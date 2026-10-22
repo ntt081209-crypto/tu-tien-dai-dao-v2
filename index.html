@@ -704,7 +704,7 @@ function $(id){return document.getElementById(id)}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function fmt(n){return Math.floor(Number(n)||0).toLocaleString("vi-VN")}
 function requiredXP(){
-    const baseXP = 100;
+    const baseXP = 10;
     const layerRate = 1.5;
     const realmRate = 15;
     return Math.floor(
