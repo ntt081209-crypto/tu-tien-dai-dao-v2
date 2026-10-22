@@ -244,6 +244,38 @@ sectContribution:0
 }
 
 let player=null,currentTab="home",gameTimer=null;
+    /* ===== TU TIEN DAI DAO 5.0: BOSS, LINH THU, PHAP BAO ===== */
+
+const BOSS_LIST = [
+    {name:"Hắc Lang Vương", hp:500, power:80, reward:200},
+    {name:"Huyết Ma Tướng", hp:1500, power:220, reward:600},
+    {name:"Cửu Đầu Xà", hp:4000, power:600, reward:1500},
+    {name:"Thượng Cổ Long Vương", hp:12000, power:1600, reward:4000},
+    {name:"Hỗn Độn Ma Thần", hp:50000, power:5000, reward:15000}
+];
+
+const PET_SKILLS = [
+    {name:"Long Uy", desc:"Tăng 20% lực chiến", bonus:0.20},
+    {name:"Bạch Hổ Chiến Ý", desc:"Tăng 25% công kích", bonus:0.25},
+    {name:"Phượng Hoàng Niết Bàn", desc:"Hồi phục sinh lực", bonus:0.15},
+    {name:"Huyền Vũ Hộ Thể", desc:"Tăng 30% phòng ngự", bonus:0.30}
+];
+
+const PET_EVOLUTIONS = [
+    {level:10,name:"Linh Thú"},
+    {level:25,name:"Thần Thú"},
+    {level:50,name:"Thánh Thú"},
+    {level:100,name:"Tiên Thú"},
+    {level:200,name:"Hỗn Độn Thần Thú"}
+];
+
+const ARTIFACTS = [
+    {name:"Ngọc Bội Tụ Linh",cost:300,power:80},
+    {name:"Lò Luyện Đan Cổ",cost:800,power:200},
+    {name:"Tháp Trấn Yêu",cost:2000,power:600},
+    {name:"Kiếm Đại Đạo",cost:5000,power:1500},
+    {name:"Hỗn Độn Châu",cost:15000,power:5000}
+];
 
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
