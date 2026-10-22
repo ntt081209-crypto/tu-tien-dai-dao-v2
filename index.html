@@ -1272,28 +1272,36 @@ function renderBossStatus(){
     if(!boss) return "";
 
     const hp = player.bossHP > 0 ? player.bossHP : boss.hp;
-    const percent = Math.max(
-        0,
-        Math.min(100, hp / boss.hp * 100)
-    );
+    const percent = Math.max(0, Math.min(100, hp / boss.hp * 100));
 
     return `
         <div class="boss-card">
-            <div class="boss-title">👹 BOSS KHIÊU CHIẾN</div>
-            <div class="boss-name">${boss.name}</div>
+            <h2>⚔️ BOSS KHIÊU CHIẾN</h2>
+
+            <div class="boss-name">👹 ${boss.name}</div>
+
             <div class="boss-stats">
-                <span>❤️ ${fmt(hp)} / ${fmt(boss.hp)} HP</span>
-                <span>⚔️ ${fmt(boss.power)} sức mạnh</span>
+                <p>❤️ Máu: ${fmt(hp)} / ${fmt(boss.hp)}</p>
+                <p>⚔️ Sức mạnh: ${fmt(boss.power)}</p>
+                <p>💎 Phần thưởng: ${fmt(boss.reward)} linh thạch</p>
             </div>
+
             <div class="boss-hp-track">
-                <div class="boss-hp-fill" style="width:${percent}%"></div>
+                <div class="boss-hp-fill"
+                     style="width:${percent}%"></div>
             </div>
-            <div class="boss-reward">
-                🪙 Phần thưởng: ${fmt(boss.reward)} linh thạch
-            </div>
-            <div class="boss-progress">
-                BOSS ${Math.min((player.bossIndex || 0) + 1, BOSS_LIST.length)}
-                / ${BOSS_LIST.length}
+
+            <p>👑 BOSS ${Math.min((player.bossIndex || 0) + 1, BOSS_LIST.length)} / ${BOSS_LIST.length}</p>
+
+            <div class="boss-list">
+                <h3>📜 DANH SÁCH 20 BOSS</h3>
+
+                ${BOSS_LIST.map((b, i) => `
+                    <div class="boss-list-item ${i === (player.bossIndex || 0) ? "active" : ""}">
+                        <span>${i + 1}. ${b.name}</span>
+                        <span>❤️ ${fmt(b.hp)}</span>
+                    </div>
+                `).join("")}
             </div>
         </div>
     `;
