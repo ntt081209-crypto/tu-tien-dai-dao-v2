@@ -1753,6 +1753,173 @@ renderView = function(){
       </section>`;
   }
 };
+  // ==========================================
+// TU TIEN DAI DAO 4.2 - HOAT ANH NHAN VAT
+// ==========================================
+
+function ttddCharacterScene(mode = "cultivate") {
+  const isBattle = mode === "battle";
+  const isBreakthrough = mode === "breakthrough";
+
+  const realmColors = [
+    "#80e8ff", "#76baff", "#ffd987",
+    "#c4a1ff", "#ff85dc", "#ff9e80",
+    "#b9ffdd", "#ffe6a0", "#ff6d8d"
+  ];
+
+  const auraColor = realmColors[
+    Math.min(8, Math.floor((player?.realm || 0) / 2))
+  ];
+
+  const enemy = BOSS_LIST[
+    Math.min(player?.bossIndex || 0, BOSS_LIST.length - 1)
+  ];
+
+  return `
+    <div id="ttddAnimationScene"
+         class="ttdd-scene ${isBattle ? "battle-mode" : ""} ${isBreakthrough ? "breakthrough-mode" : ""}"
+         style="--ttdd-aura:${auraColor}">
+
+      <div class="ttdd-stars"></div>
+      <div class="ttdd-caption">
+        ${isBattle ? "⚔️ CHIẾN ĐẤU" :
+          isBreakthrough ? "⚡ ĐỘT PHÁ CẢNH GIỚI" :
+          "☯ VẬN CÔNG TU LUYỆN"}
+      </div>
+
+      <div class="ttdd-aura"></div>
+      <div class="ttdd-magic-circle"></div>
+
+      <div class="ttdd-energy"></div>
+      <div class="ttdd-energy e2"></div>
+      <div class="ttdd-energy e3"></div>
+
+      <div class="ttdd-character">
+        <div class="ttdd-hair"></div>
+        <div class="ttdd-head"></div>
+        <div class="ttdd-arm"></div>
+        <div class="ttdd-arm right"></div>
+        <div class="ttdd-robe"></div>
+        <div class="ttdd-leg"></div>
+        <div class="ttdd-leg right"></div>
+        <div class="ttdd-sword"></div>
+      </div>
+
+      ${isBattle ? `
+        <div class="ttdd-enemy">👹</div>
+      ` : ""}
+    </div>`;
+}
+
+function ttddRefreshCharacterScene(mode) {
+  const oldScene = document.getElementById("ttddAnimationScene");
+  if (!oldScene) return;
+
+  const scene = oldScene;
+  scene.classList.remove("attack-mode", "breakthrough-mode");
+
+  if (mode === "attack") {
+    scene.classList.add("battle-mode", "attack-mode");
+  }
+
+  if (mode === "breakthrough") {
+    scene.classList.add("breakthrough-mode");
+  }
+
+  // Khởi động lại hoạt ảnh sau mỗi lần thao tác.
+  void scene.offsetWidth;
+
+  if (mode === "attack") {
+    scene.classList.add("attack-mode");
+  }
+
+  if (mode === "breakthrough") {
+    scene.classList.add("breakthrough-mode");
+  }
+}
+
+// Giữ nguyên giao diện cũ, bổ sung cảnh nhân vật.
+const TTDD_42_oldRenderView = renderView;
+
+renderView = function() {
+  TTDD_42_oldRenderView();
+
+  if (!player) return;
+
+  const view = $("view");
+  if (!view) return;
+
+  if (currentTab === "cultivate") {
+    const panel = view.querySelector(".panel");
+
+    if (panel) {
+      const scene = document.createElement("div");
+      scene.innerHTML = ttddCharacterScene("cultivate");
+      panel.insertBefore(scene.firstElementChild, panel.children[1]);
+    }
+  }
+
+  if (currentTab === "home") {
+    const sceneBox = view.querySelector(".cultivation-scene");
+
+    if (sceneBox) {
+      sceneBox.outerHTML = ttddCharacterScene("cultivate");
+    }
+  }
+
+  if (currentTab === "battle") {
+    const panel = view.querySelector(".panel");
+
+    if (panel) {
+      const scene = document.createElement("div");
+      scene.innerHTML = ttddCharacterScene("battle");
+      panel.insertBefore(scene.firstElementChild, panel.children[1]);
+    }
+  }
+};
+
+// Tu luyện: thêm hiệu ứng sau khi cập nhật dữ liệu.
+const TTDD_42_oldCultivate = cultivate;
+
+cultivate = function() {
+  TTDD_42_oldCultivate();
+
+  if (currentTab === "cultivate" || currentTab === "home") {
+    ttddRefreshCharacterScene("cultivate");
+  }
+};
+
+// Chiến đấu: nhân vật vung kiếm.
+const TTDD_42_oldBattle = battle;
+
+battle = function() {
+  TTDD_42_oldBattle();
+
+  if (currentTab === "battle") {
+    ttddRefreshCharacterScene("attack");
+  }
+};
+
+// Đột phá: bùng nổ linh khí.
+const TTDD_42_oldBreakthrough = breakthrough;
+
+breakthrough = function() {
+  const oldRealm = player ? player.realm : 0;
+  const oldLayer = player ? player.layer : 1;
+
+  TTDD_42_oldBreakthrough();
+
+  if (
+    player &&
+    (player.realm !== oldRealm || player.layer !== oldLayer)
+  ) {
+    if (currentTab === "cultivate") {
+      ttddRefreshCharacterScene("breakthrough");
+    }
+  }
+};
+
+console.log("Tu Tiên Đại Đạo 4.2: Đã nạp hoạt ảnh nhân vật.");
 
 console.log("Tu Tiên Đại Đạo 4.1: Đã nạp 20 đan dược và 20 vũ khí.");
 </script>
