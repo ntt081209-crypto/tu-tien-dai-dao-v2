@@ -775,6 +775,50 @@ function getPower(){
         techPower
     );
 }
+  // ===== CHỈ SỐ CHIẾN ĐẤU NHÂN VẬT =====
+
+function getAttack(){
+    if(!player) return 0;
+
+    const realmLevel = (player.realm || 0) + 1;
+    const layer = player.layer || 1;
+    const base = player.basePower || 100;
+
+    return Math.floor(
+        base * 0.8 +
+        200 * Math.pow(1.7, realmLevel - 1) +
+        (layer - 1) * 80
+    );
+}
+
+function getDefense(){
+    if(!player) return 0;
+
+    const realmLevel = (player.realm || 0) + 1;
+    const layer = player.layer || 1;
+    const base = player.basePower || 100;
+
+    return Math.floor(
+        base * 0.5 +
+        120 * Math.pow(1.6, realmLevel - 1) +
+        (layer - 1) * 50
+    );
+}
+
+function getMaxHP(){
+    if(!player) return 100;
+
+    const realmLevel = (player.realm || 0) + 1;
+    const layer = player.layer || 1;
+    const base = player.basePower || 100;
+
+    return Math.floor(
+        1000 +
+        base * 2 +
+        500 * Math.pow(1.7, realmLevel - 1) +
+        (layer - 1) * 200
+    );
+}
 function record(s){
 if(!player)return;
 player.logs.unshift(new Date().toLocaleTimeString("vi-VN")+" · "+s);
