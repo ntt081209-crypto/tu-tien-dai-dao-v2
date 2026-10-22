@@ -1413,30 +1413,6 @@ h=`<section class="panel">
 
 <div class="card">
     <h3>📜 DANH SÁCH ${BOSS_LIST.length} BOSS</h3>
-    <p>Đánh bại từng BOSS để nhận linh thạch và tu vi.</p>
-
-    ${BOSS_LIST.map((b,i)=>`
-        <div class="card" style="margin:10px 0;padding:12px;border:1px solid #66558a">
-            <h3>${i+1}. ${b.name}</h3>
-            <p>❤️ Máu: ${fmt(b.hp)}</p>
-            <p>⚔️ Sức mạnh: ${fmt(b.power)}</p>
-            <p>💎 Thưởng cơ bản: ${fmt(b.reward)} linh thạch</p>
-            <p>${i===(player.bossIndex||0)?"🔴 BOSS HIỆN TẠI":i<(player.bossIndex||0)?"✅ ĐÃ VƯỢT QUA":"🔒 CHƯA KHIÊU CHIẾN"}</p>
-            <p>
-    ${i === (player.selectedBossIndex ?? player.bossIndex ?? 0)
-        ? "🎯 ĐANG CHỌN"
-        : ""}
-</p>
-
-<button onclick="selectBoss(${i})">
-    🎯 Chọn BOSS này
-</button>
-        </div>
-    `).join("")}
-</div>
-
-<div class="card">
-    <h3>📜 DANH SÁCH ${BOSS_LIST.length} BOSS</h3>
     <p>Chọn BOSS bạn muốn khiêu chiến.</p>
 
     ${BOSS_LIST.map((b,i)=>`
