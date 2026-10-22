@@ -934,6 +934,92 @@ notify("Yêu thú mạnh hơn! Mất "+damage+" sinh lực.");
 }
 saveGame();renderGame();
 }
+  var autoStageTimer = null;
+var autoTowerTimer = null;
+
+function toggleAutoStage(){
+    if(!player) return;
+
+    if(player.autoStage){
+        player.autoStage = false;
+        clearTimeout(autoStageTimer);
+        autoStageTimer = null;
+        notify("Đã tắt tự động leo ải.");
+        saveGame();
+        renderGame();
+        return;
+    }
+
+    player.autoStage = true;
+    saveGame();
+    renderGame();
+    runAutoStage();
+}
+
+function runAutoStage(){
+    if(!player || !player.autoStage) return;
+
+    const enemy = enemyPower("stage");
+
+    if(player.hp < 20 || getPower() < enemy * 0.65){
+        player.autoStage = false;
+        autoStageTimer = null;
+        notify("Tự động leo ải đã dừng!");
+        saveGame();
+        renderGame();
+        return;
+    }
+
+    clearStage();
+
+    if(player && player.autoStage){
+        autoStageTimer = setTimeout(function(){
+            runAutoStage();
+        }, 1200);
+    }
+}
+
+function toggleAutoTower(){
+    if(!player) return;
+
+    if(player.autoTower){
+        player.autoTower = false;
+        clearTimeout(autoTowerTimer);
+        autoTowerTimer = null;
+        notify("Đã tắt tự động leo tháp.");
+        saveGame();
+        renderGame();
+        return;
+    }
+
+    player.autoTower = true;
+    saveGame();
+    renderGame();
+    runAutoTower();
+}
+
+function runAutoTower(){
+    if(!player || !player.autoTower) return;
+
+    const enemy = enemyPower("tower");
+
+    if(player.hp < 25 || getPower() < enemy * 0.65){
+        player.autoTower = false;
+        autoTowerTimer = null;
+        notify("Tự động leo tháp đã dừng!");
+        saveGame();
+        renderGame();
+        return;
+    }
+
+    climbTower();
+
+    if(player && player.autoTower){
+        autoTowerTimer = setTimeout(function(){
+            runAutoTower();
+        }, 1200);
+    }
+}
 function clearStage(){
 const enemy=enemyPower("stage");
 if(player.hp<20){notify("Sinh lực quá thấp.");return}
@@ -1434,13 +1520,23 @@ h=`<section class="panel">
 <div class="card">
     <h3>🏹 Chinh phạt ải ${player.expedition}</h3>
     <p>Lực chiến yêu cầu: ${fmt(enemyPower("stage"))}</p>
-    <button onclick="clearStage()">Vượt ải</button>
+
+    <button onclick="clearStage()">⚔️ Vượt ải</button>
+
+    <button onclick="toggleAutoStage()">
+        ${player.autoStage ? "⏹️ Tắt tự động leo ải" : "🤖 Bật tự động leo ải"}
+    </button>
 </div>
 
 <div class="card">
     <h3>🏯 Thông Thiên Tháp tầng ${player.tower+1}</h3>
     <p>Lực chiến thủ tháp: ${fmt(enemyPower("tower"))}</p>
-    <button onclick="climbTower()">Leo tháp</button>
+
+    <button onclick="climbTower()">⚔️ Leo tháp</button>
+
+    <button onclick="toggleAutoTower()">
+        ${player.autoTower ? "⏹️ Tắt tự động leo tháp" : "🤖 Bật tự động leo tháp"}
+    </button>
 </div>
 
 </section>`;
