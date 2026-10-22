@@ -714,12 +714,22 @@ function requiredXP(){
     );
 }
 function getPower(){
-if(!player)return 0;
-return Math.floor(player.basePower+player.realm*30+(player.layer-1)*5+
-(player.pet?player.petLevel*12:0)+player.equipmentPower+
-player.root.grade*player.root.tier*3+
-player.body.grade*player.body.tier*4+
-player.tech.grade*player.tech.tier*5);
+    if(!player) return 0;
+
+    const realmLevel = player.realm + 1;
+    const realmPower = Math.floor(500 * Math.pow(1.5, realmLevel - 1));
+    const layerPower = (player.layer - 1) * 50;
+
+    return Math.floor(
+        player.basePower +
+        realmPower +
+        layerPower +
+        (player.pet ? player.petLevel * 12 : 0) +
+        player.equipmentPower +
+        player.root.grade * player.root.tier * 3 +
+        player.body.grade * player.body.tier * 4 +
+        player.tech.grade * player.tech.tier * 5
+    );
 }
 function record(s){
 if(!player)return;
