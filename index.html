@@ -230,30 +230,70 @@ const EQUIPMENT=[
 ];
 
 function newPlayer(name){
-return {
-user:name,realm:0,layer:1,xp:0,qi:0,stones:100,hp:100,maxHp:100,
-basePower:10,attack:10,defense:5,autoCultivate:false,autoBreak:false,
-autoFight:false,pet:null,petLevel:1,sect:null,kills:0,breaks:0,
-cultivations:0,expedition:1,stagesCleared:0,tower:0,
-stonesEarned:100,explorations:0,alchemy:0,forging:0,
-inventory:{"Tụ Khí Đan":3,"Hồi Xuân Đan":2,"Linh Thảo":5,"Yêu Thú Nội Đan":1},
-quests:{},logs:[],root:{grade:1,tier:1},body:{grade:1,tier:1},
-tech:{grade:1,tier:1},equipment:"Chưa trang bị",equipmentPower:0,
-    bossKills:0,
-bossIndex:0,
-bossHP:0,
-petSkill:0,
-petEvolution:0,
-petEquipment:"Chưa trang bị",
-petEquipmentPower:0,
-artifacts:[],
-activeArtifact:"",
-equipmentLevel:0,
-sectContribution:0
-};
-}
-sectContribution:0
-};
+    return {
+        user:name,
+        realm:0,
+        layer:1,
+        xp:0,
+        qi:0,
+        stones:100,
+        hp:100,
+        maxHp:100,
+        basePower:10,
+        attack:10,
+        defense:5,
+
+        autoCultivate:false,
+        autoBreak:false,
+        autoFight:false,
+
+        pet:null,
+        petLevel:1,
+        petSkill:0,
+        petEvolution:0,
+        petEquipment:"Chưa trang bị",
+        petEquipmentPower:0,
+
+        sect:null,
+        sectContribution:0,
+
+        kills:0,
+        breaks:0,
+        cultivations:0,
+        expedition:1,
+        stagesCleared:0,
+        tower:0,
+
+        stonesEarned:100,
+        explorations:0,
+        alchemy:0,
+        forging:0,
+
+        bossKills:0,
+        bossIndex:0,
+        bossHP:0,
+
+        artifacts:[],
+        activeArtifact:"",
+        equipmentLevel:0,
+
+        inventory:{
+            "Tụ Khí Đan":3,
+            "Hồi Xuân Đan":2,
+            "Linh Thảo":5,
+            "Yêu Thú Nội Đan":1
+        },
+
+        quests:{},
+        logs:[],
+
+        root:{grade:1,tier:1},
+        body:{grade:1,tier:1},
+        tech:{grade:1,tier:1},
+
+        equipment:"Chưa trang bị",
+        equipmentPower:0
+    };
 }
 
 let player=null,currentTab="home",gameTimer=null;
