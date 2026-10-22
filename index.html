@@ -356,8 +356,18 @@ if(player.layer<10&&player.xp>=requiredXP())doLayerBreakthrough();
 record("Vận công tu luyện.");saveGame();renderGame();notify("Tu luyện thành công!");
 }
 function toggleAutoCultivation(){
-player.autoCultivate=!player.autoCultivate;saveGame();renderGame();
-notify(player.autoCultivate?"Đã bật Auto Tu Luyện.":"Đã tắt Auto Tu Luyện.");
+    if (!player) return;
+
+    player.autoCultivate = !player.autoCultivate;
+
+    if (player.autoCultivate) {
+        notify("☯ Đã bật Auto Tu Luyện! Tu vi sẽ tự tăng mỗi giây.");
+    } else {
+        notify("Đã tắt Auto Tu Luyện.");
+    }
+
+    saveGame();
+    renderGame();
 }
 function toggleAutoBreak(){
 player.autoBreak=!player.autoBreak;saveGame();renderGame();
