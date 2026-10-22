@@ -796,21 +796,34 @@ function startGame() {
 
         // AUTO TU LUYỆN
         if (player.autoCultivate) {
-            player.qi += 5;
-            player.cultivations++;
+    const oldXP = player.xp;
+    const oldQi = player.qi;
 
-            if (player.layer < 10) {
-                const need = requiredXP();
-                player.xp = Math.min(need, player.xp + 20);
+    player.qi += 5;
+    player.cultivations++;
 
-                // Tự động đột phá tầng nhỏ khi đủ tu vi
-                if (player.xp >= need) {
-                    doLayerBreakthrough();
-                }
-            }
+    if (player.layer < 10) {
+        const need = requiredXP();
 
-            changed = true;
+        player.xp = Math.min(
+            need,
+            player.xp + 20
+        );
+
+        if (player.xp >= need) {
+            doLayerBreakthrough();
         }
+    }
+
+    changed = true;
+
+    console.log(
+        "AUTO TU LUYỆN ĐANG CHẠY",
+        "Tu vi:", oldXP, "→", player.xp,
+        "Linh khí:", oldQi, "→", player.qi,
+        "Tầng:", player.layer
+    );
+}
 
         // AUTO ĐỘT PHÁ TẦNG NHỎ
         if (
