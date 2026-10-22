@@ -1422,6 +1422,15 @@ h=`<section class="panel">
             <p>⚔️ Sức mạnh: ${fmt(b.power)}</p>
             <p>💎 Thưởng cơ bản: ${fmt(b.reward)} linh thạch</p>
             <p>${i===(player.bossIndex||0)?"🔴 BOSS HIỆN TẠI":i<(player.bossIndex||0)?"✅ ĐÃ VƯỢT QUA":"🔒 CHƯA KHIÊU CHIẾN"}</p>
+            <p>
+    ${i === (player.selectedBossIndex ?? player.bossIndex ?? 0)
+        ? "🎯 ĐANG CHỌN"
+        : ""}
+</p>
+
+<button onclick="selectBoss(${i})">
+    🎯 Chọn BOSS này
+</button>
         </div>
     `).join("")}
 </div>
