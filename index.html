@@ -1144,12 +1144,45 @@ reader.readAsText(file);
     
 /* ===== HỆ THỐNG BOSS ===== */
 
+// BOSS đang được người chơi lựa chọn
 function getCurrentBoss(){
-    const index = Math.min(
-        player.bossIndex || 0,
-        BOSS_LIST.length - 1
+    if(!player) return BOSS_LIST[0];
+
+    if(player.selectedBossIndex === undefined){
+        player.selectedBossIndex = player.bossIndex || 0;
+    }
+
+    const index = Math.max(
+        0,
+        Math.min(
+            player.selectedBossIndex,
+            BOSS_LIST.length - 1
+        )
     );
+
     return BOSS_LIST[index];
+}
+
+// Chọn BOSS muốn khiêu chiến
+function selectBoss(index){
+    if(!player) return;
+
+    index = Number(index);
+
+    if(!Number.isInteger(index) || index < 0 || index >= BOSS_LIST.length){
+        notify("BOSS không hợp lệ!");
+        return;
+    }
+
+    player.selectedBossIndex = index;
+
+    // BOSS mới được chọn sẽ có đầy máu
+    player.bossHP = BOSS_LIST[index].hp;
+
+    saveGame();
+    renderGame();
+
+    notify("Đã chọn BOSS: " + BOSS_LIST[index].name);
 }
 
 function challengeBoss(){
