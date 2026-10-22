@@ -704,9 +704,9 @@ function $(id){return document.getElementById(id)}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function fmt(n){return Math.floor(Number(n)||0).toLocaleString("vi-VN")}
 function requiredXP(){
-    const baseXP = 10;
+    const baseXP = 100;
     const layerRate = 1.5;
-    const realmRate = 15;
+    const realmRate = 3;
     return Math.floor(
         baseXP *
         Math.pow(layerRate, player.layer - 1) *
@@ -1424,7 +1424,7 @@ renderNav();
   function getAutoCultivateRate() {
     return [
         10, 50, 300, 5000, 50000,
-        300000, 5000000, 300, 350, 400,
+        300000, 5000000, 50000000, 500000000, 400,
         500, 600, 700, 800,
         900, 1000, 2000,
         3000, 5000
