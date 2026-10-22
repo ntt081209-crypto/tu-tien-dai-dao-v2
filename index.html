@@ -1436,13 +1436,23 @@ h=`<section class="panel">
 </div>
 
 <div class="card">
-    <h3>🐺 Yêu thú hoang dã</h3>
-    <p>Lực chiến địch: ${fmt(enemyPower("battle"))}</p>
-    <p>Lực chiến của bạn: ${fmt(getPower())}</p>
-    <button onclick="battle()">Giao chiến</button>
-    <button onclick="toggleAutoFight()">
-        ${player.autoFight?"Tắt Auto Chiến":"Bật Auto Chiến"}
-    </button>
+    <h3>📜 DANH SÁCH ${BOSS_LIST.length} BOSS</h3>
+    <p>Chọn BOSS bạn muốn khiêu chiến.</p>
+
+    ${BOSS_LIST.map((b,i)=>`
+        <div class="card" style="margin:10px 0;padding:12px;border:1px solid #66558a">
+            <h3>${i+1}. ${b.name}</h3>
+            <p>❤️ Máu tối đa: ${fmt(b.hp)}</p>
+            <p>⚔️ Sức mạnh: ${fmt(b.power)}</p>
+            <p>💎 Thưởng: ${fmt(b.reward)} linh thạch</p>
+
+            <button onclick="selectBoss(${i})">
+                ${i === (player.selectedBossIndex ?? player.bossIndex ?? 0)
+                    ? "✅ ĐANG CHỌN BOSS NÀY"
+                    : "🎯 CHỌN BOSS NÀY"}
+            </button>
+        </div>
+    `).join("")}
 </div>
 
 <div class="card">
