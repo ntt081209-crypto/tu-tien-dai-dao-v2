@@ -90,6 +90,348 @@ header .brand{padding-right:48%}
 .hud{top:7px;right:5px;max-width:47vw;font-size:10px;padding:5px}
 header .brand{font-size:16px;padding-right:45%}
 }
+  /* ===== TU TIEN DAI DAO 4.2: HOAT ANH NHAN VAT ===== */
+
+.ttdd-scene {
+  position: relative;
+  height: 280px;
+  overflow: hidden;
+  border: 1px solid #bba4ff55;
+  border-radius: 16px;
+  margin: 12px 0;
+  background:
+    radial-gradient(ellipse at 50% 85%, #8057ff55, transparent 35%),
+    radial-gradient(ellipse at 50% 55%, #263e8055, transparent 55%),
+    linear-gradient(180deg, #10152e, #080b19);
+  perspective: 700px;
+}
+
+.ttdd-stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, #fff 1px, transparent 2px),
+    radial-gradient(circle, #9edfff 1px, transparent 2px);
+  background-size: 47px 51px, 73px 67px;
+  background-position: 0 0, 22px 30px;
+  animation: ttddStars 8s linear infinite;
+}
+
+.ttdd-aura {
+  position: absolute;
+  width: 155px;
+  height: 155px;
+  left: 50%;
+  top: 45%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid #80e8ff66;
+  box-shadow: 0 0 25px #7d8dff66, inset 0 0 30px #9c75ff44;
+  animation: ttddAura 3s ease-in-out infinite;
+}
+
+.ttdd-magic-circle {
+  position: absolute;
+  width: 190px;
+  height: 65px;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  border: 2px solid #a98aff;
+  border-radius: 50%;
+  box-shadow: 0 0 15px #9d75ff, inset 0 0 15px #8e67ff77;
+  animation: ttddCircle 8s linear infinite;
+}
+
+.ttdd-magic-circle::before,
+.ttdd-magic-circle::after {
+  content: "";
+  position: absolute;
+  inset: 8px 20px;
+  border: 1px solid #80e8ff99;
+  border-radius: 50%;
+}
+
+.ttdd-magic-circle::after {
+  transform: rotate(60deg) scale(.8);
+}
+
+.ttdd-character {
+  position: absolute;
+  left: 50%;
+  bottom: 43px;
+  width: 100px;
+  height: 190px;
+  transform: translateX(-50%);
+  animation: ttddFloat 2.6s ease-in-out infinite;
+  z-index: 2;
+}
+
+.ttdd-head {
+  position: absolute;
+  left: 38px;
+  top: 17px;
+  width: 26px;
+  height: 30px;
+  border-radius: 45% 45% 42% 42%;
+  background: linear-gradient(120deg, #ffe0b8, #c58e75);
+  box-shadow: 0 0 10px #ffd98755;
+}
+
+.ttdd-hair {
+  position: absolute;
+  left: 35px;
+  top: 10px;
+  width: 32px;
+  height: 23px;
+  border-radius: 60% 60% 30% 30%;
+  background: #151326;
+  z-index: 3;
+}
+
+.ttdd-hair::after {
+  content: "";
+  position: absolute;
+  left: 11px;
+  top: -9px;
+  width: 10px;
+  height: 20px;
+  background: #171329;
+  border-radius: 70%;
+}
+
+.ttdd-robe {
+  position: absolute;
+  top: 43px;
+  left: 21px;
+  width: 58px;
+  height: 83px;
+  background: linear-gradient(100deg, #c6c8ff, #6555bd 48%, #292b67);
+  clip-path: polygon(25% 0,75% 0,100% 100%,0 100%);
+  filter: drop-shadow(0 0 8px #9887ff77);
+}
+
+.ttdd-robe::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 27px;
+  width: 4px;
+  height: 100%;
+  background: #ffe6a0;
+}
+
+.ttdd-arm {
+  position: absolute;
+  top: 51px;
+  left: 12px;
+  width: 15px;
+  height: 61px;
+  border-radius: 10px;
+  background: linear-gradient(#c7c7ff, #5a4caa);
+  transform: rotate(22deg);
+  transform-origin: top center;
+}
+
+.ttdd-arm.right {
+  left: 72px;
+  transform: rotate(-35deg);
+}
+
+.ttdd-leg {
+  position: absolute;
+  top: 112px;
+  left: 31px;
+  width: 15px;
+  height: 47px;
+  border-radius: 5px;
+  background: linear-gradient(#6259ad, #151c40);
+  transform: rotate(7deg);
+}
+
+.ttdd-leg.right {
+  left: 53px;
+  transform: rotate(-7deg);
+}
+
+.ttdd-sword {
+  position: absolute;
+  top: 9px;
+  left: 78px;
+  width: 5px;
+  height: 94px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #80e8ff, white, #9b83ff);
+  box-shadow: 0 0 10px #80e8ff, 0 0 22px #80e8ff;
+  transform: rotate(28deg);
+  transform-origin: bottom center;
+  animation: ttddSwordGlow 2s ease-in-out infinite;
+}
+
+.ttdd-sword::after {
+  content: "";
+  position: absolute;
+  bottom: -7px;
+  left: -5px;
+  width: 15px;
+  height: 6px;
+  background: #ffd987;
+  border-radius: 3px;
+}
+
+.ttdd-energy {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  left: 50%;
+  top: 48%;
+  border-radius: 50%;
+  background: #9beaff;
+  box-shadow: 0 0 12px #80e8ff;
+  animation: ttddEnergy 3s linear infinite;
+}
+
+.ttdd-energy.e2 {
+  animation-delay: -1s;
+  background: #d0a0ff;
+}
+
+.ttdd-energy.e3 {
+  animation-delay: -2s;
+  background: #ffd987;
+}
+
+.ttdd-scene.battle-mode {
+  background:
+    radial-gradient(ellipse at 75% 75%, #e4475b44, transparent 35%),
+    radial-gradient(ellipse at 25% 65%, #6b5aff44, transparent 40%),
+    linear-gradient(180deg, #21132b, #080b19);
+}
+
+.ttdd-scene.battle-mode .ttdd-character {
+  left: 30%;
+  animation: ttddBattleIdle 1.2s ease-in-out infinite;
+}
+
+.ttdd-scene.attack-mode .ttdd-character {
+  animation: ttddAttack .42s ease-in-out;
+}
+
+.ttdd-scene.attack-mode .ttdd-sword {
+  animation: ttddSwordAttack .42s ease-in-out;
+}
+
+.ttdd-scene.breakthrough-mode .ttdd-aura {
+  animation: ttddBreakthrough .8s ease-out;
+}
+
+.ttdd-enemy {
+  position: absolute;
+  right: 12%;
+  bottom: 50px;
+  width: 70px;
+  height: 100px;
+  font-size: 62px;
+  text-align: center;
+  filter: drop-shadow(0 0 12px #ff4455);
+  animation: ttddEnemy 1.8s ease-in-out infinite;
+}
+
+.ttdd-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 12px;
+  text-align: center;
+  color: #ffe6a0;
+  font-weight: 800;
+  font-size: 14px;
+  text-shadow: 0 0 10px #c4a1ff;
+  z-index: 5;
+}
+
+.ttdd-scene.battle-mode::after {
+  content: "⚡";
+  position: absolute;
+  top: 40%;
+  left: 45%;
+  color: #80e8ff;
+  font-size: 35px;
+  opacity: 0;
+}
+
+.ttdd-scene.attack-mode::after {
+  animation: ttddSlash .42s ease-out;
+}
+
+@keyframes ttddStars {
+  to { background-position: 0 100px, 22px -100px; }
+}
+
+@keyframes ttddAura {
+  0%, 100% { transform: translate(-50%,-50%) scale(.9); opacity: .6; }
+  50% { transform: translate(-50%,-50%) scale(1.12); opacity: 1; }
+}
+
+@keyframes ttddCircle {
+  to { transform: translateX(-50%) rotate(360deg); }
+}
+
+@keyframes ttddFloat {
+  0%, 100% { margin-bottom: 0; }
+  50% { margin-bottom: 9px; }
+}
+
+@keyframes ttddSwordGlow {
+  0%, 100% { filter: brightness(.9); }
+  50% { filter: brightness(1.8); }
+}
+
+@keyframes ttddEnergy {
+  0% { transform: rotate(0deg) translateX(75px) rotate(0deg); }
+  100% { transform: rotate(360deg) translateX(75px) rotate(-360deg); }
+}
+
+@keyframes ttddBattleIdle {
+  0%, 100% { transform: translateX(-50%) rotate(-3deg); }
+  50% { transform: translateX(-50%) rotate(5deg); }
+}
+
+@keyframes ttddAttack {
+  0% { transform: translateX(-50%) translateX(0) rotate(0); }
+  55% { transform: translateX(-50%) translateX(70px) rotate(-12deg); }
+  100% { transform: translateX(-50%) translateX(0) rotate(0); }
+}
+
+@keyframes ttddSwordAttack {
+  0% { transform: rotate(28deg); }
+  50% { transform: rotate(-75deg) scale(1.2); }
+  100% { transform: rotate(28deg); }
+}
+
+@keyframes ttddSlash {
+  0% { opacity: 0; transform: translateX(-20px) scale(.5); }
+  40% { opacity: 1; transform: translateX(20px) scale(1.5); }
+  100% { opacity: 0; transform: translateX(70px) scale(.7); }
+}
+
+@keyframes ttddEnemy {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes ttddBreakthrough {
+  0% { transform: translate(-50%,-50%) scale(.5); opacity: 0; }
+  60% { transform: translate(-50%,-50%) scale(1.7); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(1.1); opacity: .7; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ttdd-scene *,
+  .ttdd-scene::after {
+    animation-duration: 8s !important;
+  }
+}
 </style>
 </head>
 
