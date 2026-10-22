@@ -786,32 +786,93 @@ $("view").innerHTML=h;renderStats();
 }
 
 /* TREO MÁY */
-function startGame(){
-clearInterval(gameTimer);
-gameTimer=setInterval(()=>{
-if(!player)return;
-let changed=false;
-if(player.autoCultivate){
-player.qi+=5;player.cultivations++;
-if(player.layer<10){
-player.xp=Math.min(requiredXP(),player.xp+20);
-if(player.xp>=requiredXP())doLayerBreakthrough();
-}
-changed=true;
-}
-if(player.autoBreak&&!player.autoCultivate&&player.layer<10&&player.xp>=requiredXP()){
-doLayerBreakthrough();changed=true;
-}
-if(player.autoFight){
-if(player.hp<=0)player.hp=Math.max(1,Math.floor(player.maxHp*.25));
-else if(getPower()>=enemyPower("battle")*.65){
-player.stones+=10;player.stonesEarned+=10;player.kills++;
-player.xp=Math.min(requiredXP(),player.xp+10);
-}else player.hp=Math.max(0,player.hp-3);
-changed=true;
-}
-if(changed){saveGame();renderStats();if(["home","cultivate","battle"].includes(currentTab))renderView()}
-},1000);
+function startGame() {
+    clearInterval(gameTimer);
+
+    gameTimer = setInterval(() => {
+        if (!player) return;
+
+        let changed = false;
+
+        // AUTO TU LUYỆN
+        if (player.autoCultivate) {
+            player.qi += 5;
+            player.cultivations++;
+
+            if (player.layer < 10) {
+                const need = requiredXP();
+                player.xp = Math.min(need, player.xp + 20);
+
+                // Tự động đột phá tầng nhỏ khi đủ tu vi
+                if (player.xp >= need) {
+                    doLayerBreakthrough();
+                }
+            }
+
+            changed = true;
+        }
+
+        // AUTO ĐỘT PHÁ TẦNG NHỎ
+        if (
+            player.autoBreak &&
+            player.layer < 10 &&
+            player.xp >= requiredXP()
+        ) {
+            if (doLayerBreakthrough()) {
+                changed = true;
+            }
+        }
+
+        // AUTO CHIẾN ĐẤU
+        if (player.autoFight) {
+            if (player.hp <= 0) {
+                player.hp = Math.max(
+                    1,
+                    Math.floor(player.maxHp * 0.25)
+                );
+            } else {
+                const enemy = enemyPower("battle");
+                const mine = getPower();
+
+                if (mine >= enemy * 0.65) {
+                    const reward = 10;
+
+                    player.stones += reward;
+                    player.stonesEarned += reward;
+                    player.kills++;
+
+                    player.xp = Math.min(
+                        requiredXP(),
+                        player.xp + 10
+                    );
+
+                    if (player.layer < 10 &&
+                        player.xp >= requiredXP()) {
+                        doLayerBreakthrough();
+                    }
+                } else {
+                    player.hp = Math.max(0, player.hp - 3);
+                }
+            }
+
+            changed = true;
+        }
+
+        // CẬP NHẬT GIAO DIỆN VÀ LƯU DỮ LIỆU
+        if (changed) {
+            saveGame();
+            renderStats();
+
+            if ([
+                "home",
+                "cultivate",
+                "battle",
+                "character"
+            ].includes(currentTab)) {
+                renderView();
+            }
+        }
+    }, 1000);
 }
 
 renderNav();
