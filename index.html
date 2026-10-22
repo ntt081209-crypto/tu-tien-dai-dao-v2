@@ -732,18 +732,47 @@ function getPower(){
     if(!player) return 0;
 
     const realmLevel = player.realm + 1;
-    const realmPower = Math.floor(500 * Math.pow(1.5, realmLevel - 1));
-    const layerPower = (player.layer - 1) * 50;
+
+    // Tăng hệ số lực chiến theo đại cảnh giới
+    const realmPower = Math.floor(
+        1500 * Math.pow(1.8, realmLevel - 1)
+    );
+
+    // Tăng lực chiến theo từng tầng
+    const layerPower = (player.layer - 1) * 200;
+
+    // Lực chiến từ linh thú
+    const petPower = player.pet
+        ? player.petLevel * 30
+        : 0;
+
+    // Lực chiến trang bị
+    const equipmentPower = player.equipmentPower || 0;
+
+    // Lực chiến linh căn
+    const rootPower =
+        player.root.grade *
+        player.root.tier * 10;
+
+    // Lực chiến luyện thể
+    const bodyPower =
+        player.body.grade *
+        player.body.tier * 12;
+
+    // Lực chiến công pháp
+    const techPower =
+        player.tech.grade *
+        player.tech.tier * 15;
 
     return Math.floor(
-        player.basePower +
+        (player.basePower || 0) +
         realmPower +
         layerPower +
-        (player.pet ? player.petLevel * 12 : 0) +
-        player.equipmentPower +
-        player.root.grade * player.root.tier * 3 +
-        player.body.grade * player.body.tier * 4 +
-        player.tech.grade * player.tech.tier * 5
+        petPower +
+        equipmentPower +
+        rootPower +
+        bodyPower +
+        techPower
     );
 }
 function record(s){
