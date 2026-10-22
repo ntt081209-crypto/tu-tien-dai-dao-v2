@@ -1922,6 +1922,325 @@ breakthrough = function() {
 console.log("Tu Tiên Đại Đạo 4.2: Đã nạp hoạt ảnh nhân vật.");
 
 console.log("Tu Tiên Đại Đạo 4.1: Đã nạp 20 đan dược và 20 vũ khí.");
+  /* ==========================================
+   TU TIÊN ĐẠI ĐẠO 4.3
+   HỆ THỐNG ÂM THANH TIÊN HIỆP
+   ========================================== */
+
+const TTDD_AUDIO = {
+    ctx: null,
+    enabled: true,
+    volume: 0.35,
+    musicTimer: null,
+    musicStep: 0,
+    initialized: false
+};
+
+// Khởi tạo âm thanh sau thao tác của người chơi
+function ttddInitAudio() {
+    const A = TTDD_AUDIO;
+
+    if (!A.ctx) {
+        const AudioContextClass =
+            window.AudioContext || window.webkitAudioContext;
+
+        if (!AudioContextClass) {
+            notify("Trình duyệt không hỗ trợ âm thanh Web Audio.");
+            return false;
+        }
+
+        A.ctx = new AudioContextClass();
+    }
+
+    if (A.ctx.state === "suspended") {
+        A.ctx.resume();
+    }
+
+    if (!A.initialized) {
+        A.initialized = true;
+        ttddStartMusic();
+    }
+
+    return true;
+}
+
+// Phát một nốt nhạc
+function ttddTone(freq, duration, type = "sine", volume = 0.3, delay = 0) {
+    const A = TTDD_AUDIO;
+
+    if (!A.enabled || !A.ctx) return;
+
+    const ctx = A.ctx;
+    const start = ctx.currentTime + delay;
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, start);
+
+    gain.gain.setValueAtTime(0.001, start);
+    gain.gain.linearRampToValueAtTime(
+        Math.max(0.001, volume * A.volume),
+        start + 0.03
+    );
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        start + Math.max(0.05, duration)
+    );
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(start);
+    osc.stop(start + duration + 0.05);
+}
+
+// Hiệu ứng âm thanh
+function ttddSound(type) {
+    if (!TTDD_AUDIO.enabled) return;
+    if (!ttddInitAudio()) return;
+
+    switch (type) {
+        case "cultivate":
+            ttddTone(220, 0.45, "sine", 0.35);
+            ttddTone(330, 0.55, "sine", 0.25, 0.12);
+            ttddTone(440, 0.65, "triangle", 0.2, 0.25);
+            break;
+
+        case "breakthrough":
+            ttddTone(110, 0.8, "sawtooth", 0.3);
+            ttddTone(220, 0.9, "triangle", 0.35, 0.12);
+            ttddTone(440, 1.1, "sine", 0.4, 0.25);
+            ttddTone(660, 1.2, "triangle", 0.3, 0.4);
+            ttddTone(880, 1.4, "sine", 0.25, 0.55);
+            break;
+
+        case "battle":
+            ttddTone(750, 0.12, "sawtooth", 0.35);
+            ttddTone(420, 0.2, "triangle", 0.4, 0.08);
+            ttddTone(180, 0.25, "sawtooth", 0.25, 0.15);
+            break;
+
+        case "victory":
+            ttddTone(392, 0.3, "triangle", 0.3);
+            ttddTone(494, 0.35, "triangle", 0.3, 0.15);
+            ttddTone(587, 0.4, "triangle", 0.3, 0.3);
+            ttddTone(784, 0.8, "sine", 0.3, 0.45);
+            break;
+
+        case "defeat":
+            ttddTone(330, 0.35, "sawtooth", 0.25);
+            ttddTone(247, 0.45, "sawtooth", 0.25, 0.2);
+            ttddTone(165, 0.65, "sine", 0.3, 0.4);
+            break;
+
+        case "alchemy":
+            ttddTone(523, 0.2, "sine", 0.25);
+            ttddTone(659, 0.25, "triangle", 0.25, 0.12);
+            ttddTone(784, 0.45, "sine", 0.3, 0.25);
+            break;
+
+        case "reward":
+            ttddTone(660, 0.16, "sine", 0.25);
+            ttddTone(880, 0.25, "sine", 0.3, 0.12);
+            break;
+
+        case "boss":
+            ttddTone(90, 0.6, "sawtooth", 0.35);
+            ttddTone(130, 0.7, "square", 0.25, 0.15);
+            ttddTone(65, 0.9, "sawtooth", 0.3, 0.3);
+            break;
+    }
+}
+
+// Nhạc nền tiên hiệp tạo trực tiếp bằng Web Audio API
+function ttddStartMusic() {
+    const A = TTDD_AUDIO;
+
+    if (A.musicTimer) {
+        clearInterval(A.musicTimer);
+        A.musicTimer = null;
+    }
+
+    const melody = [
+        261.63, 329.63, 392.00, 329.63,
+        293.66, 349.23, 440.00, 349.23,
+        261.63, 329.63, 440.00, 392.00,
+        293.66, 349.23, 392.00, 261.63
+    ];
+
+    A.musicTimer = setInterval(() => {
+        if (!A.enabled || !A.ctx || !player) return;
+
+        if (A.ctx.state !== "running") return;
+
+        const note = melody[A.musicStep % melody.length];
+
+        ttddTone(note, 1.2, "sine", 0.10);
+        ttddTone(note / 2, 1.5, "triangle", 0.07, 0.05);
+
+        A.musicStep++;
+    }, 900);
+}
+
+// Bật/tắt âm thanh
+function ttddToggleAudio() {
+    TTDD_AUDIO.enabled = !TTDD_AUDIO.enabled;
+
+    if (TTDD_AUDIO.enabled) {
+        ttddInitAudio();
+        notify("🔊 Đã bật âm thanh tiên hiệp.");
+    } else {
+        notify("🔇 Đã tắt âm thanh.");
+    }
+
+    ttddUpdateAudioPanel();
+}
+
+// Điều chỉnh âm lượng
+function ttddSetVolume(value) {
+    TTDD_AUDIO.volume = Number(value) / 100;
+    ttddInitAudio();
+}
+
+// Bảng điều khiển âm thanh
+function ttddCreateAudioPanel() {
+    if (document.getElementById("ttddAudioPanel")) return;
+
+    const panel = document.createElement("div");
+
+    panel.id = "ttddAudioPanel";
+
+    panel.style.cssText = `
+        position:fixed;
+        right:10px;
+        bottom:15px;
+        z-index:99999;
+        background:rgba(9,15,35,.96);
+        border:1px solid #d8b65c;
+        border-radius:14px;
+        padding:10px 12px;
+        color:#ffe8a3;
+        width:155px;
+        box-shadow:0 0 15px rgba(255,215,100,.18);
+        font-size:12px;
+    `;
+
+    panel.innerHTML = `
+        <div style="font-weight:bold;margin-bottom:8px">
+            🎵 Âm thanh tiên hiệp
+        </div>
+
+        <button id="ttddAudioToggle"
+            style="width:100%;margin-bottom:8px">
+            🔊 Bật âm thanh
+        </button>
+
+        <label for="ttddVolume">Âm lượng</label>
+
+        <input id="ttddVolume"
+            type="range"
+            min="0"
+            max="100"
+            value="35"
+            style="width:100%;margin-top:6px">
+
+        <div id="ttddVolumeText">35%</div>
+    `;
+
+    document.body.appendChild(panel);
+
+    document.getElementById("ttddAudioToggle").onclick =
+        ttddToggleAudio;
+
+    document.getElementById("ttddVolume").oninput = function() {
+        ttddSetVolume(this.value);
+
+        document.getElementById("ttddVolumeText").textContent =
+            this.value + "%";
+    };
+
+    ttddUpdateAudioPanel();
+}
+
+function ttddUpdateAudioPanel() {
+    const button = document.getElementById("ttddAudioToggle");
+
+    if (button) {
+        button.textContent = TTDD_AUDIO.enabled
+            ? "🔊 Tắt âm thanh"
+            : "🔇 Bật âm thanh";
+    }
+}
+
+// Gắn âm thanh vào các thao tác trong game
+function ttddWrapSound(functionName, soundName) {
+    const original = window[functionName];
+
+    if (typeof original !== "function") return;
+
+    window[functionName] = function(...args) {
+        ttddInitAudio();
+
+        const oldRealm = player ? player.realm : 0;
+        const oldLayer = player ? player.layer : 1;
+        const oldKills = player ? player.kills : 0;
+        const oldBossKills = player ? player.bossKills : 0;
+        const oldStones = player ? player.stones : 0;
+
+        const result = original.apply(this, args);
+
+        if (TTDD_AUDIO.enabled && player) {
+            if (
+                functionName === "breakthrough" &&
+                (player.realm !== oldRealm || player.layer !== oldLayer)
+            ) {
+                ttddSound("breakthrough");
+            } else if (
+                functionName === "battle" &&
+                player.kills > oldKills
+            ) {
+                ttddSound("victory");
+            } else if (
+                functionName === "challengeBoss" &&
+                player.bossKills > oldBossKills
+            ) {
+                ttddSound("victory");
+            } else if (
+                functionName === "challengeBoss"
+            ) {
+                ttddSound("boss");
+            } else if (
+                functionName === "battle" ||
+                functionName === "clearStage" ||
+                functionName === "climbTower"
+            ) {
+                ttddSound("battle");
+            } else {
+                ttddSound(soundName);
+            }
+        }
+
+        return result;
+    };
+}
+
+ttddWrapSound("cultivate", "cultivate");
+ttddWrapSound("breakthrough", "breakthrough");
+ttddWrapSound("battle", "battle");
+ttddWrapSound("clearStage", "battle");
+ttddWrapSound("climbTower", "battle");
+ttddWrapSound("challengeBoss", "boss");
+ttddWrapSound("craftAlchemy", "alchemy");
+ttddWrapSound("forgeEquipment", "reward");
+ttddWrapSound("claimQuest", "reward");
+ttddWrapSound("exploreRealm", "reward");
+ttddWrapSound("getPet", "victory");
+
+ttddCreateAudioPanel();
+
+console.log("Tu Tiên Đại Đạo 4.3: Đã nạp hệ thống âm thanh.");
 </script>
 </body>
 </html>
