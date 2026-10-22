@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#080b19">
+<title>Tu Tiên Đại Đạo 3.1</title>
+
+<style>
+:root {
+  --bg:#070916;
+  --panel:rgba(12,18,38,.94);
+  --gold:#ffd987;
+  --cyan:#80e8ff;
+  --purple:#c4a1ff;
+  --text:#eef2ff;
+  --muted:#aab4d1;
+  --border:#c5d5ff25;
+}
+
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  font-family:system-ui,-apple-system,sans-serif;
+  background:
+    linear-gradient(#070916bb,#070916f5),
+    url("https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1600&q=85")
+    center/cover fixed;
+}
+
+button {
+  padding:10px 13px;
+  border:1px solid #c9aaff55;
+  border-radius:10px;
+  background:linear-gradient(135deg,#7653a7,#24466d);
+  color:white;
+  cursor:pointer;
+  margin:3px;
+  font:inherit;
+}
+
+button:active { transform:scale(.97); }
+button:disabled { opacity:.5; cursor:not-allowed; }
+
+input {
+  width:100%;
+  padding:12px;
+  margin:6px 0 12px;
+  border:1px solid #ffffff22;
+  border-radius:9px;
+  background:#080d20;
+  color:white;
+  font:inherit;
+}
+
+header {
+  position:sticky;
+  top:0;
+  z-index:5;
+  padding:14px;
+  background:#080b19ef;
+  border-bottom:1px solid #ffffff20;
+  backdrop-filter:blur(12px);
+}
+
+.brand {
+  color:var(--gold);
+  font-size:20px;
+  font-weight:900;
+}
+
+.container {
+  max-width:1100px;
+  margin:auto;
+  padding:14px;
+}
+
+.hero,.panel,.stat {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:15px;
+  padding:15px;
+  margin-bottom:12px;
+  box-shadow:0 10px 35px #0004;
+  backdrop-filter:blur(10px);
+}
+
+.hero {
+  background:
+    linear-gradient(100deg,#080d26ef,#111b3bd9),
+    url("https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1200&q=80")
+    center/cover;
+}
+
+h1,h2 { color:var(--gold); }
+h3 { color:var(--cyan); }
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+
+.stat strong {
+  display:block;
+  color:var(--gold);
+  font-size:18px;
+  overflow-wrap:anywhere;
+}
+
+.stat small { color:var(--muted); }
+
+.layout {
+  display:grid;
+  grid-template-columns:190px minmax(0,1fr);
+  gap:12px;
+  align-items:start;
+}
+
+.nav button {
+  display:block;
+  width:100%;
+  text-align:left;
+  background:#111a34;
+}
+
+.nav button.active {
+  color:var(--gold);
+  border-color:var(--gold);
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+}
+
+.card {
+  padding:13px;
+  border-radius:12px;
+  border:1px solid #ffffff18;
+  background:#111a34ed;
+  margin-bottom:8px;
+  overflow-wrap:anywhere;
+}
+
+.progress {
+  height:9px;
+  background:#050817;
+  border-radius:20px;
+  overflow:hidden;
+  margin:8px 0;
+}
+
+.progress span {
+  display:block;
+  height:100%;
+  background:linear-gradient(90deg,#55d8ff,#b79aff,#ffd987);
+  transition:width .3s;
+}
+
+.gold {color:var(--gold)}
+.cyan {color:var(--cyan)}
+.muted {color:var(--muted)}
+.hidden {display:none!important}
+.good {color:#8dffb0}
+.notice {
+  padding:12px;
+  margin-top:12px;
+  border:1px solid #80e8ff35;
+  border-radius:10px;
+  background:#80e8ff0b;
+  color:var(--muted);
+}
+.row {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.cultivation-scene {
+  height:130px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:
+    radial-gradient(circle,#8f7cff40,transparent 60%),
+    linear-gradient(#121a42,#080d20);
+  overflow:hidden;
+}
+.cultivation-scene::after {
+  content:"☯";
+  color:var(--gold);
+  font-size:65px;
+  text-shadow:0 0 25px #bca2ff;
+  animation:breathe 3s infinite ease-in-out;
+}
+.cloud {
+  position:fixed;
+  z-index:-1;
+  pointer-events:none;
+  width:40vw;
+  height:100px;
+  left:-45vw;
+  border-radius:50%;
+  background:radial-gradient(ellipse,#c2d8ff18,transparent 70%);
+  filter:blur(12px);
+  animation:cloudMove 60s linear infinite;
+}
+.cloud:nth-child(2) {top:35%;animation-duration:80s}
+.cloud:nth-child(3) {top:65%;animation-duration:95s}
+
+@keyframes cloudMove {
+  to {transform:translateX(200vw)}
+}
+@keyframes breathe {
+  50% {transform:scale(1.12);filter:brightness(1.5)}
+}
+
+@media(max-width:700px) {
+  .layout {grid-template-columns:1fr}
+  .nav {
+    display:flex;
+    overflow-x:auto;
+    gap:5px;
+    padding:8px;
+  }
+  .nav button {
+    width:auto;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .grid {grid-template-columns:1fr}
+  .container {padding:9px}
+}
+</style>
+</head>
+
+<body>
+<div class="cloud"></div>
+<div class="cloud"></div>
+<div class="cloud"></div>
+
+<header>
+  <div class="brand">☯ TU TIÊN ĐẠI ĐẠO 3.1</div>
+  <small>TIÊN GIỚI HUYỀN ẢO</small>
+</header>
+
+<div class="container">
+
+  <div id="loginBox" class="panel">
+    <h1>Tiên Môn Khai Mở</h1>
+    <p>Nhập thông tin để bước vào tiên giới.</p>
+
+    <label for="username">Tên nhân vật</label>
+    <input id="username" maxlength="24" autocomplete="username"
+      placeholder="Tên đạo hữu">
+
+    <label for="password">Mật khẩu</label>
+    <input id="password" type="password" autocomplete="current-password"
+      placeholder="Mật khẩu">
+
+    <button onclick="login()">Đăng nhập / Đăng ký</button>
+
+    <div class="notice">
+      Dữ liệu tài khoản được lưu trên trình duyệt của thiết bị này.
+      Đây chưa phải hệ thống tài khoản trực tuyến.
+    </div>
+  </div>
+
+  <div id="game" class="hidden">
+
+    <section class="hero">
+      <h1>Tiên Lộ Vô Cương</h1>
+      <p>Phá cảnh nghịch thiên · Tu đạo trường sinh</p>
+      <p>
+        Đạo hữu: <b id="playerName" class="cyan"></b><br>
+        Cảnh giới: <b id="realm" class="gold"></b><br>
+        Tầng: <b id="layer"></b> |
+        Sức mạnh: <b id="power"></b>
+      </p>
+    </section>
+
+    <div class="stats">
+      <div class="stat">
+        <small>✨ Tu vi</small>
+        <strong id="xp"></strong>
+        <div class="progress"><span id="xpBar"></span></div>
+      </div>
+      <div class="stat">
+        <small>💎 Linh thạch</small>
+        <strong id="stones"></strong>
+      </div>
+      <div class="stat">
+        <small>❤️ Sinh lực</small>
+        <strong id="hp"></strong>
+        <div class="progress"><span id="hpBar"></span></div>
+      </div>
+      <div class="stat">
+        <small>☁ Linh khí</small>
+        <strong id="qi"></strong>
+      </div>
+    </div>
+
+    <div class="layout">
+      <nav class="nav panel" id="nav"></nav>
+      <main id="view"></main>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* =========================================
+   TU TIÊN ĐẠI ĐẠO 3.1
+   GAME CỐT LÕI
+========================================= */
+
+const REALMS = [
+  "Phàm Nhân","Luyện Khí","Trúc Cơ","Kim Đan","Nguyên Anh",
+  "Hóa Thần","Luyện Hư","Hợp Thể","Đại Thừa","Độ Kiếp",
+  "Chân Tiên","Kim Tiên","Đại La Kim Tiên","Tiên Quân","Tiên Đế"
+];
+
+const NAVS = [
+  ["home","🏯 Tổng quan"],
+  ["cultivate","☯ Tu luyện"],
+  ["battle","⚔ Chiến đấu"],
+  ["character","🧙 Nhân vật"],
+  ["inventory","🎒 Túi đồ"],
+  ["quests","📜 Nhiệm vụ"],
+  ["pets","🐉 Linh thú"],
+  ["realm","🌌 Bí cảnh"],
+  ["sect","🏮 Tông môn"],
+  ["shop","🛒 Cửa hàng"],
+  ["achievements","🏆 Thành tựu"],
+  ["journal","📖 Nhật ký"],
+  ["data","💾 Dữ liệu"]
+];
+
+function newPlayer(name) {
+  return {
+    user:name,
+    realm:0,
+    layer:1,
+    xp:0,
+    qi:0,
+    stones:100,
+    hp:100,
+    maxHp:100,
+    basePower:10,
+    attack:10,
+    defense:5,
+
+    autoCultivate:false,
+    autoBreak:false,
+    autoFight:false,
+
+    pet:null,
+    petLevel:1,
+    sect:null,
+
+    kills:0,
+    breaks:0,
+    cultivations:0,
+    expedition:1,
+    tower:0,
+
+    inventory:{
+      "Tụ Khí Đan":3,
+      "Hồi Xuân Đan":2
+    },
+
+    quests:{},
+    logs:[]
+  };
+}
+
+let player = null;
+let currentTab = "home";
+let gameTimer = null;
+
+function $(id) {
+  return document.getElementById(id);
+}
+
+function esc(text) {
+  return String(text ?? "").replace(/[&<>"']/g, ch => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#39;"
+  }[ch]));
+}
+
+function requiredXP() {
+  if (!player) return 100;
+  return Math.floor(
+    100 * Math.pow(1.48, player.layer - 1) *
+    (1 + player.realm * 0.75)
+  );
+}
+
+function getPower() {
+  if (!player) return 0;
+  return player.basePower
+    + player.realm * 30
+    + (player.layer - 1) * 5
+    + (player.pet ? player.petLevel * 12 : 0);
+}
+
+function record(message) {
+  if (!player) return;
+  player.logs.unshift(
+    new Date().toLocaleTimeString("vi-VN") + " · " + message
+  );
+  player.logs = player.logs.slice(0,100);
+}
+
+function notify(message) {
+  let box = $("gameNotice");
+
+  if (!box) {
+    box = document.createElement("div");
+    box.id = "gameNotice";
+    box.style.cssText =
+      "position:fixed;bottom:18px;left:50%;transform:translateX(-50%);" +
+      "z-index:999;background:#101a34;border:1px solid #c4b1ff;" +
+      "border-radius:12px;padding:12px 18px;max-width:92%;" +
+      "text-align:center;color:white;box-shadow:0 8px 30px #0008;";
+    document.body.appendChild(box);
+  }
+
+  box.textContent = message;
+  box.style.display = "block";
+
+  clearTimeout(window.noticeTimer);
+  window.noticeTimer = setTimeout(() => {
+    box.style.display = "none";
+  },2600);
+}
+
+/* ĐĂNG NHẬP */
+
+function login() {
+  const name = $("username").value.trim();
+  const password = $("password").value;
+
+  if (!name || !password) {
+    notify("Vui lòng nhập tên nhân vật và mật khẩu.");
+    return;
+  }
+
+  if (name.length > 24) {
+    notify("Tên nhân vật tối đa 24 ký tự.");
+    return;
+  }
+
+  const accountKey = "ttdd_account_" + name;
+  const saveKey = "ttdd_player_" + name;
+  const oldPassword = localStorage.getItem(accountKey);
+
+  if (oldPassword !== null && oldPassword !== password) {
+    notify("Mật khẩu không chính xác.");
+    return;
+  }
+
+  if (oldPassword === null) {
+    localStorage.setItem(accountKey,password);
+  }
+
+  try {
+    const saved = localStorage.getItem(saveKey);
+
+    if (saved) {
+      const data = JSON.parse(saved);
+      player = Object.assign(newPlayer(name),data);
+      player.user = name;
+      normalizePlayer();
+    } else {
+      player = newPlayer(name);
+      record("Đạo hữu lần đầu bước vào Tiên Giới.");
+    }
+  } catch (error) {
+    player = newPlayer(name);
+    record("Khởi tạo lại dữ liệu nhân vật.");
+  }
+
+  currentTab = "home";
+
+  $("loginBox").classList.add("hidden");
+  $("game").classList.remove("hidden");
+
+  saveGame();
+  startGame();
+  renderGame();
+
+  notify("Tiên Môn đã mở! Chúc đạo hữu tu luyện thành công.");
+}
+
+function normalizePlayer() {
+  const defaults = newPlayer(player.user);
+
+  for (const key in defaults) {
+    if (player[key] === undefined || player[key] === null) {
+      player[key] = defaults[key];
+    }
+  }
+
+  player.realm = Math.max(0,Math.min(REALMS.length-1,Number(player.realm)||0));
+  player.layer = Math.max(1,Math.min(10,Number(player.layer)||1));
+  player.xp = Math.max(0,Number(player.xp)||0);
+  player.qi = Math.max(0,Number(player.qi)||0);
+  player.stones = Math.max(0,Number(player.stones)||0);
+  player.maxHp = Math.max(1,Number(player.maxHp)||100);
+  player.hp = Math.max(0,Math.min(player.maxHp,Number(player.hp)||0));
+
+  if (!player.inventory || typeof player.inventory !== "object") {
+    player.inventory = {};
+  }
+  if (!player.quests || typeof player.quests !== "object") {
+    player.quests = {};
+  }
+  if (!Array.isArray(player.logs)) player.logs = [];
+}
+
+function saveGame() {
+  if (!player) return;
+
+  try {
+    localStorage.setItem(
+      "ttdd_player_" + player.user,
+      JSON.stringify(player)
+    );
+  } catch (error) {
+    notify("Không thể lưu dữ liệu. Hãy kiểm tra bộ nhớ trình duyệt.");
+  }
+}
+
+function logout() {
+  if (!player) return;
+
+  saveGame();
+  clearInterval(gameTimer);
+  gameTimer = null;
+  player = null;
+
+  $("game").classList.add("hidden");
+  $("loginBox").classList.remove("hidden");
+  $("password").value = "";
+
+  notify("Đã đăng xuất.");
+}
+
+function exportSave() {
+  if (!player) return;
+
+  const blob = new Blob(
+    [JSON.stringify(player,null,2)],
+    {type:"application/json"}
+  );
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "tu-tien-dai-dao-save.json";
+  a.click();
+
+  setTimeout(() => URL.revokeObjectURL(url),1000);
+}
+
+function importSaveFile(file) {
+  if (!player || !file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function() {
+    try {
+      const data = JSON.parse(reader.result);
+
+      if (!data.user || data.user !== player.user) {
+        notify("File lưu không thuộc nhân vật hiện tại.");
+        return;
+      }
+
+      player = Object.assign(newPlayer(data.user),data);
+      normalizePlayer();
+
+      saveGame();
+      renderGame();
+      notify("Nhập dữ liệu thành công.");
+    } catch (error) {
+      notify("File dữ liệu không hợp lệ.");
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+/* THÔNG SỐ */
+
+function renderStats() {
+  if (!player) return;
+
+  const need = requiredXP();
+
+  $("playerName").textContent = player.user;
+  $("realm").textContent = REALMS[player.realm] || "Tiên Đế";
+  $("layer").textContent = player.layer + "/10";
+  $("power").textContent = getPower();
+
+  $("xp").textContent =
+    Math.floor(player.xp).toLocaleString("vi-VN") +
+    " / " + need.toLocaleString("vi-VN");
+
+  $("stones").textContent = player.stones.toLocaleString("vi-VN");
+  $("hp").textContent = player.hp + " / " + player.maxHp;
+  $("qi").textContent = player.qi.toLocaleString("vi-VN");
+
+  $("xpBar").style.width =
+    Math.max(0,Math.min(100,player.xp/need*100)) + "%";
+
+  $("hpBar").style.width =
+    Math.max(0,Math.min(100,player.hp/player.maxHp*100)) + "%";
+}
+
+/* ĐIỀU HƯỚNG */
+
+function renderNav() {
+  $("nav").innerHTML = NAVS.map(([id,label]) => `
+    <button class="${currentTab===id?"active":""}"
+      onclick="openTab('${id}')">${label}</button>
+  `).join("");
+}
+
+function openTab(tab) {
+  currentTab = tab;
+  renderNav();
+  renderView();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* CƠ CHẾ ĐỘT PHÁ TẦNG */
+
+function doLayerBreakthrough(isAuto=false) {
+  if (!player || player.layer >= 10) return false;
+
+  const need = requiredXP();
+
+  if (player.xp < need) return false;
+
+  player.xp -= need;
+  player.layer++;
+
+  player.basePower += 5;
+  player.maxHp += 10;
+  player.hp = player.maxHp;
+  player.breaks++;
+
+  record((isAuto ? "Tự động " : "") +
+    "đột phá thành công lên tầng " + player.layer + ".");
+
+  return true;
+}
+
+/* TU LUYỆN THỦ CÔNG */
+
+function cultivate() {
+  if (!player) return;
+
+  player.xp += 20;
+  player.qi += 5;
+  player.cultivations++;
+
+  if (player.layer < 10 && player.xp >= requiredXP()) {
+    notify("Tu vi đã viên mãn! Có thể đột phá.");
+  } else if (player.layer === 10 && player.xp >= requiredXP()) {
+    player.xp = requiredXP();
+    notify("Tu vi tầng 10 đã viên mãn! Hãy nghênh đón thiên kiếp.");
+  } else {
+    notify("Tu luyện thành công: +20 tu vi, +5 linh khí.");
+  }
+
+  record("Vận công tu luyện.");
+  saveGame();
+  renderGame();
+}
+
+/* AUTO TU LUYỆN
+   Tự tăng tu vi và tự đột phá các tầng nhỏ.
+   Tầng 10 không tự động vượt thiên kiếp.
+*/
+
+function toggleAutoCultivation() {
+  if (!player) return;
+
+  player.autoCultivate = !player.autoCultivate;
+
+  record(player.autoCultivate
+    ? "Bắt đầu tự động tu luyện."
+    : "Dừng tự động tu luyện.");
+
+  saveGame();
+  renderGame();
+
+  notify(player.autoCultivate
+    ? "Đã bật Auto Tu Luyện: tự tăng tu vi và đột phá tầng nhỏ."
+    : "Đã tắt Auto Tu Luyện.");
+}
+
+/* GIỮ NÚT AUTO ĐỘT PHÁ RIÊNG CHO NGƯỜI MUỐN DÙNG */
+function toggleAutoBreak() {
+  if (!player) return;
+
+  player.autoBreak = !player.autoBreak;
+  saveGame();
+  renderGame();
+
+  notify(player.autoBreak
+    ? "Đã bật chế độ Auto Đột Phá bổ sung."
+    : "Đã tắt chế độ Auto Đột Phá bổ sung.");
+}
+
+/* ĐỘT PHÁ THỦ CÔNG */
+
+function breakthrough() {
+  if (!player) return;
+
+  if (player.xp < requiredXP()) {
+    notify("Tu vi chưa đủ, hãy tiếp tục tu luyện.");
+    return;
+  }
+
+  if (player.layer < 10) {
+    doLayerBreakthrough(false);
+    saveGame();
+    renderGame();
+    notify("Đột phá thành công! Tầng " + player.layer);
+  } else {
+    showTribulation();
+  }
+}
+
+/* THIÊN KIẾP */
+
+function showTribulation() {
+  if (!player) return;
+
+  const nextRealm = player.realm + 1;
+
+  if (nextRealm >= REALMS.length) {
+    notify("Bạn đã đạt cảnh giới cao nhất!");
+    return;
+  }
+
+  if (player.xp < requiredXP()) {
+    notify("Tu vi tầng 10 chưa viên mãn.");
+    return;
+  }
+
+  const accepted = confirm(
+    "Bạn đã đạt tầng 10.\n\n" +
+    "Nghênh đón thiên kiếp để tiến vào " +
+    REALMS[nextRealm] + "?"
+  );
+
+  if (!accepted) return;
+
+  const chance = Math.min(
+    0.95,
+    0.55 + getPower()/800 + player.defense/300
+  );
+
+  document.body.animate(
+    [
+      {filter:"brightness(1)"},
+      {filter:"brightness(2.2)"},
+      {filter:"brightness(1)"}
+    ],
+    {duration:700}
+  );
+
+  if (Math.random() < chance) {
+    player.realm++;
+    player.layer = 1;
+    player.xp = 0;
+
+    player.basePower += 25;
+    player.attack += 10;
+    player.defense += 5;
+    player.maxHp += 40;
+    player.hp = player.maxHp;
+    player.stones += 50;
+
+    record("Thiên kiếp thành công! Đạt " + REALMS[player.realm] + ".");
+    notify("Thiên kiếp thành công! Đã tiến vào " + REALMS[player.realm] + ".");
+  } else {
+    player.hp = Math.max(1,player.hp-35);
+    player.stones = Math.max(0,player.stones-20);
+
+    record("Thiên kiếp thất bại.");
+    notify("Thiên kiếp thất bại! Mất 35 sinh lực và tối đa 20 linh thạch.");
+  }
+
+  saveGame();
+  renderGame();
+}
+
+/* CHIẾN ĐẤU */
+
+function battle() {
+  if (!player) return;
+
+  if (player.hp <= 0) {
+    player.hp = Math.max(1,Math.floor(player.maxHp*0.25));
+    notify("Bạn được đưa về đạo trường để hồi phục.");
+    saveGame();
+    renderGame();
+    return;
+  }
+
+  const enemyPower =
+    8 + player.expedition*12 + player.realm*18 +
+    Math.floor(Math.random()*12);
+
+  const myPower =
+    player.attack + player.realm*5 + player.layer*2 +
+    Math.floor(Math.random()*10);
+
+  if (myPower >= enemyPower*0.65) {
+    const reward = 12 + player.expedition*3 +
+      Math.floor(Math.random()*12);
+
+    player.stones += reward;
+    player.xp = Math.min(requiredXP(),player.xp+18);
+    player.kills++;
+
+    if (Math.random() < 0.18) {
+      player.inventory["Tụ Khí Đan"] =
+        (player.inventory["Tụ Khí Đan"]||0)+1;
+    }
+
+    record("Đánh bại yêu thú, nhận " + reward + " linh thạch.");
+    notify("Chiến thắng! +" + reward + " linh thạch.");
+  } else {
+    const damage = Math.max(5,enemyPower-myPower);
+    player.hp = Math.max(0,player.hp-damage);
+
+    record("Bị yêu thú gây thương tích.");
+    notify("Đối thủ quá mạnh! Mất " + damage + " sinh lực.");
+  }
+
+  saveGame();
+  renderGame();
+}
+
+/* AUTO CHIẾN — ĐÃ BỔ SUNG HÀM BỊ THIẾU */
+
+function toggleAutoFight() {
+  if (!player) return;
+
+  player.autoFight = !player.autoFight;
+
+  record(player.autoFight
+    ? "Bật tự động chiến đấu."
+    : "Tắt tự động chiến đấu.");
+
+  saveGame();
+  renderGame();
+
+  notify(player.autoFight
+    ? "Đã bật Auto Chiến."
+    : "Đã tắt Auto Chiến.");
+}
+
+/* VƯỢT ẢI */
+
+function clearStage() {
+  if (!player) return;
+
+  if (player.hp < 20) {
+    notify("Sinh lực quá thấp. Hãy hồi phục trước.");
+    return;
+  }
+
+  const reward = 40 + player.expedition*10;
+
+  player.stones += reward;
+  player.xp = Math.min(requiredXP(),player.xp+30);
+  player.expedition++;
+
+  record("Vượt ải thành công, nhận " + reward + " linh thạch.");
+  saveGame();
+  renderGame();
+
+  notify("Vượt ải thành công! +" + reward + " linh thạch.");
+}
+
+/* THÔNG THIÊN THÁP */
+
+function climbTower() {
+  if (!player) return;
+
+  if (player.hp < 25) {
+    notify("Sinh lực không đủ để tiếp tục leo tháp.");
+    return;
+  }
+
+  if (getPower() < player.tower*18+20) {
+    player.hp = Math.max(1,player.hp-15);
+    notify("Thất bại tại Thông Thiên Tháp! Mất 15 sinh lực.");
+  } else {
+    player.tower++;
+    player.stones += 25;
+    player.xp = Math.min(requiredXP(),player.xp+25);
+    notify("Vượt tầng " + player.tower + " thành công!");
+  }
+
+  record("Thử thách Thông Thiên Tháp.");
+  saveGame();
+  renderGame();
+}
+
+/* HỒI PHỤC */
+
+function heal() {
+  if (!player) return;
+
+  if (player.stones < 20) {
+    notify("Không đủ 20 linh thạch.");
+    return;
+  }
+
+  player.stones -= 20;
+  player.hp = player.maxHp;
+
+  record("Dùng linh thạch hồi phục sinh lực.");
+  saveGame();
+  renderGame();
+
+  notify("Sinh lực đã hồi phục.");
+}
+
+/* VÒNG LẶP TỰ ĐỘNG */
+
+function startGame() {
+  clearInterval(gameTimer);
+
+  gameTimer = setInterval(() => {
+    if (!player) return;
+
+    let changed = false;
+
+    if (player.autoCultivate) {
+      player.qi += 5;
+      player.cultivations++;
+
+      if (player.layer < 10) {
+        player.xp += 20;
+
+        /* Đột phá liên tục nếu tu vi tích lũy đủ.
+           Dừng ở tầng 10 để chờ người chơi độ kiếp. */
+        let safety = 0;
+
+        while (
+          player.layer < 10 &&
+          player.xp >= requiredXP() &&
+          safety < 10
+        ) {
+          if (!doLayerBreakthrough(true)) break;
+          safety++;
+        }
+      } else {
+        /* Ở tầng 10, không tích lũy tu vi vô hạn. */
+        player.xp = Math.min(requiredXP(),player.xp+20);
+      }
+
+      changed = true;
+    }
+
+    /* AutoBreak vẫn có thể bật riêng nếu người chơi tắt AutoCultivate
+       rồi muốn tự động xử lý phần tu vi đang có. */
+    if (player.autoBreak && !player.autoCultivate &&
+        player.layer < 10 && player.xp >= requiredXP()) {
+      doLayerBreakthrough(true);
+      changed = true;
+    }
+
+    if (player.autoFight) {
+      if (player.hp > 0) {
+        const enemy = 8 + player.expedition*12 + player.realm*18;
+        const attack = player.attack + player.realm*5 + player.layer*2;
+
+        if (attack >= enemy*0.65) {
+          player.stones += 10;
+          player.kills++;
+          player.xp = Math.min(requiredXP(),player.xp+10);
+
+          if (Math.random() < 0.05) {
+            player.inventory["Tụ Khí Đan"] =
+              (player.inventory["Tụ Khí Đan"]||0)+1;
+          }
+        } else {
+          player.hp = Math.max(0,player.hp-3);
+        }
+      } else {
+        player.hp = Math.max(1,Math.floor(player.maxHp*0.25));
+      }
+
+      changed = true;
+    }
+
+    if (changed) {
+      saveGame();
+      renderStats();
+
+      /* Cập nhật các nút bật/tắt khi đang xem trang game. */
+      if (currentTab === "home" ||
+          currentTab === "cultivate" ||
+          currentTab === "battle") {
+        renderView();
+      }
+    }
+  },1000);
+}
+</script>
+
+<script>
+/* =========================================
+   GIAO DIỆN VÀ CÁC HỆ THỐNG BỔ SUNG
+========================================= */
+
+function renderGame() {
+  if (!player) return;
+  renderStats();
+  renderNav();
+  renderView();
+}
+
+function renderView() {
+  if (!player) return;
+
+  let html = "";
+
+  switch (currentTab) {
+    case "home":
+      html = `
+      <section class="panel">
+        <h2>🏯 Đạo trường của bạn</h2>
+
+        <div class="grid">
+          <div class="card">
+            <h3>☯ Tu luyện</h3>
+            <p>Hấp thu linh khí, tích lũy tu vi.</p>
+            <button onclick="cultivate()">Tu luyện +20</button>
+            <button onclick="toggleAutoCultivation()">
+              ${player.autoCultivate?"Tắt tự tu luyện":"Bật tự tu luyện"}
+            </button>
+          </div>
+
+          <div class="card">
+            <h3>⚡ Đột phá</h3>
+            <p>Tu vi: ${Math.floor(player.xp)}/${requiredXP()}</p>
+            <p>Tầng hiện tại: ${player.layer}/10</p>
+            <button onclick="breakthrough()">Đột phá / Độ kiếp</button>
+          </div>
+
+          <div class="card">
+            <h3>⚔ Chiến đấu</h3>
+            <p>Đánh yêu thú để kiếm linh thạch.</p>
+            <button onclick="battle()">Khiêu chiến</button>
+            <button onclick="toggleAutoFight()">
+              ${player.autoFight?"Tắt Auto Chiến":"Bật Auto Chiến"}
+            </button>
+          </div>
+
+          <div class="card">
+            <h3>🌠 Tiên lộ</h3>
+            <p>Đã đánh bại ${player.kills} yêu thú.</p>
+            <p>Đã vượt ${player.tower} tầng tháp.</p>
+            <button onclick="openTab('realm')">Khám phá bí cảnh</button>
+          </div>
+        </div>
+
+        <h2>✨ Linh đài tu luyện</h2>
+        <div class="cultivation-scene"></div>
+        <p class="muted">
+          Linh khí hội tụ, tiên quang lưu chuyển.
+          Hãy kiên trì tu luyện để bước lên đỉnh đại đạo.
+        </p>
+
+        <div class="notice">
+          Auto Tu Luyện: tự tăng tu vi, linh khí và tự đột phá các tầng nhỏ.
+          Khi đạt tầng 10, bạn cần tự bấm Đột phá / Độ kiếp.
+        </div>
+      </section>`;
+      break;
+
+    case "cultivate":
+      html = `
+      <section class="panel">
+        <h2>☯ Tu luyện đại đạo</h2>
+        <div class="cultivation-scene"></div>
+        <p>Tu vi: ${Math.floor(player.xp)}/${requiredXP()}</p>
+        <div class="progress">
+          <span style="width:${Math.min(100,player.xp/requiredXP()*100)}%"></span>
+        </div>
+
+        <p>Linh khí: <b class="cyan">${player.qi}</b></p>
+        <p>Trạng thái Auto Tu Luyện:
+          <b class="${player.autoCultivate?"good":"muted"}">
+            ${player.autoCultivate?"ĐANG BẬT":"ĐANG TẮT"}
+          </b>
+        </p>
+
+        <button onclick="cultivate()">Vận công +20 tu vi</button>
+        <button onclick="toggleAutoCultivation()">
+          ${player.autoCultivate?"Dừng treo máy":"Bật Auto Tu Luyện"}
+        </button>
+        <button onclick="toggleAutoBreak()">
+          ${player.autoBreak?"Tắt Auto Đột Phá bổ sung":"Bật Auto Đột Phá bổ sung"}
+        </button>
+        <button onclick="breakthrough()">Đột phá / Độ kiếp</button>
+
+        <div class="notice">
+          Auto Tu Luyện đã bao gồm tự đột phá tầng nhỏ.
+          Auto Đột Phá bổ sung là lựa chọn riêng.
+          Đạt tầng 10 cần chủ động độ kiếp để lên đại cảnh giới.
+        </div>
+      </section>`;
+      break;
+
+    case "battle":
+      html = `
+      <section class="panel">
+        <h2>⚔ Chiến đấu</h2>
+
+        <div class="card">
+          <h3>Yêu thú hoang dã</h3>
+          <p>Độ nguy hiểm: ${player.expedition}</p>
+          <button onclick="battle()">Giao chiến</button>
+        </div>
+
+        <div class="card">
+          <h3>Chinh phạt ải</h3>
+          <p>Ải hiện tại: ${player.expedition}</p>
+          <button onclick="clearStage()">Vượt ải</button>
+        </div>
+
+        <div class="card">
+          <h3>Thông Thiên Tháp</h3>
+          <p>Đã vượt tầng: ${player.tower}</p>
+          <button onclick="climbTower()">Leo tháp</button>
+        </div>
+
+        <div class="card">
+          <h3>Tự động chiến đấu</h3>
+          <p>Trạng thái:
+            <b class="${player.autoFight?"good":"muted"}">
+              ${player.autoFight?"ĐANG BẬT":"ĐANG TẮT"}
+            </b>
+          </p>
+          <button onclick="toggleAutoFight()">
+            ${player.autoFight?"Tắt Auto Chiến":"Bật Auto Chiến"}
+          </button>
+        </div>
+      </section>`;
+      break;
+
+    case "character":
+      html = `
+      <section class="panel">
+        <h2>🧙 Thông tin nhân vật</h2>
+        <div class="card">
+          <p>Tên đạo hữu: <b>${esc(player.user)}</b></p>
+          <p>Cảnh giới: <b class="gold">${REALMS[player.realm]}</b></p>
+          <p>Tầng tu luyện: ${player.layer}/10</p>
+          <p>Sức mạnh: ${getPower()}</p>
+          <p>Công kích: ${player.attack+player.realm*5+player.layer*2}</p>
+          <p>Phòng ngự: ${player.defense+player.realm*3}</p>
+          <p>Số lần đột phá: ${player.breaks}</p>
+          <p>Số lần tu luyện: ${player.cultivations}</p>
+          <p>Yêu thú đã đánh bại: ${player.kills}</p>
+        </div>
+        <button onclick="heal()">Hồi phục sinh lực · 20 linh thạch</button>
+      </section>`;
+      break;
+
+    case "inventory":
+      html = `
+      <section class="panel">
+        <h2>🎒 Túi đồ</h2>
+        ${Object.keys(player.inventory).length
+          ?Object.entries(player.inventory).map(([name,count])=>`
+            <div class="card">
+              <div class="row">
+                <b>${esc(name)}</b>
+                <span>Số lượng: ${count}</span>
+              </div>
+              <button onclick="useItem('${esc(name)}')">Sử dụng</button>
+            </div>`).join("")
+          :'<p class="muted">Túi đồ đang trống.</p>'}
+      </section>`;
+      break;
+
+    case "quests": {
+      const questList = [
+        ["cultivate","Tu luyện 5 lần",player.cultivations,5,30],
+        ["kills","Đánh bại 3 yêu thú",player.kills,3,50],
+        ["breaks","Đột phá 2 lần",player.breaks,2,80]
+      ];
+
+      html = `
+      <section class="panel">
+        <h2>📜 Nhiệm vụ tu tiên</h2>
+        ${questList.map(q=>`
+          <div class="card">
+            <h3>${q[1]}</h3>
+            <p>Tiến độ: ${Math.min(q[2],q[3])}/${q[3]}</p>
+            <div class="progress">
+              <span style="width:${Math.min(100,q[2]/q[3]*100)}%"></span>
+            </div>
+            ${player.quests[q[0]]
+              ?'<span class="good">Đã nhận thưởng</span>'
+              :`<button onclick="claimQuest('${q[0]}',${q[3]},${q[4]})">Nhận thưởng</button>`}
+          </div>`).join("")}
+      </section>`;
+      break;
+    }
+
+    case "pets":
+      html = `
+      <section class="panel">
+        <h2>🐉 Linh thú</h2>
+        <div class="cultivation-scene"></div>
+        <div class="card">
+          <h3>${esc(player.pet||"Chưa có linh thú")}</h3>
+          <p>${player.pet
+            ?"Cấp linh thú: "+player.petLevel
+            :"Kết duyên cùng linh thú để tăng sức mạnh."}</p>
+          ${player.pet
+            ?'<button onclick="feedPet()">Nuôi dưỡng · 50 linh thạch</button>'
+            :'<button onclick="getPet()">Tìm linh thú · 150 linh thạch</button>'}
+        </div>
+      </section>`;
+      break;
+
+    case "realm":
+      html = `
+      <section class="panel">
+        <h2>🌌 Bí cảnh tiên giới</h2>
+        <p class="muted">Khám phá bí cảnh để thu thập tài nguyên.</p>
+        ${[
+          ["Rừng U Minh",0,"🌲"],
+          ["Động Thiên Phúc Địa",2,"⛰️"],
+          ["Cổ Chiến Trường",5,"⚔️"],
+          ["Tiên Ma Cấm Khu",8,"🌑"]
+        ].map((r,i)=>`
+          <div class="card">
+            <h3>${r[2]} ${r[0]}</h3>
+            <p>Cảnh giới yêu cầu: ${REALMS[r[1]]}</p>
+            <button onclick="exploreRealm(${r[1]},${i})">Khám phá</button>
+          </div>`).join("")}
+      </section>`;
+      break;
+
+    case "sect":
+      html = `
+      <section class="panel">
+        <h2>🏮 Tông môn</h2>
+        <div class="card">
+          <h3>${esc(player.sect||"Tán tu vô môn")}</h3>
+          <p>Gia nhập tông môn để bắt đầu hành trình đồng đạo.</p>
+          <button onclick="joinSect()">Gia nhập Thanh Vân Tông</button>
+          <button onclick="contributeSect()">Cống hiến 30 linh thạch</button>
+        </div>
+        <div class="notice">
+          Tông môn hiện hoạt động cục bộ trên thiết bị này.
+        </div>
+      </section>`;
+      break;
+
+    case "shop":
+      html = `
+      <section class="panel">
+        <h2>🛒 Vạn Bảo Các</h2>
+        ${[
+          ["Tụ Khí Đan",30],
+          ["Hồi Xuân Đan",25],
+          ["Trứng Linh Thú",150]
+        ].map(item=>`
+          <div class="card">
+            <h3>${item[0]}</h3>
+            <p>Giá: ${item[1]} linh thạch</p>
+            <button onclick="buyItem('${item[0]}',${item[1]})">Mua</button>
+          </div>`).join("")}
+      </section>`;
+      break;
+
+    case "achievements":
+      html = `
+      <section class="panel">
+        <h2>🏆 Thành tựu</h2>
+        <div class="card">
+          <h3>${player.cultivations>=1?"✅":"🔒"} Bước chân tu tiên</h3>
+          <p>Tu luyện lần đầu tiên.</p>
+        </div>
+        <div class="card">
+          <h3>${player.kills>=1?"✅":"🔒"} Săn yêu nhập môn</h3>
+          <p>Đánh bại yêu thú đầu tiên.</p>
+        </div>
+        <div class="card">
+          <h3>${player.breaks>=1?"✅":"🔒"} Phá cảnh</h3>
+          <p>Đột phá lần đầu tiên.</p>
+        </div>
+        <div class="card">
+          <h3>${player.realm>=1?"✅":"🔒"} Phi thăng đại cảnh</h3>
+          <p>Độ kiếp thành công lần đầu tiên.</p>
+        </div>
+      </section>`;
+      break;
+
+    case "journal":
+      html = `
+      <section class="panel">
+        <h2>📖 Nhật ký tu tiên</h2>
+        ${player.logs.length
+          ?'<ul>'+player.logs.map(s=>'<li>'+esc(s)+'</li>').join("")+'</ul>'
+          :'<p class="muted">Chưa có ghi chép.</p>'}
+      </section>`;
+      break;
+
+    case "data":
+      html = `
+      <section class="panel">
+        <h2>💾 Quản lý dữ liệu</h2>
+        <p>Dữ liệu nhân vật được lưu trên trình duyệt của thiết bị.</p>
+        <button onclick="saveGame();notify('Đã lưu dữ liệu.')">Lưu ngay</button>
+        <button onclick="exportSave()">Xuất file JSON</button>
+        <button onclick="$('importInput').click()">Nhập file JSON</button>
+        <input id="importInput" type="file" accept=".json"
+          onchange="importSaveFile(this.files[0]);this.value=''">
+        <button onclick="logout()">Đăng xuất</button>
+        <div class="notice">
+          Đây là bản lưu cục bộ. Đăng nhập chưa đồng bộ giữa nhiều thiết bị.
+          Mật khẩu cục bộ không thay thế hệ thống xác thực máy chủ an toàn.
+        </div>
+      </section>`;
+      break;
+
+    default:
+      html = '<section class="panel"><h2>Không tìm thấy mục này</h2></section>';
+  }
+
+  $("view").innerHTML = html;
+  renderStats();
+}
+
+/* VẬT PHẨM */
+
+function useItem(name) {
+  if (!player || !player.inventory[name]) {
+    notify("Bạn không còn vật phẩm này.");
+    return;
+  }
+
+  if (name === "Tụ Khí Đan") {
+    player.xp = Math.min(requiredXP(),player.xp+80);
+    player.qi += 20;
+  } else if (name === "Hồi Xuân Đan") {
+    if (player.hp >= player.maxHp) {
+      notify("Sinh lực đang đầy.");
+      return;
+    }
+    player.hp = Math.min(player.maxHp,player.hp+40);
+  } else {
+    notify("Vật phẩm này chưa thể sử dụng.");
+    return;
+  }
+
+  player.inventory[name]--;
+
+  if (player.inventory[name] <= 0) {
+    delete player.inventory[name];
+  }
+
+  record("Sử dụng " + name + ".");
+  saveGame();
+  renderGame();
+  notify("Đã sử dụng " + name + ".");
+}
+
+/* LINH THÚ */
+
+function getPet() {
+  if (!player) return;
+
+  if (player.pet) {
+    notify("Bạn đã có linh thú.");
+    return;
+  }
+
+  if (player.stones < 150) {
+    notify("Cần 150 linh thạch.");
+    return;
+  }
+
+  player.stones -= 150;
+  player.pet = ["Thanh Long","Bạch Hổ","Chu Tước","Huyền Vũ"][
+    Math.floor(Math.random()*4)
+  ];
+  player.petLevel = 1;
+
+  record("Kết duyên linh thú " + player.pet + ".");
+  saveGame();
+  renderGame();
+  notify("Linh thú xuất hiện: " + player.pet + "!");
+}
+
+function feedPet() {
+  if (!player || !player.pet) {
+    notify("Bạn chưa có linh thú.");
+    return;
+  }
+
+  if (player.stones < 50) {
+    notify("Không đủ linh thạch.");
+    return;
+  }
+
+  player.stones -= 50;
+  player.petLevel++;
+
+  record("Nuôi dưỡng linh thú lên cấp " + player.petLevel + ".");
+  saveGame();
+  renderGame();
+  notify("Linh thú đã tăng cấp!");
+}
+
+/* BÍ CẢNH */
+
+function exploreRealm(requiredRealm,index) {
+  if (!player) return;
+
+  if (player.realm < requiredRealm) {
+    notify("Cảnh giới chưa đủ để vào bí cảnh này.");
+    return;
+  }
+
+  const reward = 50 + index*40 + Math.floor(Math.random()*30);
+  player.stones += reward;
+  player.xp = Math.min(requiredXP(),player.xp+25+index*10);
+
+  if (Math.random() < 0.3) {
+    player.inventory["Tụ Khí Đan"] =
+      (player.inventory["Tụ Khí Đan"]||0)+1;
+  }
+
+  record("Khám phá bí cảnh, nhận " + reward + " linh thạch.");
+  saveGame();
+  renderGame();
+  notify("Khám phá thành công! +" + reward + " linh thạch.");
+}
+
+/* TÔNG MÔN */
+
+function joinSect() {
+  if (!player) return;
+
+  if (player.sect) {
+    notify("Bạn đã gia nhập tông môn.");
+    return;
+  }
+
+  if (player.stones < 100) {
+    notify("Cần 100 linh thạch.");
+    return;
+  }
+
+  player.stones -= 100;
+  player.sect = "Thanh Vân Tông";
+
+  record("Gia nhập Thanh Vân Tông.");
+  saveGame();
+  renderGame();
+  notify("Chúc mừng, bạn đã gia nhập Thanh Vân Tông!");
+}
+
+function contributeSect() {
+  if (!player || !player.sect) {
+    notify("Hãy gia nhập tông môn trước.");
+    return;
+  }
+
+  if (player.stones < 30) {
+    notify("Không đủ linh thạch.");
+    return;
+  }
+
+  player.stones -= 30;
+  player.basePower += 3;
+
+  record("Cống hiến cho tông môn, tăng sức mạnh.");
+  saveGame();
+  renderGame();
+  notify("Cống hiến thành công! Sức mạnh tăng.");
+}
+
+/* CỬA HÀNG */
+
+function buyItem(name,price) {
+  if (!player) return;
+
+  if (player.stones < price) {
+    notify("Không đủ linh thạch.");
+    return;
+  }
+
+  if (name === "Trứng Linh Thú" && player.pet) {
+    notify("Bạn đã có linh thú.");
+    return;
+  }
+
+  player.stones -= price;
+
+  if (name === "Trứng Linh Thú") {
+    player.pet = ["Thanh Long","Bạch Hổ","Chu Tước","Huyền Vũ"][
+      Math.floor(Math.random()*4)
+    ];
+    player.petLevel = 1;
+  } else {
+    player.inventory[name] = (player.inventory[name]||0)+1;
+  }
+
+  record("Mua " + name + " tại Vạn Bảo Các.");
+  saveGame();
+  renderGame();
+  notify("Mua thành công: " + name);
+}
+
+/* NHIỆM VỤ */
+
+function claimQuest(key,goal,reward) {
+  if (!player) return;
+
+  if (player.quests[key]) {
+    notify("Bạn đã nhận thưởng nhiệm vụ này.");
+    return;
+  }
+
+  const progress = {
+    cultivate:player.cultivations,
+    kills:player.kills,
+    breaks:player.breaks
+  }[key]||0;
+
+  if (progress < goal) {
+    notify("Nhiệm vụ chưa hoàn thành.");
+    return;
+  }
+
+  player.quests[key] = true;
+  player.stones += reward;
+
+  record("Hoàn thành nhiệm vụ, nhận " + reward + " linh thạch.");
+  saveGame();
+  renderGame();
+  notify("Nhiệm vụ hoàn thành! +" + reward + " linh thạch.");
+}
+
+/* KHỞI TẠO GIAO DIỆN ĐĂNG NHẬP */
+renderNav();
+</script>
+
+</body>
+</html>
