@@ -829,7 +829,19 @@ function renderNav(){
 $("nav").innerHTML=NAVS.map(([id,label])=>`<button class="${currentTab===id?"active":""}" onclick="openTab('${id}')">${label}</button>`).join("");
 }
 function openTab(tab){currentTab=tab;renderNav();renderView();window.scrollTo({top:0,behavior:"smooth"})}
-function renderGame(){if(!player)return;renderStats();renderNav();renderView()}
+function renderGame(){
+    if(!player) return;
+
+    renderStats();
+    renderNav();
+    renderView();
+
+    const bossContainer = document.getElementById("bossListContainer");
+
+    if(bossContainer){
+        bossContainer.innerHTML = renderBossStatus();
+    }
+}
 
 /* TU LUYỆN VÀ ĐỘT PHÁ */
 function doLayerBreakthrough(){
