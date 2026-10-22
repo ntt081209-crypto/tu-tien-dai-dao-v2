@@ -982,7 +982,7 @@ function startGame() {
 
     // Tăng tu vi mỗi giây
     if (player.xp < need) {
-        player.xp += 20;
+        player.xp += getAutoCultivateRate();
 
         // Không vượt giới hạn tu vi của tầng
         if (player.xp > need) {
