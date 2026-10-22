@@ -1144,6 +1144,8 @@ function challengeBoss(){
     if(!player) return;
 
     const boss = getCurrentBoss();
+    if(!boss) return;
+
     const power = getPower();
     const realmLevel = player.realm + 1;
 
@@ -1152,12 +1154,10 @@ function challengeBoss(){
         return;
     }
 
-    // Khởi tạo máu boss nếu chưa có
     if(!player.bossHP || player.bossHP <= 0){
         player.bossHP = boss.hp;
     }
 
-    // Sát thương người chơi
     const damage = Math.max(
         1,
         Math.floor(power * (0.8 + Math.random() * 0.4))
@@ -1166,20 +1166,25 @@ function challengeBoss(){
     player.bossHP = Math.max(0, player.bossHP - damage);
 
     record(
-        "Tấn công " + boss.name +
-        ", gây " + damage + " sát thương."
+        "⚔️ Tấn công " + boss.name +
+        ", gây " + fmt(damage) + " sát thương."
     );
 
-    // Nếu boss bị đánh bại
+    if(typeof showBossDamage === "function"){
+        showBossDamage(damage);
+    }
+
     if(player.bossHP <= 0){
-        player.bossKills++;
+        player.bossKills = (player.bossKills || 0) + 1;
 
         const rewardMultiplier = Math.pow(1.5, player.realm);
         const stoneReward = Math.floor(boss.reward * rewardMultiplier);
         const xpReward = Math.floor(100 * rewardMultiplier);
 
-        player.stones += stoneReward;
-        player.stonesEarned += stoneReward;
+        player.stones = (player.stones || 0) + stoneReward;
+        player.stonesEarned = (player.stonesEarned || 0) + stoneReward;
+
+        player.inventory = player.inventory || {};
 
         player.inventory["Yêu Thú Nội Đan"] =
             (player.inventory["Yêu Thú Nội Đan"] || 0) + 3;
@@ -1189,29 +1194,40 @@ function challengeBoss(){
 
         player.xp = Math.min(
             requiredXP(),
-            player.xp + xpReward
+            (player.xp || 0) + xpReward
         );
 
-        record("Đánh bại Boss " + boss.name + "!");
+        record("🏆 Đánh bại BOSS " + boss.name + "!");
 
         notify(
-            "Đánh bại Boss! Nhận " +
-            fmt(stoneReward) + " linh thạch và " +
-            fmt(xpReward) + " tu vi."
+            "🏆 ĐẠI THẮNG!\n" +
+            "Đánh bại: " + boss.name + "\n" +
+            "Linh thạch: +" + fmt(stoneReward) + "\n" +
+            "Tu vi: +" + fmt(xpReward) + "\n" +
+            "Yêu Thú Nội Đan: +3\n" +
+            "Linh Thảo: +5"
         );
 
-        player.bossIndex =
-            (player.bossIndex + 1) % BOSS_LIST.length;
+        player.bossIndex = (player.bossIndex || 0) + 1;
+
+        if(player.bossIndex >= BOSS_LIST.length){
+            player.bossIndex = 0;
+            record("🌌 Đã chinh phục toàn bộ BOSS! Vòng khiêu chiến mới bắt đầu.");
+            notify("🌌 Chúc mừng! Bạn đã chinh phục toàn bộ 20 BOSS!");
+        }
 
         player.bossHP = 0;
+
+        if(typeof playBossVictoryEffect === "function"){
+            playBossVictoryEffect();
+        }
     }else{
-        // Boss phản công mạnh dần theo cảnh giới
         const realmMultiplier = Math.pow(1.25, player.realm);
 
         const retaliation = Math.max(
-            5,
+            1,
             Math.floor(
-                (boss.power - Math.floor(player.defense / 2)) *
+                (boss.power - Math.floor((player.defense || 0) / 2)) *
                 realmMultiplier
             )
         );
@@ -1219,19 +1235,92 @@ function challengeBoss(){
         player.hp = Math.max(0, player.hp - retaliation);
 
         record(
-            boss.name + " phản công, gây " +
-            retaliation + " sát thương."
+            "👹 " + boss.name +
+            " phản công, gây " +
+            fmt(retaliation) + " sát thương."
         );
 
         notify(
-            boss.name + " còn " + fmt(player.bossHP) +
-            " HP. Bạn nhận " + fmt(retaliation) +
-            " sát thương."
+            "⚔️ Gây " + fmt(damage) + " sát thương!\n" +
+            "👹 " + boss.name + "\n" +
+            "❤️ BOSS còn: " + fmt(player.bossHP) +
+            "/" + fmt(boss.hp) + " HP\n" +
+            "💥 Bạn nhận: " + fmt(retaliation) + " sát thương."
         );
     }
 
     saveGame();
     renderGame();
+}
+
+function getBossHealthPercent(){
+    const boss = getCurrentBoss();
+    if(!boss || !player) return 0;
+
+    const hp = player.bossHP > 0 ? player.bossHP : boss.hp;
+
+    return Math.max(
+        0,
+        Math.min(100, hp / boss.hp * 100)
+    );
+}
+
+function renderBossStatus(){
+    if(!player) return "";
+
+    const boss = getCurrentBoss();
+    if(!boss) return "";
+
+    const hp = player.bossHP > 0 ? player.bossHP : boss.hp;
+    const percent = Math.max(
+        0,
+        Math.min(100, hp / boss.hp * 100)
+    );
+
+    return `
+        <div class="boss-card">
+            <div class="boss-title">👹 BOSS KHIÊU CHIẾN</div>
+            <div class="boss-name">${boss.name}</div>
+            <div class="boss-stats">
+                <span>❤️ ${fmt(hp)} / ${fmt(boss.hp)} HP</span>
+                <span>⚔️ ${fmt(boss.power)} sức mạnh</span>
+            </div>
+            <div class="boss-hp-track">
+                <div class="boss-hp-fill" style="width:${percent}%"></div>
+            </div>
+            <div class="boss-reward">
+                🪙 Phần thưởng: ${fmt(boss.reward)} linh thạch
+            </div>
+            <div class="boss-progress">
+                BOSS ${Math.min((player.bossIndex || 0) + 1, BOSS_LIST.length)}
+                / ${BOSS_LIST.length}
+            </div>
+        </div>
+    `;
+}
+
+function showBossDamage(damage){
+    const scene = document.getElementById("ttddAnimationScene");
+    if(!scene) return;
+
+    const effect = document.createElement("div");
+    effect.className = "boss-damage-popup";
+    effect.textContent = "-" + fmt(damage);
+
+    scene.appendChild(effect);
+
+    setTimeout(() => effect.remove(), 1200);
+}
+
+function playBossVictoryEffect(){
+    const scene = document.getElementById("ttddAnimationScene");
+    if(!scene) return;
+
+    scene.classList.add("boss-victory");
+
+    setTimeout(() => {
+        scene.classList.remove("boss-victory");
+    }, 1500);
 }
 /* GIAO DIỆN CÁC MỤC */
 function renderView(){
