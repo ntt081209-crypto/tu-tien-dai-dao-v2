@@ -432,16 +432,6 @@ header .brand{font-size:16px;padding-right:45%}
     animation-duration: 8s !important;
   }
 }
-  /* Ẩn tất cả giao diện điều khiển âm thanh */
-
-[id*=“audio” i],
-[class*=“audio” i],
-[id*=“sound” i],
-[class*=“sound” i],
-[id*=“music” i],
-[class*=“music” i] {
-display: none !important;
-}
 </style>
 </head>
 
@@ -1928,42 +1918,56 @@ breakthrough = function() {
     }
   }
 };
-
-console.log("Tu Tiên Đại Đạo 4.2: Đã nạp hoạt ảnh nhân vật.");
-
-console.log("Tu Tiên Đại Đạo 4.1: Đã nạp 20 đan dược và 20 vũ khí.");
   /* ==========================================
-   TU TIÊN ĐẠI ĐẠO 4.3
-   HỆ THỐNG ÂM THANH TIÊN HIỆP
+   TU TIÊN ĐẠI ĐẠO 5.0
+   PHẦN 1: BỘ MÁY ÂM THANH
    ========================================== */
 
 const TTDD_AUDIO = {
     ctx: null,
+    master: null,
     enabled: true,
     volume: 0.35,
     musicTimer: null,
     musicStep: 0,
-    initialized: false
+    initialized: false,
+    lastSound: {},
+    noiseBuffer: null
 };
 
-// Khởi tạo âm thanh sau thao tác của người chơi
+// Khởi tạo hệ thống âm thanh
 function ttddInitAudio() {
     const A = TTDD_AUDIO;
 
     if (!A.ctx) {
-        const AudioContextClass =
+        const AudioClass =
             window.AudioContext || window.webkitAudioContext;
 
-        if (!AudioContextClass) {
-            notify("Trình duyệt không hỗ trợ âm thanh Web Audio.");
+        if (!AudioClass) {
             return false;
         }
 
-        A.ctx = new AudioContextClass();
+        A.ctx = new AudioClass();
+
+        A.master = A.ctx.createGain();
+        A.master.gain.value = A.volume;
+        A.master.connect(A.ctx.destination);
+
+        A.noiseBuffer = A.ctx.createBuffer(
+            1,
+            A.ctx.sampleRate,
+            A.ctx.sampleRate
+        );
+
+        const data = A.noiseBuffer.getChannelData(0);
+
+        for (let i = 0; i < data.length; i++) {
+            data[i] = Math.random() * 2 - 1;
+        }
     }
 
     if (A.ctx.state === "suspended") {
-        A.ctx.resume();
+        A.ctx.resume().catch(() => {});
     }
 
     if (!A.initialized) {
@@ -1974,97 +1978,288 @@ function ttddInitAudio() {
     return true;
 }
 
-// Phát một nốt nhạc
-function ttddTone(freq, duration, type = "sine", volume = 0.3, delay = 0) {
+// Tạo một nốt nhạc với âm sắc tùy chọn
+function ttddPlayNote(
+    frequency,
+    duration = 0.5,
+    instrument = "flute",
+    delay = 0,
+    volume = 0.3
+) {
     const A = TTDD_AUDIO;
 
-    if (!A.enabled || !A.ctx) return;
+    if (!A.enabled || !A.ctx || !A.master) return;
 
     const ctx = A.ctx;
-    const start = ctx.currentTime + delay;
+    const start = ctx.currentTime + Math.max(0, delay);
+    const end = start + Math.max(0.08, duration);
 
-    const osc = ctx.createOscillator();
     const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
 
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, start);
+    filter.type = "lowpass";
+
+    let wave = "sine";
+    let attack = 0.04;
+    let peak = volume;
+    let cutoff = 3500;
+
+    if (instrument === "flute") {
+        wave = "sine";
+        attack = 0.12;
+        cutoff = 2600;
+        peak = volume * 0.8;
+    }
+
+    if (instrument === "guqin") {
+        wave = "triangle";
+        attack = 0.008;
+        cutoff = 1800;
+        peak = volume;
+    }
+
+    if (instrument === "bell") {
+        wave = "sine";
+        attack = 0.01;
+        cutoff = 5000;
+        peak = volume * 0.7;
+    }
+
+    if (instrument === "power") {
+        wave = "sawtooth";
+        attack = 0.03;
+        cutoff = 1400;
+        peak = volume * 0.7;
+    }
+
+    filter.frequency.setValueAtTime(cutoff, start);
 
     gain.gain.setValueAtTime(0.001, start);
+
     gain.gain.linearRampToValueAtTime(
-        Math.max(0.001, volume * A.volume),
-        start + 0.03
+        Math.max(0.001, peak),
+        start + attack
     );
+
     gain.gain.exponentialRampToValueAtTime(
         0.001,
-        start + Math.max(0.05, duration)
+        end
     );
 
-    osc.connect(gain);
-    gain.connect(ctx.destination);
+    filter.connect(gain);
+    gain.connect(A.master);
 
+    const osc = ctx.createOscillator();
+
+    osc.type = wave;
+    osc.frequency.setValueAtTime(frequency, start);
+
+    if (instrument === "flute") {
+        osc.detune.setValueAtTime(-3, start);
+        osc.detune.linearRampToValueAtTime(3, end);
+    }
+
+    osc.connect(filter);
     osc.start(start);
-    osc.stop(start + duration + 0.05);
+    osc.stop(end + 0.03);
+
+    // Đàn cổ: thêm họa âm tạo cảm giác tiếng gảy dây
+    if (instrument === "guqin") {
+        const harmonic = ctx.createOscillator();
+        const harmonicGain = ctx.createGain();
+
+        harmonic.type = "sine";
+        harmonic.frequency.setValueAtTime(
+            frequency * 2,
+            start
+        );
+
+        harmonicGain.gain.setValueAtTime(
+            Math.max(0.001, peak * 0.18),
+            start
+        );
+
+        harmonicGain.gain.exponentialRampToValueAtTime(
+            0.001,
+            end * 0.7
+        );
+
+        harmonic.connect(harmonicGain);
+        harmonicGain.connect(A.master);
+
+        harmonic.start(start);
+        harmonic.stop(end + 0.03);
+    }
 }
 
-// Hiệu ứng âm thanh
+// Âm thanh gió, linh khí và tiếng kiếm
+function ttddNoise(duration = 0.25, volume = 0.1, delay = 0) {
+    const A = TTDD_AUDIO;
+
+    if (!A.enabled || !A.ctx || !A.noiseBuffer) return;
+
+    const ctx = A.ctx;
+    const start = ctx.currentTime + Math.max(0, delay);
+
+    const source = ctx.createBufferSource();
+    const filter = ctx.createBiquadFilter();
+    const gain = ctx.createGain();
+
+    source.buffer = A.noiseBuffer;
+
+    filter.type = "bandpass";
+    filter.frequency.setValueAtTime(1600, start);
+    filter.Q.value = 0.7;
+
+    gain.gain.setValueAtTime(0.001, start);
+
+    gain.gain.linearRampToValueAtTime(
+        Math.max(0.001, volume),
+        start + 0.025
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        start + duration
+    );
+
+    source.connect(filter);
+    filter.connect(gain);
+    gain.connect(A.master);
+
+    source.start(start);
+    source.stop(start + duration + 0.03);
+}
+
+// Tạo âm thanh trầm cho những sự kiện đặc biệt
+function ttddBass(frequency, duration, delay = 0, volume = 0.2) {
+    ttddPlayNote(
+        frequency,
+        duration,
+        "power",
+        delay,
+        volume
+    );
+}
+  /* ==========================================
+   PHẦN 2: NHẠC CỔ PHONG VÀ HIỆU ỨNG
+   ========================================== */
+
+// Hiệu ứng âm thanh theo từng hành động
 function ttddSound(type) {
     if (!TTDD_AUDIO.enabled) return;
     if (!ttddInitAudio()) return;
 
+    const now = Date.now();
+
+    // Chống phát âm thanh trùng lặp quá nhanh
+    if (
+        TTDD_AUDIO.lastSound[type] &&
+        now - TTDD_AUDIO.lastSound[type] < 100
+    ) {
+        return;
+    }
+
+    TTDD_AUDIO.lastSound[type] = now;
+
     switch (type) {
+
+        // Tu luyện: tiếng đàn cổ nhẹ nhàng
         case "cultivate":
-            ttddTone(220, 0.45, "sine", 0.35);
-            ttddTone(330, 0.55, "sine", 0.25, 0.12);
-            ttddTone(440, 0.65, "triangle", 0.2, 0.25);
+            ttddPlayNote(293.66, 0.7, "guqin", 0, 0.20);
+            ttddPlayNote(392.00, 0.8, "flute", 0.18, 0.16);
+            ttddPlayNote(440.00, 1.0, "flute", 0.38, 0.14);
+            ttddNoise(0.45, 0.035, 0.05);
             break;
 
+        // Đột phá: linh khí bùng nổ
         case "breakthrough":
-            ttddTone(110, 0.8, "sawtooth", 0.3);
-            ttddTone(220, 0.9, "triangle", 0.35, 0.12);
-            ttddTone(440, 1.1, "sine", 0.4, 0.25);
-            ttddTone(660, 1.2, "triangle", 0.3, 0.4);
-            ttddTone(880, 1.4, "sine", 0.25, 0.55);
+            ttddBass(65.41, 1.1, 0, 0.35);
+            ttddBass(130.81, 0.9, 0.12, 0.25);
+            ttddPlayNote(261.63, 1.1, "power", 0.18, 0.24);
+            ttddPlayNote(392.00, 1.2, "bell", 0.32, 0.24);
+            ttddPlayNote(523.25, 1.4, "flute", 0.48, 0.28);
+            ttddPlayNote(783.99, 1.6, "bell", 0.68, 0.22);
+            ttddNoise(0.8, 0.16, 0.05);
             break;
 
+        // Chiến đấu: kiếm khí xé gió
         case "battle":
-            ttddTone(750, 0.12, "sawtooth", 0.35);
-            ttddTone(420, 0.2, "triangle", 0.4, 0.08);
-            ttddTone(180, 0.25, "sawtooth", 0.25, 0.15);
+            ttddNoise(0.20, 0.16, 0);
+            ttddPlayNote(740, 0.18, "power", 0.02, 0.22);
+            ttddPlayNote(370, 0.22, "guqin", 0.10, 0.17);
+            ttddBass(110, 0.25, 0.08, 0.16);
             break;
 
+        // Chiến thắng
         case "victory":
-            ttddTone(392, 0.3, "triangle", 0.3);
-            ttddTone(494, 0.35, "triangle", 0.3, 0.15);
-            ttddTone(587, 0.4, "triangle", 0.3, 0.3);
-            ttddTone(784, 0.8, "sine", 0.3, 0.45);
+            ttddPlayNote(392.00, 0.45, "guqin", 0, 0.22);
+            ttddPlayNote(493.88, 0.50, "flute", 0.15, 0.23);
+            ttddPlayNote(587.33, 0.65, "flute", 0.30, 0.25);
+            ttddPlayNote(783.99, 1.10, "bell", 0.48, 0.25);
+            ttddPlayNote(587.33, 0.75, "guqin", 0.68, 0.14);
             break;
 
+        // Thất bại
         case "defeat":
-            ttddTone(330, 0.35, "sawtooth", 0.25);
-            ttddTone(247, 0.45, "sawtooth", 0.25, 0.2);
-            ttddTone(165, 0.65, "sine", 0.3, 0.4);
+            ttddPlayNote(329.63, 0.45, "guqin", 0, 0.18);
+            ttddPlayNote(246.94, 0.65, "guqin", 0.20, 0.20);
+            ttddBass(110, 0.9, 0.38, 0.20);
             break;
 
+        // Luyện đan
         case "alchemy":
-            ttddTone(523, 0.2, "sine", 0.25);
-            ttddTone(659, 0.25, "triangle", 0.25, 0.12);
-            ttddTone(784, 0.45, "sine", 0.3, 0.25);
+            ttddPlayNote(392.00, 0.30, "bell", 0, 0.18);
+            ttddPlayNote(523.25, 0.40, "bell", 0.14, 0.20);
+            ttddPlayNote(659.25, 0.55, "flute", 0.28, 0.20);
+            ttddNoise(0.3, 0.04, 0.05);
             break;
 
+        // Luyện khí, rèn vũ khí
+        case "forge":
+            ttddNoise(0.12, 0.17, 0);
+            ttddPlayNote(880, 0.12, "bell", 0.02, 0.24);
+            ttddPlayNote(660, 0.20, "bell", 0.13, 0.17);
+            ttddBass(220, 0.20, 0.05, 0.12);
+            break;
+
+        // Nhận thưởng
         case "reward":
-            ttddTone(660, 0.16, "sine", 0.25);
-            ttddTone(880, 0.25, "sine", 0.3, 0.12);
+            ttddPlayNote(523.25, 0.25, "bell", 0, 0.20);
+            ttddPlayNote(659.25, 0.30, "bell", 0.12, 0.22);
+            ttddPlayNote(783.99, 0.50, "flute", 0.25, 0.20);
             break;
 
+        // Boss xuất hiện
         case "boss":
-            ttddTone(90, 0.6, "sawtooth", 0.35);
-            ttddTone(130, 0.7, "square", 0.25, 0.15);
-            ttddTone(65, 0.9, "sawtooth", 0.3, 0.3);
+            ttddBass(55, 1.0, 0, 0.32);
+            ttddBass(82.41, 0.9, 0.15, 0.26);
+            ttddPlayNote(110, 0.9, "power", 0.30, 0.20);
+            ttddNoise(0.65, 0.12, 0.15);
+            break;
+
+        // Khám phá bí cảnh
+        case "explore":
+            ttddPlayNote(293.66, 0.65, "flute", 0, 0.18);
+            ttddPlayNote(369.99, 0.75, "flute", 0.22, 0.20);
+            ttddPlayNote(440.00, 0.90, "bell", 0.45, 0.18);
+            ttddNoise(0.45, 0.04, 0.1);
+            break;
+
+        // Nhận linh thú
+        case "pet":
+            ttddPlayNote(523.25, 0.35, "bell", 0, 0.18);
+            ttddPlayNote(659.25, 0.45, "flute", 0.15, 0.20);
+            ttddPlayNote(880.00, 0.70, "bell", 0.30, 0.22);
+            break;
+
+        default:
+            ttddPlayNote(440, 0.25, "bell", 0, 0.15);
             break;
     }
 }
 
-// Nhạc nền tiên hiệp tạo trực tiếp bằng Web Audio API
+// Nhạc nền cổ phong mô phỏng sáo trúc và đàn cổ
 function ttddStartMusic() {
     const A = TTDD_AUDIO;
 
@@ -2073,48 +2268,133 @@ function ttddStartMusic() {
         A.musicTimer = null;
     }
 
+    // Giai điệu ngũ cung phong cách tiên hiệp
     const melody = [
-        261.63, 329.63, 392.00, 329.63,
-        293.66, 349.23, 440.00, 349.23,
-        261.63, 329.63, 440.00, 392.00,
-        293.66, 349.23, 392.00, 261.63
+        392.00, 440.00, 523.25, 587.33,
+        523.25, 440.00, 392.00, 329.63,
+        349.23, 440.00, 523.25, 659.25,
+        587.33, 523.25, 440.00, 392.00,
+        293.66, 349.23, 392.00, 440.00,
+        523.25, 440.00, 392.00, 329.63
     ];
 
-    A.musicTimer = setInterval(() => {
-        if (!A.enabled || !A.ctx || !player) return;
+    const bass = [
+        196.00, 220.00, 261.63, 220.00,
+        174.61, 196.00, 220.00, 196.00
+    ];
 
+    A.musicStep = 0;
+
+    A.musicTimer = setInterval(() => {
+        if (!A.enabled || !A.ctx || !A.master) return;
         if (A.ctx.state !== "running") return;
 
-        const note = melody[A.musicStep % melody.length];
+        // Không phát nhạc khi chưa vào game
+        if (typeof player === "undefined" || !player) return;
 
-        ttddTone(note, 1.2, "sine", 0.10);
-        ttddTone(note / 2, 1.5, "triangle", 0.07, 0.05);
+        const step = A.musicStep;
+        const note = melody[step % melody.length];
+
+        // Giai điệu chính như tiếng sáo trúc
+        ttddPlayNote(
+            note,
+            1.15,
+            "flute",
+            0,
+            0.075
+        );
+
+        // Đàn cổ điểm xuyết ở các nhịp
+        if (step % 2 === 0) {
+            ttddPlayNote(
+                bass[Math.floor(step / 2) % bass.length],
+                1.4,
+                "guqin",
+                0.05,
+                0.045
+            );
+        }
+
+        // Chuông tiên ở cuối câu nhạc
+        if (step % 8 === 7) {
+            ttddPlayNote(
+                note * 2,
+                1.4,
+                "bell",
+                0.10,
+                0.035
+            );
+        }
 
         A.musicStep++;
-    }, 900);
+    }, 1150);
 }
+  /* ==========================================
+   PHẦN 3: ĐIỀU KHIỂN VÀ TÍCH HỢP GAME
+   ========================================== */
 
-// Bật/tắt âm thanh
+// Bật hoặc tắt toàn bộ âm thanh
 function ttddToggleAudio() {
-    TTDD_AUDIO.enabled = !TTDD_AUDIO.enabled;
+    const A = TTDD_AUDIO;
 
-    if (TTDD_AUDIO.enabled) {
+    A.enabled = !A.enabled;
+
+    if (A.enabled) {
         ttddInitAudio();
-        notify("🔊 Đã bật âm thanh tiên hiệp.");
+
+        if (A.master) {
+            A.master.gain.setTargetAtTime(
+                A.volume,
+                A.ctx.currentTime,
+                0.05
+            );
+        }
+
+        if (typeof notify === "function") {
+            notify("🔊 Đã bật âm thanh tiên hiệp!");
+        }
     } else {
-        notify("🔇 Đã tắt âm thanh.");
+        if (A.master && A.ctx) {
+            A.master.gain.setTargetAtTime(
+                0,
+                A.ctx.currentTime,
+                0.05
+            );
+        }
+
+        if (typeof notify === "function") {
+            notify("🔇 Đã tắt âm thanh.");
+        }
     }
 
     ttddUpdateAudioPanel();
 }
 
-// Điều chỉnh âm lượng
+// Chỉnh âm lượng
 function ttddSetVolume(value) {
-    TTDD_AUDIO.volume = Number(value) / 100;
-    ttddInitAudio();
+    const A = TTDD_AUDIO;
+
+    A.volume = Math.max(
+        0,
+        Math.min(1, Number(value) / 100)
+    );
+
+    if (A.ctx && A.master) {
+        A.master.gain.setTargetAtTime(
+            A.enabled ? A.volume : 0,
+            A.ctx.currentTime,
+            0.04
+        );
+    }
+
+    const text = document.getElementById("ttddVolumeText");
+
+    if (text) {
+        text.textContent = Math.round(A.volume * 100) + "%";
+    }
 }
 
-// Bảng điều khiển âm thanh
+// Tạo bảng điều khiển
 function ttddCreateAudioPanel() {
     if (document.getElementById("ttddAudioPanel")) return;
 
@@ -2127,36 +2407,65 @@ function ttddCreateAudioPanel() {
         right:10px;
         bottom:15px;
         z-index:99999;
+        width:165px;
+        box-sizing:border-box;
         background:rgba(9,15,35,.96);
         border:1px solid #d8b65c;
         border-radius:14px;
-        padding:10px 12px;
+        padding:11px;
         color:#ffe8a3;
-        width:155px;
-        box-shadow:0 0 15px rgba(255,215,100,.18);
+        box-shadow:0 0 18px rgba(255,215,100,.22);
         font-size:12px;
+        font-family:Arial,sans-serif;
     `;
 
     panel.innerHTML = `
-        <div style="font-weight:bold;margin-bottom:8px">
-            🎵 Âm thanh tiên hiệp
+        <div style="
+            font-weight:bold;
+            font-size:13px;
+            margin-bottom:9px;
+        ">
+            🎵 Tiên Hiệp Audio
         </div>
 
-        <button id="ttddAudioToggle"
-            style="width:100%;margin-bottom:8px">
-            🔊 Bật âm thanh
+        <button
+            id="ttddAudioToggle"
+            type="button"
+            style="
+                width:100%;
+                margin-bottom:9px;
+                padding:7px;
+                border-radius:8px;
+                border:1px solid #d8b65c;
+                background:#202b49;
+                color:#ffe8a3;
+            "
+        >
+            🔊 Tắt âm thanh
         </button>
 
         <label for="ttddVolume">Âm lượng</label>
 
-        <input id="ttddVolume"
+        <input
+            id="ttddVolume"
             type="range"
             min="0"
             max="100"
-            value="35"
-            style="width:100%;margin-top:6px">
+            value="${Math.round(TTDD_AUDIO.volume * 100)}"
+            style="width:100%;margin:7px 0"
+        >
 
-        <div id="ttddVolumeText">35%</div>
+        <div id="ttddVolumeText">
+            ${Math.round(TTDD_AUDIO.volume * 100)}%
+        </div>
+
+        <div style="
+            font-size:10px;
+            opacity:.8;
+            margin-top:7px;
+        ">
+            Nhạc nền cổ phong
+        </div>
     `;
 
     document.body.appendChild(panel);
@@ -2166,14 +2475,12 @@ function ttddCreateAudioPanel() {
 
     document.getElementById("ttddVolume").oninput = function() {
         ttddSetVolume(this.value);
-
-        document.getElementById("ttddVolumeText").textContent =
-            this.value + "%";
     };
 
     ttddUpdateAudioPanel();
 }
 
+// Cập nhật nút bật/tắt
 function ttddUpdateAudioPanel() {
     const button = document.getElementById("ttddAudioToggle");
 
@@ -2184,49 +2491,53 @@ function ttddUpdateAudioPanel() {
     }
 }
 
-// Gắn âm thanh vào các thao tác trong game
+// Kết nối âm thanh với các hành động trong game
 function ttddWrapSound(functionName, soundName) {
     const original = window[functionName];
 
     if (typeof original !== "function") return;
 
-    window[functionName] = function(...args) {
-        ttddInitAudio();
+    // Không bọc một hàm hai lần
+    if (original.ttddSoundWrapped) return;
+
+    const wrapped = function(...args) {
+        const A = TTDD_AUDIO;
 
         const oldRealm = player ? player.realm : 0;
         const oldLayer = player ? player.layer : 1;
-        const oldKills = player ? player.kills : 0;
-        const oldBossKills = player ? player.bossKills : 0;
-        const oldStones = player ? player.stones : 0;
+        const oldKills = player ? player.kills || 0 : 0;
+        const oldBossKills = player ? player.bossKills || 0 : 0;
+
+        // Khởi tạo âm thanh sau thao tác của người chơi
+        if (A.enabled) {
+            ttddInitAudio();
+        }
 
         const result = original.apply(this, args);
 
-        if (TTDD_AUDIO.enabled && player) {
+        if (A.enabled && player) {
             if (
                 functionName === "breakthrough" &&
-                (player.realm !== oldRealm || player.layer !== oldLayer)
+                (
+                    player.realm !== oldRealm ||
+                    player.layer !== oldLayer
+                )
             ) {
                 ttddSound("breakthrough");
             } else if (
                 functionName === "battle" &&
-                player.kills > oldKills
+                (player.kills || 0) > oldKills
             ) {
                 ttddSound("victory");
             } else if (
                 functionName === "challengeBoss" &&
-                player.bossKills > oldBossKills
+                (player.bossKills || 0) > oldBossKills
             ) {
                 ttddSound("victory");
             } else if (
                 functionName === "challengeBoss"
             ) {
                 ttddSound("boss");
-            } else if (
-                functionName === "battle" ||
-                functionName === "clearStage" ||
-                functionName === "climbTower"
-            ) {
-                ttddSound("battle");
             } else {
                 ttddSound(soundName);
             }
@@ -2234,8 +2545,12 @@ function ttddWrapSound(functionName, soundName) {
 
         return result;
     };
+
+    wrapped.ttddSoundWrapped = true;
+    window[functionName] = wrapped;
 }
 
+// Kết nối các hành động có trong game
 ttddWrapSound("cultivate", "cultivate");
 ttddWrapSound("breakthrough", "breakthrough");
 ttddWrapSound("battle", "battle");
@@ -2243,12 +2558,18 @@ ttddWrapSound("clearStage", "battle");
 ttddWrapSound("climbTower", "battle");
 ttddWrapSound("challengeBoss", "boss");
 ttddWrapSound("craftAlchemy", "alchemy");
-ttddWrapSound("forgeEquipment", "reward");
+ttddWrapSound("forgeEquipment", "forge");
 ttddWrapSound("claimQuest", "reward");
-ttddWrapSound("exploreRealm", "reward");
-ttddWrapSound("getPet", "victory");
+ttddWrapSound("exploreRealm", "explore");
+ttddWrapSound("getPet", "pet");
 
+// Hiển thị bảng âm thanh
 ttddCreateAudioPanel();
+
+console.log("Tu Tiên Đại Đạo 5.0: Đã nạp hệ thống âm thanh tiên hiệp.");
+console.log("Tu Tiên Đại Đạo 4.2: Đã nạp hoạt ảnh nhân vật.");
+
+console.log("Tu Tiên Đại Đạo 4.1: Đã nạp 20 đan dược và 20 vũ 
 
 console.log("Tu Tiên Đại Đạo 4.3: Đã nạp hệ thống âm thanh.");
 </script>
