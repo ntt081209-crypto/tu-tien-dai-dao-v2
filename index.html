@@ -667,7 +667,81 @@ saveGame();renderGame();notify("Nhập dữ liệu thành công.");
 };
 reader.readAsText(file);
 }
+    
+/* ===== HỆ THỐNG BOSS ===== */
 
+function getCurrentBoss(){
+    const index = Math.min(
+        player.bossIndex || 0,
+        BOSS_LIST.length - 1
+    );
+    return BOSS_LIST[index];
+}
+
+function challengeBoss(){
+    if(!player) return;
+
+    const boss = getCurrentBoss();
+    const power = getPower();
+
+    if(player.hp <= 0){
+        notify("Sinh lực đã cạn. Hãy hồi phục trước!");
+        return;
+    }
+
+    const damage = Math.max(
+        1,
+        Math.floor(power * (0.8 + Math.random() * 0.4))
+    );
+
+    if(!player.bossHP || player.bossHP <= 0){
+        player.bossHP = boss.hp;
+    }
+
+    player.bossHP = Math.max(0, player.bossHP - damage);
+
+    record("Tấn công "+boss.name+", gây "+damage+" sát thương.");
+
+    if(player.bossHP <= 0){
+        player.bossKills++;
+        player.stones += boss.reward;
+        player.stonesEarned += boss.reward;
+
+        player.inventory["Yêu Thú Nội Đan"] =
+            (player.inventory["Yêu Thú Nội Đan"] || 0) + 3;
+
+        player.inventory["Linh Thảo"] =
+            (player.inventory["Linh Thảo"] || 0) + 5;
+
+        player.xp = Math.min(
+            requiredXP(),
+            player.xp + boss.reward
+        );
+
+        record("Đánh bại Boss "+boss.name+"!");
+        notify("Đánh bại Boss! Nhận "+boss.reward+" linh thạch.");
+
+        player.bossIndex =
+            (player.bossIndex + 1) % BOSS_LIST.length;
+
+        player.bossHP = 0;
+    }else{
+        const retaliation = Math.max(
+            5,
+            boss.power - Math.floor(player.defense / 2)
+        );
+
+        player.hp = Math.max(0, player.hp - retaliation);
+
+        notify(
+            boss.name+" còn "+fmt(player.bossHP)+
+            " HP. Bạn nhận "+retaliation+" sát thương."
+        );
+    }
+
+    saveGame();
+    renderGame();
+}
 /* GIAO DIỆN CÁC MỤC */
 function renderView(){
 if(!player)return;
