@@ -805,6 +805,73 @@ header .brand{font-size:16px;padding-right:45%}
     font-size: 42px;
   }
 }
+  /* NHAN VAT TIEN HIEP CHAN THUC */
+
+.ttdd-character {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 25px;
+  width: 180px;
+  height: 230px;
+  transform: translateX(-50%);
+  animation: ttddImmortalFloat 3s ease-in-out infinite;
+}
+
+.ttdd-character-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center bottom;
+  filter: drop-shadow(0 0 12px var(--ttdd-aura, #8c6cff));
+  transition: filter .5s ease;
+}
+
+@keyframes ttddImmortalFloat {
+  0%, 100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -8px;
+  }
+}
+
+.ttdd-scene.breakthrough-mode .ttdd-character-image {
+  animation: ttddImmortalBreakthrough 1s ease-in-out;
+}
+
+@keyframes ttddImmortalBreakthrough {
+  0% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+
+  50% {
+    transform: scale(1.12);
+    filter: brightness(2.2);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+.ttdd-scene.attack-mode .ttdd-character {
+  animation: ttddImmortalAttack .45s ease-in-out;
+}
+
+@keyframes ttddImmortalAttack {
+  0%, 100% {
+    margin-left: 0;
+  }
+
+  45% {
+    margin-left: 35px;
+  }
+}
 </style>
 </head>
 
@@ -2839,15 +2906,13 @@ function ttddCharacterScene(mode = "cultivate") {
       <div class="ttdd-energy e3"></div>
 
       <div class="ttdd-character">
-        <div class="ttdd-hair"></div>
-        <div class="ttdd-head"></div>
-        <div class="ttdd-arm"></div>
-        <div class="ttdd-arm right"></div>
-        <div class="ttdd-robe"></div>
-        <div class="ttdd-leg"></div>
-        <div class="ttdd-leg right"></div>
-        <div class="ttdd-sword"></div>
-      </div>
+  <img
+    id="ttddCharacterImage"
+    class="ttdd-character-image"
+    src="images/realm-1.png"
+    alt="Nhân vật tu tiên"
+  >
+</div>
 
       ${isBattle ? `
         <div class="ttdd-enemy">👹</div>
