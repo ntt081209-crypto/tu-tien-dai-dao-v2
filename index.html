@@ -846,9 +846,27 @@ if(player.realm>=REALMS.length-1){notify("Bạn đã đạt cảnh giới cao nh
 if(!confirm("Nghênh đón thiên kiếp để tiến vào "+REALMS[player.realm+1]+"?"))return;
 const chance=Math.min(.95,.55+getPower()/800+player.defense/300);
 if(Math.random()<chance){
-player.realm++;player.layer=1;player.xp=0;player.basePower+=25;
-player.attack+=10;player.defense+=5;player.maxHp+=40;player.hp=player.maxHp;
-player.stones+=50;record("Thiên kiếp thành công: "+REALMS[player.realm]);
+player.realm++;
+player.layer = 1;
+player.xp = 0;
+
+// Tăng sức mạnh theo đại cảnh giới mới
+const realmLevel = player.realm + 1;
+const growth = Math.pow(1.5, realmLevel - 1);
+
+player.basePower += Math.floor(500 * growth);
+player.attack += Math.floor(100 * growth);
+player.defense += Math.floor(50 * growth);
+
+// Tăng máu tối đa và hồi đầy máu
+player.maxHp += Math.floor(1000 * growth);
+player.hp = player.maxHp;
+
+// Phần thưởng linh thạch tăng theo cảnh giới
+player.stones += Math.floor(100 * growth);
+
+record("Thiên kiếp thành công: " + REALMS[player.realm]);
+notify("Đột phá đại cảnh giới thành công!");
 notify("Đột phá đại cảnh giới thành công!");
 }else{
 player.hp=Math.max(1,player.hp-35);player.stones=Math.max(0,player.stones-20);
