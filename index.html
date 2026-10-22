@@ -703,7 +703,16 @@ const ARTIFACTS = [
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function fmt(n){return Math.floor(Number(n)||0).toLocaleString("vi-VN")}
-function requiredXP(){return Math.floor(100*Math.pow(1.48,player.layer-1)*(1+player.realm*.75))}
+function requiredXP(){
+    const baseXP = 100;
+    const layerRate = 1.5;
+    const realmRate = 15;
+    return Math.floor(
+        baseXP *
+        Math.pow(layerRate, player.layer - 1) *
+        Math.pow(realmRate, player.realm)
+    );
+}
 function getPower(){
 if(!player)return 0;
 return Math.floor(player.basePower+player.realm*30+(player.layer-1)*5+
