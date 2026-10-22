@@ -1079,6 +1079,340 @@ renderNav();
         1500000, 3000000
     ][Math.min(18, Math.max(0, Number(player.realm) || 0))];
 }
+  // ========================================
+// TU TIEN DAI DAO 4.1 - NANG CAP DAN DUOC
+// VA 20 VU KHI
+// ========================================
+
+const TTDD_PILLS = [
+  {name:"Tụ Khí Đan",cost:40,items:{"Linh Thảo":2},xp:500,desc:"+500 tu vi"},
+  {name:"Ngưng Khí Đan",cost:80,items:{"Linh Thảo":3},xp:2000,desc:"+2.000 tu vi"},
+  {name:"Trúc Cơ Đan",cost:180,items:{"Linh Thảo":5,"Yêu Thú Nội Đan":1},xp:10000,desc:"+10.000 tu vi"},
+  {name:"Kim Nguyên Đan",cost:400,items:{"Linh Thảo":6,"Yêu Thú Nội Đan":2},xp:30000,desc:"+30.000 tu vi"},
+  {name:"Nguyên Anh Đan",cost:800,items:{"Linh Thảo":8,"Yêu Thú Nội Đan":3},xp:100000,desc:"+100.000 tu vi"},
+  {name:"Hóa Thần Đan",cost:1500,items:{"Linh Thảo":10,"Yêu Thú Nội Đan":4},xp:300000,desc:"+300.000 tu vi"},
+  {name:"Thiên Nguyên Đan",cost:3000,items:{"Linh Thảo":12,"Yêu Thú Nội Đan":5},xp:1000000,desc:"+1.000.000 tu vi"},
+  {name:"Tiên Linh Đan",cost:6000,items:{"Linh Thảo":15,"Yêu Thú Nội Đan":6},xp:5000000,desc:"+5.000.000 tu vi"},
+  {name:"Hỗn Độn Đạo Đan",cost:12000,items:{"Linh Thảo":20,"Yêu Thú Nội Đan":10},xp:20000000,desc:"+20.000.000 tu vi"},
+  {name:"Phá Cảnh Đan",cost:500,items:{"Linh Thảo":5,"Yêu Thú Nội Đan":1},effect:"break",desc:"Bổ sung tu vi đủ điều kiện đột phá tầng"},
+  {name:"Hồi Huyết Đan",cost:80,items:{"Linh Thảo":2},effect:"heal20",desc:"Hồi 20% HP"},
+  {name:"Đại Hồi Huyết Đan",cost:250,items:{"Linh Thảo":4},effect:"heal50",desc:"Hồi 50% HP"},
+  {name:"Sinh Cơ Đan",cost:600,items:{"Linh Thảo":6,"Yêu Thú Nội Đan":1},effect:"heal80",desc:"Hồi 80% HP"},
+  {name:"Cửu Chuyển Hoàn Hồn Đan",cost:1500,items:{"Linh Thảo":10,"Yêu Thú Nội Đan":3},effect:"heal100",desc:"Hồi đầy HP"},
+  {name:"Cuồng Chiến Đan",cost:1000,items:{"Linh Thảo":5,"Yêu Thú Nội Đan":2},effect:"damage",desc:"Tăng sức mạnh chiến đấu 20% trong 5 phút"},
+  {name:"Kim Cương Đan",cost:1000,items:{"Linh Thảo":5,"Yêu Thú Nội Đan":2},effect:"defense",desc:"Tăng phòng thủ 20% trong 5 phút"},
+  {name:"Tật Phong Đan",cost:1500,items:{"Linh Thảo":6,"Yêu Thú Nội Đan":2},effect:"speed",desc:"Tăng sức mạnh 25% trong 5 phút"},
+  {name:"Long Huyết Đan",cost:2000,items:{"Linh Thảo":8,"Yêu Thú Nội Đan":3},effect:"strength",desc:"Tăng sức mạnh 30% trong 5 phút"},
+  {name:"Ngộ Đạo Đan",cost:3000,items:{"Linh Thảo":10,"Yêu Thú Nội Đan":4},effect:"cultivation",desc:"Tăng hiệu quả tu luyện 3 lần trong 5 phút"},
+  {name:"Niết Bàn Đan",cost:5000,items:{"Linh Thảo":15,"Yêu Thú Nội Đan":5},effect:"nirvana",desc:"Tăng sức mạnh 100% trong 5 phút"}
+];
+
+const TTDD_WEAPONS = [
+  ["Thiết Kiếm",10,50,0],
+  ["Thanh Phong Kiếm",30,200,0],
+  ["Hàn Băng Kiếm",80,600,1],
+  ["Liệt Diễm Kiếm",200,1800,2],
+  ["Tử Điện Kiếm",500,5000,3],
+  ["Huyết Ảnh Đao",1000,12000,4],
+  ["Thiên Long Thương",2000,30000,5],
+  ["Phá Thiên Kích",5000,80000,6],
+  ["Long Uyên Kiếm",10000,180000,7],
+  ["Trấn Hải Tam Xoa Kích",20000,400000,8],
+  ["Trảm Tiên Kiếm",50000,900000,9],
+  ["Tru Tiên Kiếm",100000,2000000,10],
+  ["Khai Thiên Phủ",200000,5000000,11],
+  ["Vạn Kiếm Quy Tông",500000,12000000,12],
+  ["Cửu Tiêu Lôi Kiếm",1000000,30000000,13],
+  ["Thái Cổ Thần Kiếm",2000000,70000000,14],
+  ["Thiên Đạo Chi Nhận",5000000,150000000,15],
+  ["Hỗn Độn Thần Binh",10000000,350000000,16],
+  ["Vạn Cổ Đạo Kiếm",50000000,800000000,17],
+  ["Sáng Thế Thần Kiếm",100000000,2000000000,18]
+].map((w,i)=>({
+  name:w[0],
+  power:w[1],
+  cost:w[2],
+  realm:w[3],
+  items:{
+    "Linh Thảo":Math.min(20,1+Math.floor(i/3)),
+    "Yêu Thú Nội Đan":Math.floor(i/2)
+  }
+}));
+
+// Thay danh sach cu bang danh sach moi
+RECIPES.splice(0,RECIPES.length,...TTDD_PILLS);
+EQUIPMENT.splice(0,EQUIPMENT.length,...TTDD_WEAPONS);
+
+// Bo sung du lieu cho nguoi choi cu, khong xoa save
+const TTDD_oldNormalize = normalizePlayer;
+normalizePlayer = function(){
+  TTDD_oldNormalize();
+  if(player && !player.effects){
+    player.effects = {};
+  }
+  if(player && !player.effects) player.effects = {};
+};
+
+// Kiem tra nguyen lieu
+function ttddHasItems(items){
+  for(const name in items){
+    if((player.inventory[name]||0)<items[name]) return false;
+  }
+  return true;
+}
+
+function ttddSpendItems(items){
+  for(const name in items){
+    player.inventory[name]=(player.inventory[name]||0)-items[name];
+    if(player.inventory[name]<=0) delete player.inventory[name];
+  }
+}
+
+// Lam moi he thong luyen dan
+craftAlchemy = function(index){
+  const r=RECIPES[index];
+  if(!r || !player) return;
+
+  if(player.stones<r.cost){
+    notify("Không đủ linh thạch!");
+    return;
+  }
+
+  if(!ttddHasItems(r.items)){
+    notify("Không đủ nguyên liệu luyện đan!");
+    return;
+  }
+
+  player.stones-=r.cost;
+  ttddSpendItems(r.items);
+  player.inventory[r.name]=(player.inventory[r.name]||0)+1;
+  player.alchemy=(player.alchemy||0)+1;
+
+  record("Luyện chế thành công "+r.name+".");
+  saveGame();
+  renderGame();
+  notify("Luyện đan thành công: "+r.name);
+};
+
+// He thong su dung dan duoc
+useItem = function(name){
+  if(!player) return;
+
+  const count=player.inventory[name]||0;
+  if(count<=0){
+    notify("Bạn không có vật phẩm này!");
+    return;
+  }
+
+  const r=TTDD_PILLS.find(x=>x.name===name);
+
+  // Tuong thich vat pham cua ban cu
+  if(!r){
+    if(name==="Hồi Xuân Đan"){
+      player.inventory[name]--;
+      player.hp=Math.min(player.maxHp,player.hp+100);
+      notify("Đã hồi 100 HP!");
+    }else{
+      notify("Vật phẩm này không thể sử dụng trực tiếp.");
+      return;
+    }
+  }else{
+    player.inventory[name]--;
+
+    if(r.xp){
+      player.xp=(player.xp||0)+r.xp;
+      notify("Sử dụng "+name+", nhận "+fmt(r.xp)+" tu vi!");
+    }else if(r.effect==="break"){
+      if(player.layer>=10){
+        player.inventory[name]=(player.inventory[name]||0)+1;
+        notify("Đã đạt tầng 10. Hãy đột phá đại cảnh giới trước!");
+        return;
+      }
+      player.xp=Math.max(player.xp||0,requiredXP());
+      notify("Tu vi đã đủ để đột phá tầng!");
+    }else if(r.effect==="heal20"){
+      player.hp=Math.min(player.maxHp,player.hp+Math.ceil(player.maxHp*0.2));
+      notify("Hồi 20% HP!");
+    }else if(r.effect==="heal50"){
+      player.hp=Math.min(player.maxHp,player.hp+Math.ceil(player.maxHp*0.5));
+      notify("Hồi 50% HP!");
+    }else if(r.effect==="heal80"){
+      player.hp=Math.min(player.maxHp,player.hp+Math.ceil(player.maxHp*0.8));
+      notify("Hồi 80% HP!");
+    }else if(r.effect==="heal100"){
+      player.hp=player.maxHp;
+      notify("HP đã hồi đầy!");
+    }else{
+      if(!player.effects) player.effects={};
+      const until=Date.now()+300000;
+
+      if(r.effect==="damage"){
+        player.effects.damageBonus=0.2;
+        player.effects.damageUntil=until;
+      }
+      if(r.effect==="defense"){
+        player.effects.defenseBonus=0.2;
+        player.effects.defenseUntil=until;
+      }
+      if(r.effect==="speed"){
+        player.effects.speedBonus=0.25;
+        player.effects.speedUntil=until;
+      }
+      if(r.effect==="strength"){
+        player.effects.strengthBonus=0.3;
+        player.effects.strengthUntil=until;
+      }
+      if(r.effect==="cultivation"){
+        player.effects.cultivationMultiplier=3;
+        player.effects.cultivationUntil=until;
+      }
+      if(r.effect==="nirvana"){
+        player.effects.nirvanaBonus=1;
+        player.effects.nirvanaUntil=until;
+      }
+
+      notify("Đã sử dụng "+name+"! Hiệu quả kéo dài 5 phút.");
+    }
+  }
+
+  if(player.inventory[name]<=0) delete player.inventory[name];
+  saveGame();
+  renderGame();
+};
+
+// Tinh suc manh, khong cong don suc manh vu khi cu
+getPower = function(){
+  if(!player) return 0;
+
+  let power =
+    Number(player.basePower||0) +
+    Number(player.realm||0)*30 +
+    (Number(player.layer||1)-1)*5 +
+    (player.pet ? Number(player.petLevel||0)*12 : 0) +
+    Number(player.equipmentPower||0) +
+    Number(player.root?.grade||0)*Number(player.root?.tier||0)*3 +
+    Number(player.body?.grade||0)*Number(player.body?.tier||0)*4 +
+    Number(player.tech?.grade||0)*Number(player.tech?.tier||0)*5;
+
+  const e=player.effects||{};
+  const now=Date.now();
+
+  if(e.damageUntil>now) power*=1+(e.damageBonus||0);
+  if(e.speedUntil>now) power*=1+(e.speedBonus||0);
+  if(e.strengthUntil>now) power*=1+(e.strengthBonus||0);
+  if(e.nirvanaUntil>now) power*=1+(e.nirvanaBonus||0);
+
+  return Math.floor(power);
+};
+
+// Lam moi he thong luyen khi
+forgeEquipment = function(index){
+  const e=EQUIPMENT[index];
+  if(!e || !player) return;
+
+  if((player.realm||0)<e.realm){
+    notify("Cảnh giới chưa đủ để luyện chế vũ khí này!");
+    return;
+  }
+
+  if(player.stones<e.cost){
+    notify("Không đủ linh thạch!");
+    return;
+  }
+
+  if(!ttddHasItems(e.items)){
+    notify("Không đủ nguyên liệu luyện khí!");
+    return;
+  }
+
+  player.stones-=e.cost;
+  ttddSpendItems(e.items);
+
+  // Thay vu khi cu, khong cong don suc manh
+  player.equipment=e.name;
+  player.equipmentPower=e.power;
+
+  player.forging=(player.forging||0)+1;
+
+  record("Trang bị "+e.name+".");
+  saveGame();
+  renderGame();
+  notify("Đã trang bị "+e.name+"!");
+};
+
+// Tang hieu qua tu luyen khi dung Ngo Dao Dan
+const TTDD_baseCultivateRate = getAutoCultivateRate;
+getAutoCultivateRate = function(){
+  let rate=TTDD_baseCultivateRate();
+  const e=player && player.effects;
+  if(e && e.cultivationUntil>Date.now()){
+    rate*=e.cultivationMultiplier||1;
+  }
+  return rate;
+};
+
+// Hien thi mo ta va nguyen lieu cua 20 loai dan/vu khi
+const TTDD_oldRenderView = renderView;
+renderView = function(){
+  TTDD_oldRenderView();
+
+  if(!player) return;
+
+  if(currentTab==="alchemy"){
+    view.innerHTML=`
+      <section class="panel">
+        <h2>⚗️ Luyện đan</h2>
+        <p>Linh thạch hiện có: ${fmt(player.stones)}</p>
+        <p>Đã luyện đan: ${player.alchemy||0} lần</p>
+        ${RECIPES.map((r,i)=>`
+          <div class="card">
+            <h3>${esc(r.name)}</h3>
+            <p>${esc(r.desc||"Đan dược tu luyện")}</p>
+            <p>Chi phí: ${fmt(r.cost)} linh thạch</p>
+            <p>Nguyên liệu: ${Object.entries(r.items).map(([n,c])=>`${esc(n)} × ${c}`).join(", ")}</p>
+            <p>Trong túi: ${player.inventory[r.name]||0}</p>
+            <button onclick="craftAlchemy(${i})">Luyện chế</button>
+          </div>
+        `).join("")}
+      </section>`;
+  }
+
+  if(currentTab==="forging"){
+    view.innerHTML=`
+      <section class="panel">
+        <h2>🔨 Luyện khí</h2>
+        <p>Vũ khí hiện tại: ${esc(player.equipment||"Chưa trang bị")}</p>
+        <p>Sức mạnh vũ khí: ${fmt(player.equipmentPower||0)}</p>
+        <p>Đã luyện khí: ${player.forging||0} lần</p>
+        ${EQUIPMENT.map((e,i)=>`
+          <div class="card">
+            <h3>${esc(e.name)}</h3>
+            <p>Sức mạnh: +${fmt(e.power)}</p>
+            <p>Yêu cầu: ${esc(REALMS[e.realm]?.name||REALMS[e.realm]||("Cảnh giới "+e.realm))}</p>
+            <p>Chi phí: ${fmt(e.cost)} linh thạch</p>
+            <p>Nguyên liệu: ${Object.entries(e.items).filter(x=>x[1]>0).map(([n,c])=>`${esc(n)} × ${c}`).join(", ")}</p>
+            <button onclick="forgeEquipment(${i})">${player.equipment===e.name?"Đang trang bị":"Luyện chế và trang bị"}</button>
+          </div>
+        `).join("")}
+      </section>`;
+  }
+
+  if(currentTab==="inventory"){
+    view.innerHTML=`
+      <section class="panel">
+        <h2>🎒 Túi đồ</h2>
+        ${Object.entries(player.inventory||{}).filter(x=>x[1]>0).map(([name,count])=>{
+          const pill=TTDD_PILLS.find(x=>x.name===name);
+          return `<div class="card">
+            <div class="row"><b>${esc(name)}</b><span>Số lượng: ${count}</span></div>
+            ${pill?`<p>${esc(pill.desc||"Đan dược")}</p><button onclick="useItem('${esc(name)}')">Sử dụng</button>`:"<p>Nguyên liệu chế tạo</p>"}
+          </div>`;
+        }).join("")||"<p>Túi đồ đang trống.</p>"}
+      </section>`;
+  }
+};
+
+console.log("Tu Tiên Đại Đạo 4.1: Đã nạp 20 đan dược và 20 vũ khí.");
 </script>
 </body>
 </html>
