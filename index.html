@@ -1601,12 +1601,113 @@ ${player.quests[q.id]?'<span class="good">Đã nhận thưởng</span>':`<button
 break;
 
 case "pets":{
-const cost=petUpgradeCost();
-h=`<section class="panel"><h2>🐉 Linh thú</h2><div class="cultivation-scene"></div>
-<div class="card"><h3>${esc(player.pet||"Chưa có linh thú")}</h3>
-${player.pet?`<p>Cấp linh thú: <b class="gold">${fmt(player.petLevel)}</b></p><p>Chi phí lên cấp tiếp theo: ${fmt(cost)} linh thạch</p><p>Chi phí tăng theo cấp số cộng: 50 + (cấp hiện tại - 1) × 25.</p><button onclick="feedPet()">Nuôi dưỡng linh thú</button>`:`<p>Thu phục linh thú để tăng lực chiến.</p><button onclick="getPet()">Tìm linh thú · 150 linh thạch</button>`}
-</div></section>`;
-break;
+    const cost = petUpgradeCost();
+
+    const petLevel = player.petLevel || 1;
+    const petRealm = player.petRealm || 0;
+    const petEvolution = player.petEvolution || 0;
+    const petQuality = player.petQuality || 0;
+    const petSkills = player.petSkills || [];
+
+    const petRealms = [
+        "🐾 Phàm Thú",
+        "🐉 Linh Thú",
+        "✨ Tiên Thú",
+        "🔥 Thần Thú",
+        "👑 Thánh Thú"
+    ];
+
+    const petQualities = [
+        "⚪ Thường",
+        "🟢 Hiếm",
+        "🔵 Sử Thi",
+        "🟣 Truyền Thuyết",
+        "🟠 Thần Thú"
+    ];
+
+    const realmName = petRealms[
+        Math.min(petRealm, petRealms.length - 1)
+    ];
+
+    const qualityName = petQualities[
+        Math.min(petQuality, petQualities.length - 1)
+    ];
+
+    h = `
+    <section class="panel">
+        <h2>🐉 Linh Thú</h2>
+
+        <div class="cultivation-scene"></div>
+
+        <div class="card">
+            <h3>${esc(player.pet || "Chưa có linh thú")}</h3>
+
+            ${
+                player.pet
+                ? `
+                    <p>⭐ Cấp độ: <b class="gold">${fmt(petLevel)}</b></p>
+
+                    <p>🌟 Phẩm chất: <b>${qualityName}</b></p>
+
+                    <p>🏯 Cảnh giới: <b>${realmName}</b></p>
+
+                    <p>🔥 Số lần tiến hóa: <b>${fmt(petEvolution)}</b></p>
+
+                    <p>💎 Chi phí nuôi dưỡng tiếp theo:
+                        <b>${fmt(cost)} linh thạch</b>
+                    </p>
+
+                    <button onclick="feedPet()">
+                        🥩 Nuôi dưỡng Linh Thú
+                    </button>
+
+                    <button onclick="breakthroughPet()">
+                        ⚡ Đột phá cảnh giới
+                    </button>
+
+                    <button onclick="evolvePet()">
+                        🔥 Tiến hóa Linh Thú
+                    </button>
+
+                    <button onclick="upgradePetQuality()">
+                        🌟 Nâng phẩm chất
+                    </button>
+
+                    <div class="card">
+                        <h3>⚔️ Kỹ năng Linh Thú</h3>
+
+                        <p>💥 Tấn công: ${petSkills.includes("attack") ? "✅ Đã mở khóa" : "🔒 Chưa mở khóa"}</p>
+
+                        <p>🛡️ Phòng thủ: ${petSkills.includes("defense") ? "✅ Đã mở khóa" : "🔒 Chưa mở khóa"}</p>
+
+                        <p>✨ Tăng lực chiến: ${petSkills.includes("power") ? "✅ Đã mở khóa" : "🔒 Chưa mở khóa"}</p>
+
+                        <button onclick="unlockPetSkill('attack')">
+                            💥 Mở kỹ năng tấn công
+                        </button>
+
+                        <button onclick="unlockPetSkill('defense')">
+                            🛡️ Mở kỹ năng phòng thủ
+                        </button>
+
+                        <button onclick="unlockPetSkill('power')">
+                            ✨ Mở kỹ năng tăng lực chiến
+                        </button>
+                    </div>
+                `
+                : `
+                    <p>Thu phục Linh Thú để đồng hành tu luyện.</p>
+
+                    <button onclick="getPet()">
+                        🐉 Tìm Linh Thú · 150 linh thạch
+                    </button>
+                `
+            }
+        </div>
+    </section>
+    `;
+
+    break;
 }
 
 case "realm":
