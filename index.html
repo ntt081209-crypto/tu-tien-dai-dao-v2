@@ -1090,6 +1090,147 @@ player.stones-=cost;player.petLevel++;
 record("Linh thú tăng lên cấp "+player.petLevel);
 saveGame();renderGame();notify("Linh thú tăng cấp thành công!");
 }
+  function breakthroughPet(){
+    if(!player || !player.pet){
+        notify("Bạn chưa có Linh Thú!");
+        return;
+    }
+
+    player.petLevel = player.petLevel || 1;
+    player.petRealm = player.petRealm || 0;
+
+    const cost = (player.petRealm + 1) * 500;
+    const requiredLevel = (player.petRealm + 1) * 10;
+
+    if(player.petLevel < requiredLevel){
+        notify("Linh Thú cần đạt cấp " + requiredLevel + " mới được đột phá!");
+        return;
+    }
+
+    if(player.stones < cost){
+        notify("Không đủ linh thạch! Cần " + fmt(cost) + ".");
+        return;
+    }
+
+    if(player.petRealm >= 4){
+        notify("Linh Thú đã đạt cảnh giới tối đa!");
+        return;
+    }
+
+    player.stones -= cost;
+    player.petRealm++;
+
+    record("🐉 Linh Thú đột phá: " + player.petRealm);
+    notify("⚡ Đột phá thành công! Cảnh giới Linh Thú tăng lên!");
+
+    saveGame();
+    renderGame();
+}
+
+function evolvePet(){
+    if(!player || !player.pet){
+        notify("Bạn chưa có Linh Thú!");
+        return;
+    }
+
+    player.petLevel = player.petLevel || 1;
+    player.petEvolution = player.petEvolution || 0;
+
+    const cost = (player.petEvolution + 1) * 1000;
+    const requiredLevel = (player.petEvolution + 1) * 15;
+
+    if(player.petLevel < requiredLevel){
+        notify("Cần Linh Thú cấp " + requiredLevel + " để tiến hóa!");
+        return;
+    }
+
+    if(player.stones < cost){
+        notify("Không đủ linh thạch! Cần " + fmt(cost) + ".");
+        return;
+    }
+
+    player.stones -= cost;
+    player.petEvolution++;
+
+    record("🔥 Linh Thú tiến hóa lần " + player.petEvolution);
+    notify("🔥 Linh Thú tiến hóa thành công!");
+
+    saveGame();
+    renderGame();
+}
+
+function upgradePetQuality(){
+    if(!player || !player.pet){
+        notify("Bạn chưa có Linh Thú!");
+        return;
+    }
+
+    player.petQuality = player.petQuality || 0;
+
+    if(player.petQuality >= 4){
+        notify("Linh Thú đã đạt phẩm chất tối đa!");
+        return;
+    }
+
+    const cost = (player.petQuality + 1) * 2000;
+
+    if(player.stones < cost){
+        notify("Không đủ linh thạch! Cần " + fmt(cost) + ".");
+        return;
+    }
+
+    player.stones -= cost;
+    player.petQuality++;
+
+    record("🌟 Linh Thú tăng phẩm chất lên cấp " + player.petQuality);
+    notify("🌟 Nâng phẩm chất thành công!");
+
+    saveGame();
+    renderGame();
+}
+
+function unlockPetSkill(skill){
+    if(!player || !player.pet){
+        notify("Bạn chưa có Linh Thú!");
+        return;
+    }
+
+    player.petSkills = player.petSkills || [];
+
+    const skills = {
+        attack: {name:"Tấn công", cost:1000, level:5},
+        defense: {name:"Phòng thủ", cost:1500, level:10},
+        power: {name:"Tăng lực chiến", cost:2000, level:15}
+    };
+
+    const data = skills[skill];
+
+    if(!data) return;
+
+    if(player.petSkills.includes(skill)){
+        notify("Kỹ năng này đã được mở khóa!");
+        return;
+    }
+
+    if((player.petLevel || 1) < data.level){
+        notify("Cần Linh Thú cấp " + data.level + "!");
+        return;
+    }
+
+    if(player.stones < data.cost){
+        notify("Không đủ linh thạch! Cần " + fmt(data.cost) + ".");
+        return;
+    }
+
+    player.stones -= data.cost;
+    player.petSkills.push(skill);
+
+    record("✨ Mở kỹ năng Linh Thú: " + data.name);
+    notify("✨ Đã mở kỹ năng " + data.name + "!");
+
+    saveGame();
+    renderGame();
+}
 
 /* BÍ CẢNH */
 function exploreRealm(index){
