@@ -432,7 +432,16 @@ header .brand{font-size:16px;padding-right:45%}
     animation-duration: 8s !important;
   }
 }
-  #audioPanel, .audio-panel, .sound-panel, .music-panel, #soundControls, #musicControls { display: none !important; }
+  /* Ẩn tất cả giao diện điều khiển âm thanh */
+
+[id*=“audio” i],
+[class*=“audio” i],
+[id*=“sound” i],
+[class*=“sound” i],
+[id*=“music” i],
+[class*=“music” i] {
+display: none !important;
+}
 </style>
 </head>
 
