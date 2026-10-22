@@ -374,7 +374,7 @@ window.noticeTimer=setTimeout(()=>box.style.display="none",2600);
 function normalizePlayer(){
 const d=newPlayer(player.user);
 for(const k in d)if(player[k]===undefined||player[k]===null)player[k]=d[k];
-player.realm=Math.max(0,Math.min(14,Number(player.realm)||0));
+player.realm=Math.max(0,Math.min(18,Number(player.realm)||0));
 player.layer=Math.max(1,Math.min(10,Number(player.layer)||1));
 player.stones=Math.max(0,Number(player.stones)||0);
 player.hp=Math.max(0,Math.min(player.maxHp,Number(player.hp)||0));
