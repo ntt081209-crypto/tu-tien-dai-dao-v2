@@ -1130,29 +1130,41 @@ function challengeBoss(){
 
     const boss = getCurrentBoss();
     const power = getPower();
+    const realmLevel = player.realm + 1;
 
     if(player.hp <= 0){
         notify("Sinh lực đã cạn. Hãy hồi phục trước!");
         return;
     }
 
+    // Khởi tạo máu boss nếu chưa có
+    if(!player.bossHP || player.bossHP <= 0){
+        player.bossHP = boss.hp;
+    }
+
+    // Sát thương người chơi
     const damage = Math.max(
         1,
         Math.floor(power * (0.8 + Math.random() * 0.4))
     );
 
-    if(!player.bossHP || player.bossHP <= 0){
-        player.bossHP = boss.hp;
-    }
-
     player.bossHP = Math.max(0, player.bossHP - damage);
 
-    record("Tấn công "+boss.name+", gây "+damage+" sát thương.");
+    record(
+        "Tấn công " + boss.name +
+        ", gây " + damage + " sát thương."
+    );
 
+    // Nếu boss bị đánh bại
     if(player.bossHP <= 0){
         player.bossKills++;
-        player.stones += boss.reward;
-        player.stonesEarned += boss.reward;
+
+        const rewardMultiplier = Math.pow(1.5, player.realm);
+        const stoneReward = Math.floor(boss.reward * rewardMultiplier);
+        const xpReward = Math.floor(100 * rewardMultiplier);
+
+        player.stones += stoneReward;
+        player.stonesEarned += stoneReward;
 
         player.inventory["Yêu Thú Nội Đan"] =
             (player.inventory["Yêu Thú Nội Đan"] || 0) + 3;
@@ -1162,27 +1174,44 @@ function challengeBoss(){
 
         player.xp = Math.min(
             requiredXP(),
-            player.xp + boss.reward
+            player.xp + xpReward
         );
 
-        record("Đánh bại Boss "+boss.name+"!");
-        notify("Đánh bại Boss! Nhận "+boss.reward+" linh thạch.");
+        record("Đánh bại Boss " + boss.name + "!");
+
+        notify(
+            "Đánh bại Boss! Nhận " +
+            fmt(stoneReward) + " linh thạch và " +
+            fmt(xpReward) + " tu vi."
+        );
 
         player.bossIndex =
             (player.bossIndex + 1) % BOSS_LIST.length;
 
         player.bossHP = 0;
     }else{
+        // Boss phản công mạnh dần theo cảnh giới
+        const realmMultiplier = Math.pow(1.25, player.realm);
+
         const retaliation = Math.max(
             5,
-            boss.power - Math.floor(player.defense / 2)
+            Math.floor(
+                (boss.power - Math.floor(player.defense / 2)) *
+                realmMultiplier
+            )
         );
 
         player.hp = Math.max(0, player.hp - retaliation);
 
+        record(
+            boss.name + " phản công, gây " +
+            retaliation + " sát thương."
+        );
+
         notify(
-            boss.name+" còn "+fmt(player.bossHP)+
-            " HP. Bạn nhận "+retaliation+" sát thương."
+            boss.name + " còn " + fmt(player.bossHP) +
+            " HP. Bạn nhận " + fmt(retaliation) +
+            " sát thương."
         );
     }
 
