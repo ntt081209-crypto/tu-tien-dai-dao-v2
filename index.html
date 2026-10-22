@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#080b19">
+<title>Tu Tiên Đại Đạo 3.0 — Tiên Giới Huyền Ảo</title>
+
+<style>
+:root {
+  --bg:#070916;
+  --panel:rgba(13,19,39,.92);
+  --panel2:rgba(25,34,65,.92);
+  --gold:#ffe09a;
+  --purple:#bba0ff;
+  --cyan:#80eaff;
+  --red:#ff7188;
+  --green:#73f0b5;
+  --text:#f3f4ff;
+  --muted:#aab7d7;
+  --border:rgba(155,170,232,.32);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  background:
+    radial-gradient(ellipse at 50% 0%,#3d4785 0%,transparent 42%),
+    radial-gradient(ellipse at 10% 35%,#29245b 0%,transparent 35%),
+    radial-gradient(ellipse at 95% 55%,#163b5c 0%,transparent 38%),
+    linear-gradient(180deg,#080b1c,#10152e 45%,#070916);
+  background-attachment:fixed;
+  overflow-x:hidden;
+}
+button,input{font:inherit}
+button{
+  color:#fff;
+  border:1px solid rgba(170,181,239,.43);
+  border-radius:10px;
+  padding:11px 14px;
+  background:linear-gradient(135deg,#364a79,#1a2443);
+  cursor:pointer;
+  transition:transform .2s,border-color .2s,box-shadow .2s,filter .2s;
+}
+button:hover{
+  border-color:var(--gold);
+  box-shadow:0 0 18px #b79aff45;
+  filter:brightness(1.13);
+}
+button:active{transform:scale(.97)}
+button:disabled{opacity:.5;cursor:not-allowed}
+input{
+  display:block;
+  width:100%;
+  margin:7px 0 14px;
+  padding:12px;
+  border:1px solid #4b5b85;
+  border-radius:9px;
+  background:#090f21;
+  color:white;
+}
+h1,h2,h3{color:var(--gold)}
+h2{margin-top:0}
+p{line-height:1.55}
+.small{font-size:12px;color:var(--muted)}
+.gold{color:var(--gold)}
+.purple{color:var(--purple)}
+.cyan{color:var(--cyan)}
+.green{color:var(--green)}
+.red{color:var(--red)}
+.hidden{display:none!important}
+
+/* ===== BẦU TRỜI TIÊN GIỚI ===== */
+.sky{
+  position:fixed;
+  inset:0;
+  z-index:-4;
+  overflow:hidden;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 30%,#7162c52b,transparent 45%),
+    linear-gradient(180deg,#090d20aa,transparent 65%);
+}
+.stars{
+  position:absolute;
+  inset:0;
+  opacity:.7;
+  background-image:
+    radial-gradient(2px 2px at 12% 17%,#fff,transparent),
+    radial-gradient(1px 1px at 24% 36%,#c9c9ff,transparent),
+    radial-gradient(2px 2px at 41% 11%,#fff1bc,transparent),
+    radial-gradient(1px 1px at 63% 24%,#fff,transparent),
+    radial-gradient(2px 2px at 78% 15%,#c6dfff,transparent),
+    radial-gradient(1px 1px at 90% 35%,#fff,transparent),
+    radial-gradient(1px 1px at 53% 45%,#fff,transparent),
+    radial-gradient(2px 2px at 6% 55%,#c5baff,transparent);
+  animation:starGlow 5s ease-in-out infinite alternate;
+}
+@keyframes starGlow{
+  from{opacity:.35}
+  to{opacity:.9}
+}
+.moon{
+  position:absolute;
+  top:7%;
+  right:12%;
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fffde8,#c9c4ff 45%,#827fd6 75%,transparent 76%);
+  box-shadow:0 0 35px #a9a4ff75,0 0 100px #8b7cff38;
+  opacity:.78;
+}
+.mountain{
+  position:absolute;
+  bottom:-2px;
+  width:0;height:0;
+  border-left:190px solid transparent;
+  border-right:190px solid transparent;
+  border-bottom:260px solid #141a37;
+  filter:drop-shadow(0 -10px 18px #6b6ae622);
+}
+.mountain:after{
+  content:"";
+  position:absolute;
+  top:30px;
+  left:-65px;
+  width:0;height:0;
+  border-left:65px solid transparent;
+  border-right:65px solid transparent;
+  border-bottom:90px solid #343761;
+}
+.m1{left:-100px;transform:scale(1.3);border-bottom-color:#151a35}
+.m2{left:15%;transform:scale(.85);border-bottom-color:#1b2145}
+.m3{right:12%;transform:scale(1.15);border-bottom-color:#171d3b}
+.m4{right:-140px;transform:scale(.95);border-bottom-color:#10162f}
+.cloud{
+  position:absolute;
+  width:220px;
+  height:48px;
+  border-radius:50%;
+  background:#a8b7ff0a;
+  filter:blur(12px);
+  animation:cloudFloat 32s linear infinite;
+}
+.c1{top:32%;left:-250px}
+.c2{top:55%;left:-300px;animation-duration:43s;animation-delay:-18s}
+.c3{top:72%;left:-200px;animation-duration:37s;animation-delay:-9s}
+@keyframes cloudFloat{
+  from{transform:translateX(-10vw)}
+  to{transform:translateX(130vw)}
+}
+
+/* ===== ĐĂNG NHẬP ===== */
+#login{
+  position:relative;
+  width:min(440px,93%);
+  margin:8vh auto;
+  padding:26px;
+  border:1px solid #a18bdf88;
+  border-radius:22px;
+  background:linear-gradient(145deg,#141c38f5,#0a1025f5);
+  box-shadow:0 0 45px #8d73ff25,0 20px 60px #0007;
+  overflow:hidden;
+}
+#login:before{
+  content:"";
+  position:absolute;
+  width:260px;height:260px;
+  top:-170px;left:calc(50% - 130px);
+  border-radius:50%;
+  border:1px solid #c0aaff45;
+  box-shadow:0 0 30px #a68aff22;
+}
+.logo{
+  font-size:65px;
+  text-align:center;
+  color:var(--gold);
+  text-shadow:0 0 22px #b79aff;
+  animation:logoGlow 4s ease-in-out infinite;
+}
+@keyframes logoGlow{
+  50%{text-shadow:0 0 35px #b79aff,0 0 55px #6d67ff}
+}
+.login-title{text-align:center;letter-spacing:2px;font-size:25px}
+#loginError{min-height:18px}
+
+/* ===== BỐ CỤC CHÍNH ===== */
+#game{max-width:1280px;margin:auto;padding:12px}
+.hero{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  padding:22px;
+  border:1px solid #9d9fe35e;
+  border-radius:20px;
+  background:
+    radial-gradient(ellipse at 50% 115%,#8b70ff44,transparent 55%),
+    linear-gradient(125deg,#17284beF,#17152eef,#101c35ef);
+  box-shadow:0 12px 45px #0004,0 0 30px #8573ff12;
+}
+.hero:before{
+  content:"☯";
+  position:absolute;
+  z-index:-1;
+  right:14px;
+  top:-52px;
+  font-size:190px;
+  color:#c7b8ff0d;
+  animation:slowRotate 50s linear infinite;
+}
+@keyframes slowRotate{to{transform:rotate(360deg)}}
+.hero h1{
+  margin:0 0 8px;
+  font-size:clamp(23px,5vw,37px);
+  text-shadow:0 0 18px #ffe09a55;
+}
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
+  margin-top:18px;
+}
+.stat{
+  min-width:0;
+  padding:12px;
+  border-radius:11px;
+  border:1px solid #7484bd4a;
+  background:linear-gradient(145deg,#080f22df,#17213ddd);
+  box-shadow:inset 0 0 18px #a38bff06;
+  transition:.25s;
+}
+.stat:hover{
+  border-color:#ffe09a88;
+  box-shadow:0 0 17px #b79aff1a;
+}
+.stat span{font-size:12px;color:var(--muted)}
+.stat strong{
+  display:block;
+  margin-top:6px;
+  overflow-wrap:anywhere;
+  font-size:14px;
+  color:#fff4ce;
+}
+nav{
+  position:sticky;
+  top:0;
+  z-index:20;
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin:12px 0;
+  padding:8px;
+  border:1px solid #7384bd32;
+  border-radius:14px;
+  background:#080d1ceF;
+  backdrop-filter:blur(14px);
+}
+nav button{flex:1 0 auto;padding:10px}
+nav button.active{
+  color:#fff0bc;
+  border-color:var(--gold);
+  background:linear-gradient(135deg,#8e6526,#45331f);
+  box-shadow:0 0 13px #ffd77824;
+}
+.panel{
+  padding:17px;
+  margin-bottom:13px;
+  border:1px solid var(--border);
+  border-radius:15px;
+  background:var(--panel);
+  box-shadow:0 8px 28px #0003,inset 0 0 24px #7c6eff04;
+  backdrop-filter:blur(8px);
+  animation:panelIn .35s ease;
+}
+@keyframes panelIn{
+  from{opacity:.5;transform:translateY(5px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+}
+.card{
+  position:relative;
+  overflow:hidden;
+  padding:15px;
+  border:1px solid #7183bd42;
+  border-radius:13px;
+  background:linear-gradient(145deg,#202d4beF,#111a31ef);
+  box-shadow:inset 0 0 20px #9d8bff05;
+  transition:transform .25s,border-color .25s,box-shadow .25s;
+}
+.card:hover{
+  transform:translateY(-2px);
+  border-color:#bca5ff99;
+  box-shadow:0 5px 24px #a08bff12;
+}
+.card h3{margin-top:0}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.row button{flex:1}
+.bar{
+  height:12px;
+  overflow:hidden;
+  margin:9px 0 14px;
+  border-radius:20px;
+  background:#050914;
+  border:1px solid #3d4b70;
+}
+.bar span{
+  display:block;
+  width:0;
+  height:100%;
+  border-radius:20px;
+  background:linear-gradient(90deg,#36c9a0,#c9ffe5);
+  transition:width .35s;
+  box-shadow:0 0 10px #70f3b966;
+}
+.bar.xp span{
+  background:linear-gradient(90deg,#7758e9,#78e7ff);
+  box-shadow:0 0 12px #8a78ff77;
+}
+.bar.hp span{
+  background:linear-gradient(90deg,#ff435c,#ffab84);
+}
+.log{
+  padding:10px;
+  max-height:320px;
+  overflow:auto;
+  overflow-wrap:anywhere;
+  border-radius:9px;
+  background:#050a17;
+  font-size:13px;
+  line-height:1.65;
+}
+.log p{margin:3px 0;padding-bottom:4px;border-bottom:1px solid #1d2940}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:9px;border-bottom:1px solid #35496d;overflow-wrap:anywhere}
+footer{text-align:center;color:var(--muted);padding:18px;font-size:12px}
+
+/* ===== PHÁP TRẬN ===== */
+.cultivation-scene{
+  position:relative;
+  display:flex;
+  min-height:230px;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  margin-bottom:14px;
+  border:1px solid #9382d84d;
+  border-radius:15px;
+  background:
+    radial-gradient(circle at 50% 50%,#8169db2e,transparent 42%),
+    linear-gradient(180deg,#0a1125,#151334);
+}
+.magic-circle{
+  position:relative;
+  width:165px;
+  height:165px;
+  border:2px solid #b6a3ffae;
+  border-radius:50%;
+  box-shadow:0 0 20px #9b78ff38,inset 0 0 24px #9b78ff22;
+}
+.magic-circle:before,.magic-circle:after{
+  content:"";
+  position:absolute;
+  inset:12px;
+  border:1px dashed #ffe09a9c;
+  border-radius:50%;
+}
+.magic-circle:after{
+  inset:27px;
+  border-style:solid;
+  border-color:#7ceaff75;
+  transform:rotate(45deg);
+}
+.magic-circle.active{animation:circleSpin 12s linear infinite}
+.magic-circle.active:before{animation:circleSpin 8s linear infinite reverse}
+.magic-symbol{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:var(--gold);
+  font-size:52px;
+  text-shadow:0 0 22px #c7a7ff;
+}
+@keyframes circleSpin{to{transform:rotate(360deg)}}
+.aura-text{
+  position:absolute;
+  bottom:12px;
+  left:0;right:0;
+  text-align:center;
+  color:#c5b6ff;
+  font-size:12px;
+  letter-spacing:2px;
+  text-shadow:0 0 10px #a18cff;
+}
+.energy-particle{
+  position:absolute;
+  width:4px;height:4px;
+  border-radius:50%;
+  background:#d6cbff;
+  box-shadow:0 0 12px #b6a0ff;
+  animation:particleRise 4s linear infinite;
+}
+@keyframes particleRise{
+  from{transform:translateY(100px) scale(.5);opacity:0}
+  30%{opacity:1}
+  to{transform:translateY(-130px) scale(1.5);opacity:0}
+}
+
+/* ===== THIÊN KIẾP ===== */
+#effect{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  pointer-events:none;
+  background:radial-gradient(circle,#b5a3ff70,transparent 70%);
+}
+#effect.show{display:flex;animation:flash 1.6s ease-out forwards}
+#effect strong{
+  max-width:90%;
+  text-align:center;
+  font-size:clamp(26px,7vw,58px);
+  color:white;
+  text-shadow:0 0 15px #8d5cff,0 0 45px #c8a8ff;
+}
+#effect.lightning{background:linear-gradient(180deg,#ffffffa8,#8d8bff22,transparent)}
+@keyframes flash{
+  0%{opacity:0}
+  12%{opacity:1}
+  35%{opacity:.85}
+  100%{opacity:0}
+}
+body.breakthrough-shake{animation:screenShake .45s ease}
+@keyframes screenShake{
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-5px)}
+  40%{transform:translateX(5px)}
+  60%{transform:translateX(-3px)}
+  80%{transform:translateX(3px)}
+}
+.realm-highlight{
+  color:var(--gold);
+  text-shadow:0 0 10px #ffd77888;
+}
+.action-note{color:var(--muted);font-size:12px;margin-top:8px}
+.status-pill{
+  display:inline-block;
+  padding:4px 8px;
+  margin:3px;
+  border-radius:30px;
+  border:1px solid #8390bb55;
+  background:#101a31;
+  font-size:12px;
+}
+.status-pill.on{color:var(--green);border-color:#73f0b577}
+@media(max-width:650px){
+  #game{padding:7px}
+  .hero{padding:15px}
+  .panel{padding:11px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  nav{gap:5px;padding:6px}
+  nav button{flex:1 0 28%;font-size:12px;padding:9px 4px}
+  .grid{grid-template-columns:1fr}
+  .moon{width:70px;height:70px;right:8%;top:4%}
+  .mountain{transform:scale(.65);transform-origin:bottom center}
+  .magic-circle{width:145px;height:145px}
+  th,td{padding:6px;font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    transition-duration:.01ms!important;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="sky" aria-hidden="true">
+  <div class="stars"></div>
+  <div class="moon"></div>
+  <div class="mountain m1"></div>
+  <div class="mountain m2"></div>
+  <div class="mountain m3"></div>
+  <div class="mountain m4"></div>
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="cloud c3"></div>
+</div>
+
+<section id="login">
+  <div class="logo">☯</div>
+  <h1 class="login-title">TU TIÊN ĐẠI ĐẠO</h1>
+  <p class="purple" style="text-align:center">Thiên địa bất nhân, đại đạo vô tình.</p>
+  <p class="small" style="text-align:center">PHIÊN BẢN 3.0 · TIÊN GIỚI HUYỀN ẢO</p>
+  <label for="username">Tên nhân vật</label>
+  <input id="username" maxlength="24" placeholder="Nhập tên nhân vật" autocomplete="username">
+  <label for="password">Mật khẩu thử nghiệm</label>
+  <input id="password" type="password" maxlength="60" placeholder="Nhập mật khẩu" autocomplete="current-password">
+  <button style="width:100%" onclick="login()">✨ Đăng nhập / Tạo nhân vật</button>
+  <p id="loginError" class="red"></p>
+  <p class="small">Dữ liệu lưu trên thiết bị hiện tại. Không dùng mật khẩu quan trọng.</p>
+</section>
+
+<main id="game" class="hidden">
+  <header class="hero">
+    <h1>☯ TU TIÊN ĐẠI ĐẠO 3.0</h1>
+    <div id="welcome" class="purple"></div>
+    <p class="small">Một niệm thành tiên — một bước nghịch thiên.</p>
+    <div class="stats">
+      <div class="stat"><span>🌌 Cảnh giới</span><strong id="realmStat"></strong></div>
+      <div class="stat"><span>✨ Tu vi</span><strong id="xpStat"></strong></div>
+      <div class="stat"><span>💎 Linh thạch</span><strong id="stoneStat"></strong></div>
+      <div class="stat"><span>⚔️ Lực chiến</span><strong id="powerStat"></strong></div>
+      <div class="stat"><span>❤️ Sinh mệnh</span><strong id="hpStat"></strong></div>
+      <div class="stat"><span>🧬 Linh căn</span><strong id="rootStat"></strong></div>
+      <div class="stat"><span>💪 Thể chất</span><strong id="bodyStat"></strong></div>
+      <div class="stat"><span>📖 Công pháp</span><strong id="skillStat"></strong></div>
+    </div>
+  </header>
+
+  <nav id="nav">
+    <button data-tab="home" class="active" onclick="showTab('home',this)">🏠 Tổng quan</button>
+    <button data-tab="cultivation" onclick="showTab('cultivation',this)">🧘 Tu luyện</button>
+    <button data-tab="battle" onclick="showTab('battle',this)">⚔️ Chiến đấu</button>
+    <button data-tab="character" onclick="showTab('character',this)">🧍 Nhân vật</button>
+    <button data-tab="inventory" onclick="showTab('inventory',this)">🎒 Túi đồ</button>
+    <button data-tab="quests" onclick="showTab('quests',this)">📜 Nhiệm vụ</button>
+    <button data-tab="pet" onclick="showTab('pet',this)">🐉 Linh thú</button>
+    <button data-tab="dungeon" onclick="showTab('dungeon',this)">🏯 Bí cảnh</button>
+    <button data-tab="sect" onclick="showTab('sect',this)">🏮 Tông môn</button>
+    <button data-tab="shop" onclick="showTab('shop',this)">🛒 Cửa hàng</button>
+    <button data-tab="achievements" onclick="showTab('achievements',this)">🏆 Thành tựu</button>
+    <button data-tab="ranking" onclick="showTab('ranking',this)">📊 Xếp hạng</button>
+    <button data-tab="journal" onclick="showTab('journal',this)">📔 Nhật ký</button>
+    <button data-tab="settings" onclick="showTab('settings',this)">⚙️ Dữ liệu</button>
+  </nav>
+
+  <section id="tab-home" class="tab panel">
+    <h2>🏔️ Động phủ tu tiên</h2>
+    <p id="homeIntro"></p>
+    <div class="card">
+      <h3>✨ Tiến độ tu vi</h3>
+      <div class="bar xp"><span id="homeXpBar"></span></div>
+      <div class="bar hp"><span id="homeHpBar"></span></div>
+      <div id="autoSummary" class="small"></div>
+    </div>
+    <h3>Con đường đại đạo</h3>
+    <div class="grid">
+      <div class="card"><h3>🧘 Tu luyện</h3><p>Hấp thu linh khí, nâng cao cảnh giới.</p><button onclick="showTab('cultivation')">Tiến vào</button></div>
+      <div class="card"><h3>⚔️ Chiến đấu</h3><p>Khiêu chiến yêu thú, thu thập nội đan.</p><button onclick="showTab('battle')">Khiêu chiến</button></div>
+      <div class="card"><h3>🏯 Bí cảnh</h3><p>Vượt ải và chinh phục bảo tháp.</p><button onclick="showTab('dungeon')">Khám phá</button></div>
+      <div class="card"><h3>📜 Nhiệm vụ</h3><p>Hoàn thành thử thách để nhận thưởng.</p><button onclick="showTab('quests')">Xem nhiệm vụ</button></div>
+    </div>
+    <h3>📔 Nhật ký gần đây</h3>
+    <div id="recentLog" class="log"></div>
+  </section>
+
+  <section id="tab-cultivation" class="tab panel hidden">
+    <h2>🧘 Động phủ tu luyện</h2>
+    <p>Ngưng thần tĩnh khí, hấp thu linh lực của thiên địa.</p>
+    <div class="cultivation-scene">
+      <div id="magicCircle" class="magic-circle">
+        <div class="magic-symbol">☯</div>
+      </div>
+      <div class="aura-text">☯ TỤ LINH PHÁP TRẬN ☯</div>
+    </div>
+    <div class="bar xp"><span id="cultXpBar"></span></div>
+    <div class="grid">
+      <div class="card">
+        <h3>☯ Vận công</h3>
+        <p>Hấp thu linh khí, tu luyện thủ công.</p>
+        <button onclick="manualCultivate()">Tu luyện +20</button>
+      </div>
+      <div class="card">
+        <h3>✨ Auto Tu Luyện</h3>
+        <p>Tốc độ cố định x1.</p>
+        <p id="autoCultText"></p>
+        <button id="autoCultBtn" onclick="toggleAuto('cult')"></button>
+      </div>
+      <div class="card">
+        <h3>🌌 Đại cảnh giới</h3>
+        <p id="breakInfo"></p>
+        <button onclick="breakthrough()">Đột phá đại cảnh giới</button>
+      </div>
+      <div class="card">
+        <h3>⚡ Thiên kiếp</h3>
+        <p>Thử thách căn cơ, nhận thưởng khi vượt kiếp.</p>
+        <button onclick="tribulation()">Độ thiên kiếp</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-battle" class="tab panel hidden">
+    <h2>⚔️ Chiến trường</h2>
+    <div class="grid">
+      <div class="card"><h3>🐲 Yêu thú</h3><p>Đánh bại yêu thú để nhận tài nguyên.</p><button onclick="fight()">Khiêu chiến yêu thú</button></div>
+      <div class="card"><h3>⚔️ Auto Chiến Đấu</h3><p id="autoFightText"></p><button id="autoFightBtn" onclick="toggleAuto('fight')"></button></div>
+      <div class="card"><h3>❤️ Hồi phục</h3><p>Tiêu hao 50 linh thạch.</p><button onclick="heal()">Hồi phục HP</button></div>
+    </div>
+    <h3>Diễn biến chiến đấu</h3>
+    <div id="battleInfo" class="log">Chưa có trận chiến.</div>
+  </section>
+
+  <section id="tab-character" class="tab panel hidden">
+    <h2>🧍 Nhân vật</h2>
+    <div id="characterDetails"></div>
+    <div class="grid">
+      <div class="card"><h3>🧬 Linh căn</h3><p id="rootCost"></p><button onclick="upgradeAttribute('root')">Nâng linh căn</button></div>
+      <div class="card"><h3>💪 Thể chất</h3><p id="bodyCost"></p><button onclick="upgradeAttribute('body')">Nâng thể chất</button></div>
+      <div class="card"><h3>📖 Công pháp</h3><p id="skillCost"></p><button onclick="upgradeAttribute('skill')">Nâng công pháp</button></div>
+    </div>
+  </section>
+
+  <section id="tab-inventory" class="tab panel hidden">
+    <h2>🎒 Túi đồ</h2>
+    <div id="inventoryList"></div>
+  </section>
+
+  <section id="tab-quests" class="tab panel hidden">
+    <h2>📜 Nhiệm vụ</h2>
+    <div id="questList"></div>
+  </section>
+
+  <section id="tab-pet" class="tab panel hidden">
+    <h2>🐉 Linh thú</h2>
+    <div class="card">
+      <h3 id="petName"></h3>
+      <p id="petInfo"></p>
+      <button onclick="summonPet()">Triệu hồi linh thú — 300 linh thạch</button>
+      <button onclick="feedPet()">Bồi dưỡng — 100 linh thạch</button>
+    </div>
+  </section>
+
+  <section id="tab-dungeon" class="tab panel hidden">
+    <h2>🏯 Bí cảnh và bảo tháp</h2>
+    <div class="grid">
+      <div class="card">
+        <h3>⚔️ Vượt ải</h3>
+        <p id="stageInfo"></p>
+        <button onclick="runStage()">Vượt ải kế tiếp</button>
+        <p id="autoStageText"></p>
+        <button id="autoStageBtn" onclick="toggleAuto('stage')"></button>
+      </div>
+      <div class="card">
+        <h3>🗼 Leo tháp</h3>
+        <p id="towerInfo"></p>
+        <button onclick="climbTower()">Leo một tầng</button>
+        <p id="autoTowerText"></p>
+        <button id="autoTowerBtn" onclick="toggleAuto('tower')"></button>
+      </div>
+      <div class="card">
+        <h3>🌫️ Thám hiểm</h3>
+        <p>Tiến vào bí cảnh tìm kiếm bảo vật.</p>
+        <button onclick="explore()">Thám hiểm bí cảnh</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-sect" class="tab panel hidden">
+    <h2>🏮 Tông môn</h2>
+    <div class="card">
+      <h3 id="sectName"></h3>
+      <p id="sectInfo"></p>
+      <button onclick="joinSect()">Gia nhập — 200 linh thạch</button>
+      <button onclick="sectTraining()">Tu luyện tông môn</button>
+      <button onclick="sectMission()">Nhiệm vụ tông môn</button>
+    </div>
+  </section>
+
+  <section id="tab-shop" class="tab panel hidden">
+    <h2>🛒 Cửa hàng</h2>
+    <div class="grid">
+      <div class="card"><h3>❤️ Đan dược hồi phục</h3><p>Hồi 50 HP.</p><button onclick="buyItem('Đan dược hồi phục',100)">Mua — 100</button></div>
+      <div class="card"><h3>✨ Tụ Khí Đan</h3><p>Nhận 100 tu vi.</p><button onclick="buyItem('Tụ Khí Đan',150)">Mua — 150</button></div>
+      <div class="card"><h3>💎 Linh thạch nhỏ</h3><p>Đổi vật phẩm lấy linh thạch.</p><button onclick="buyItem('Linh thạch nhỏ',250)">Mua — 250</button></div>
+    </div>
+  </section>
+
+  <section id="tab-achievements" class="tab panel hidden">
+    <h2>🏆 Thành tựu</h2>
+    <div id="achievementList"></div>
+  </section>
+
+  <section id="tab-ranking" class="tab panel hidden">
+    <h2>📊 Bảng xếp hạng cục bộ</h2>
+    <div id="rankingList"></div>
+    <p class="small">Bảng xếp hạng chỉ phản ánh nhân vật đang chơi trên thiết bị này, chưa phải bảng xếp hạng online.</p>
+  </section>
+
+  <section id="tab-journal" class="tab panel hidden">
+    <h2>📔 Nhật ký tu tiên</h2>
+    <button onclick="clearJournal()">Xóa nhật ký</button>
+    <div id="journalList" class="log"></div>
+  </section>
+
+  <section id="tab-settings" class="tab panel hidden">
+    <h2>⚙️ Quản lý dữ liệu</h2>
+    <div class="grid">
+      <div class="card"><h3>💾 Lưu game</h3><p>Lưu tiến trình hiện tại.</p><button onclick="saveGame(true)">Lưu ngay</button></div>
+      <div class="card"><h3>📤 Xuất dữ liệu</h3><p>Tạo file sao lưu JSON.</p><button onclick="exportSave()">Xuất JSON</button></div>
+      <div class="card"><h3>📥 Nhập dữ liệu</h3><input id="importFile" type="file" accept=".json,application/json"><button onclick="importSave()">Nhập JSON</button></div>
+      <div class="card"><h3>🚪 Đăng xuất</h3><p>Thoát nhân vật hiện tại.</p><button onclick="logout()">Đăng xuất</button></div>
+    </div>
+    <p class="small">Hãy xuất bản sao lưu trước khi đổi trình duyệt hoặc thiết bị.</p>
+  </section>
+
+  <footer>Tu Tiên Đại Đạo 3.0 · Tiên Giới Huyền Ảo · Bản thử nghiệm cục bộ</footer>
+</main>
+
+<div id="effect"><strong id="effectText">ĐẠI ĐỘT PHÁ!</strong></div>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+const PREFIX = "ttdd3_account_";
+
+const realms = [
+ "Luyện Khí","Trúc Cơ","Kim Đan","Nguyên Anh","Hóa Thần",
+ "Luyện Hư","Hợp Thể","Đại Thừa","Độ Kiếp","Chân Tiên",
+ "Thiên Tiên","Kim Tiên","Thái Ất Kim Tiên","Đại La Kim Tiên",
+ "Tiên Quân","Tiên Vương","Tiên Hoàng","Tiên Đế","Thần Nhân",
+ "Chân Thần","Thiên Thần","Thần Vương","Thần Hoàng","Thần Đế",
+ "Thánh Nhân","Đại Thánh","Chuẩn Đế","Đại Đế","Hỗn Độn",
+ "Hồng Mông","Vĩnh Hằng","Siêu Thoát","Vô Thượng","Đại Đạo"
+];
+
+const grades = [
+ "Phàm phẩm","Hạ phẩm","Trung phẩm","Thượng phẩm","Cực phẩm",
+ "Địa phẩm","Thiên phẩm","Thánh phẩm","Tiên phẩm","Thần phẩm"
+];
+
+let state = null;
+let accountKey = "";
+let timers = {};
+
+function freshState(name){
+ return {
+  name,
+  realmIndex:0,realmLevel:1,xp:0,stones:1000,
+  hp:100,maxHp:100,root:0,body:0,skill:0,
+  kills:0,stage:0,tower:0,petLevel:0,
+  petName:"Thanh Vân Linh Thú",
+  sect:false,sectName:"Thanh Vân Tông",
+  inventory:{},
+  autos:{cult:false,fight:false,stage:false,tower:false},
+  log:[],
+  stats:{cultivations:0,breakthroughs:0,wins:0},
+  claimed:{}
+ };
+}
+
+function keyFor(name){
+ return PREFIX+name.trim().toLowerCase();
+}
+
+function login(){
+ const name=$("username").value.trim();
+ const pass=$("password").value;
+
+ if(!name||!pass){
+  $("loginError").textContent="Hãy nhập tên nhân vật và mật khẩu.";
+  return;
+ }
+
+ const key=keyFor(name);
+
+ try{
+  const old=localStorage.getItem(key);
+
+  if(old){
+   const data=JSON.parse(old);
+   if(data.password!==pass){
+    $("loginError").textContent="Mật khẩu không đúng.";
+    return;
+   }
+   state=data.game;
+   normalize();
+  }else{
+   state=freshState(name);
+   localStorage.setItem(key,JSON.stringify({
+    password:pass,
+    game:state
+   }));
+  }
+
+  accountKey=key;
+  sessionStorage.setItem("ttdd3_current",key);
+  $("loginError").textContent="";
+  $("login").classList.add("hidden");
+  $("game").classList.remove("hidden");
+
+  log("Bước vào con đường tu tiên.");
+  startTimers();
+  render();
+ }catch(e){
+  $("loginError").textContent="Không thể đọc dữ liệu game trên thiết bị này.";
+ }
+}
+
+function normalize(){
+ const d=freshState(state.name||"Đạo hữu");
+
+ Object.keys(d).forEach(k=>{
+  if(state[k]===undefined)state[k]=d[k];
+ });
+
+ state.autos=Object.assign({},d.autos,state.autos||{});
+ state.inventory=state.inventory||{};
+ state.stats=Object.assign({},d.stats,state.stats||{});
+ state.claimed=state.claimed||{};
+ state.log=Array.isArray(state.log)?state.log:[];
+
+ state.realmIndex=Math.max(0,Math.floor(Number(state.realmIndex)||0));
+ state.realmLevel=Math.max(1,Math.min(10,Math.floor(Number(state.realmLevel)||1)));
+ state.xp=Math.max(0,Number(state.xp)||0);
+ state.stones=Math.max(0,Math.floor(Number(state.stones)||0));
+ state.maxHp=Math.max(100,Number(state.maxHp)||100);
+ state.hp=Math.max(0,Math.min(state.maxHp,Number(state.hp)||0));
+}
+
+function logout(){
+ stopTimers();
+ saveGame(false);
+ sessionStorage.removeItem("ttdd3_current");
+ state=null;
+ accountKey="";
+ $("game").classList.add("hidden");
+ $("login").classList.remove("hidden");
+ $("password").value="";
+}
+
+function showTab(name,btn){
+ document.querySelectorAll(".tab").forEach(x=>x.classList.add("hidden"));
+ $("tab-"+name).classList.remove("hidden");
+
+ document.querySelectorAll("#nav button").forEach(x=>x.classList.remove("active"));
+
+ if(btn)btn.classList.add("active");
+ else{
+  const target=document.querySelector('#nav button[data-tab="'+name+'"]');
+  if(target)target.classList.add("active");
+ }
+ render();
+}
+
+function realm(){
+ return state.realmIndex<realms.length
+  ? realms[state.realmIndex]
+  : "Vô Cực Cảnh "+(state.realmIndex-realms.length+1);
+}
+
+function realmText(){
+ return realm()+" tầng "+state.realmLevel;
+}
+
+function needXp(){
+ return Math.floor(
+  100*Math.pow(1.42,state.realmIndex)*
+  Math.pow(1.28,state.realmLevel-1)
+ );
+}
+
+function power(){
+ return Math.floor(
+  10+state.realmIndex*80+state.realmLevel*24+
+  state.root*28+state.body*45+state.skill*38+
+  state.petLevel*60+state.stage*12+state.tower*10
+ );
+}
+
+function gradeText(v){
+ v=Math.max(0,Math.floor(Number(v)||0));
+ const grade=Math.min(9,Math.floor(v/10));
+ const tier=(v%10)+1;
+ return grades[grade]+" tầng "+tier;
+}
+
+function cost(type){
+ return Math.floor(100*Math.pow(3.4,state[type]/5));
+}
+
+function addStones(n){
+ state.stones=Math.max(0,state.stones+Math.floor(n));
+}
+
+function log(s){
+ if(!state)return;
+ state.log.unshift(
+  "["+new Date().toLocaleTimeString("vi-VN")+"] "+s
+ );
+ state.log=state.log.slice(0,250);
+}
+
+function item(name,n=1){
+ state.inventory[name]=(state.inventory[name]||0)+n;
+}
+
+function flash(text,lightning=false){
+ $("effectText").textContent=text;
+ $("effect").classList.toggle("lightning",lightning);
+ $("effect").classList.remove("show");
+ void $("effect").offsetWidth;
+ $("effect").classList.add("show");
+
+ if(text.includes("ĐỘT PHÁ")||text.includes("THIÊN KIẾP")){
+  document.body.classList.remove("breakthrough-shake");
+  void document.body.offsetWidth;
+  document.body.classList.add("breakthrough-shake");
+  setTimeout(()=>document.body.classList.remove("breakthrough-shake"),500);
+ }
+}
+
+function cultivate(amount,source){
+ if(state.realmLevel===10&&state.xp>=needXp())return;
+
+ state.xp+=amount;
+ state.stats.cultivations++;
+
+ checkMinorBreakthrough();
+
+ if(source)log(source+": +"+Math.floor(amount).toLocaleString("vi-VN")+" tu vi.");
+
+ if(state.realmLevel===10&&state.xp>=needXp()){
+  state.xp=needXp();
+ }
+}
+
+function manualCultivate(){
+ cultivate(20+state.root*3+state.skill*2,"Tu luyện thủ công");
+ flash("LINH KHÍ HỘI TỤ");
+ render();
+}
+
+function checkMinorBreakthrough(){
+ let guard=0;
+
+ while(state.xp>=needXp()&&state.realmLevel<10&&guard++<20){
+  state.xp-=needXp();
+  state.realmLevel++;
+  state.maxHp+=10;
+  state.hp=Math.min(state.maxHp,state.hp+10);
+  log("Đột phá tầng nhỏ: "+realmText()+".");
+ }
+
+ if(state.realmLevel===10){
+  state.xp=Math.min(state.xp,needXp());
+ }
+}
+
+function breakthrough(){
+ if(state.realmLevel!==10||state.xp<needXp()){
+  alert("Cần đạt tầng 10 và đủ tu vi mới được đột phá.");
+  return;
+ }
+
+ const fee=Math.floor(1000*Math.pow(1.6,state.realmIndex));
+
+ if(state.stones<fee){
+  alert("Đột phá cần "+fee.toLocaleString("vi-VN")+" linh thạch.");
+  return;
+ }
+
+ if(state.hp<=0){
+  alert("Sinh mệnh đã cạn. Hãy hồi phục.");
+  return;
+ }
+
+ if(!confirm("Đột phá đại cảnh giới với chi phí "+fee.toLocaleString("vi-VN")+" linh thạch? Tỉ lệ thành công giảm ở cảnh giới cao."))return;
+
+ addStones(-fee);
+ const chance=Math.max(.15,.78-state.realmIndex*.012);
+
+ if(Math.random()<chance){
+  state.realmIndex++;
+  state.realmLevel=1;
+  state.xp=0;
+  state.maxHp+=50;
+  state.hp=state.maxHp;
+  state.stats.breakthroughs++;
+
+  log("ĐẠI ĐỘT PHÁ THÀNH CÔNG: "+realmText()+"!");
+  flash("ĐẠI ĐỘT PHÁ!",true);
+ }else{
+  state.hp=Math.max(1,state.hp-Math.floor(state.maxHp*.35));
+  state.xp=Math.floor(state.xp*.8);
+
+  log("Đột phá thất bại! Tu vi tổn hao, sinh mệnh giảm.");
+  flash("ĐỘT PHÁ THẤT BẠI!",true);
+ }
+
+ render();
+}
+
+function tribulation(){
+ if(state.realmIndex<4){
+  alert("Thiên kiếp chỉ xuất hiện từ Hóa Thần trở lên.");
+  return;
+ }
+ if(state.hp<=0){
+  alert("Sinh mệnh đã cạn.");
+  return;
+ }
+
+ const enemy=power()*1.3+state.realmIndex*200;
+
+ if(power()>=enemy*.9&&Math.random()<.7){
+  addStones(500+state.realmIndex*100);
+  cultivate(needXp()*.25,"Vượt thiên kiếp");
+  state.maxHp+=30;
+  state.hp=state.maxHp;
+
+  log("Vượt qua thiên kiếp, căn cơ được củng cố!");
+  flash("ĐỘ THIÊN KIẾP THÀNH CÔNG!",true);
+ }else{
+  const damage=Math.floor(state.maxHp*.45);
+  state.hp=Math.max(1,state.hp-damage);
+
+  log("Thiên kiếp giáng xuống! Mất "+damage+" HP.");
+  flash("THIÊN KIẾP GIÁNG LÂM!",true);
+ }
+
+ render();
+}
+
+function upgradeAttribute(type){
+ const fee=cost(type);
+
+ if(state.stones<fee){
+  alert("Cần "+fee.toLocaleString("vi-VN")+" linh thạch.");
+  return;
+ }
+
+ const isGrade=state[type]%10===9;
+
+ if(isGrade&&!confirm("Đột phá đại phẩm cấp? Tỉ lệ thành công 65%."))return;
+
+ addStones(-fee);
+
+ if(!isGrade||Math.random()<.65){
+  state[type]++;
+  log("Nâng "+type+" thành "+gradeText(state[type])+".");
+
+  if(isGrade)flash("ĐẠI PHẨM CẤP ĐỘT PHÁ!",true);
+ }else{
+  log("Đột phá phẩm cấp thất bại.");
+ }
+
+ render();
+}
+
+function toggleAuto(t){
+ state.autos[t]=!state.autos[t];
+ log(t+" "+(state.autos[t]?"đã bật":"đã tắt")+".");
+ render();
+}
+
+function enemyPower(){
+ return Math.floor(25+state.kills*16+state.realmIndex*90);
+}
+
+function fight(){
+ if(state.hp<=0)return;
+
+ const e=enemyPower(),p=power();
+
+ if(p>=e*.9){
+  const reward=Math.floor(30+e*.15+Math.random()*25);
+  addStones(reward);
+  state.kills++;
+  state.stats.wins++;
+
+  cultivate(25+Math.floor(e*.1),"Chiến thắng");
+  item("Yêu thú nội đan");
+  state.hp=Math.min(state.maxHp,state.hp+5);
+
+  $("battleInfo").textContent=
+   "Chiến thắng!\nNhận "+reward+" linh thạch và một nội đan.";
+
+  log("Đánh bại yêu thú.");
+
+  if([10,100,1000,10000].includes(state.kills)){
+   const bossReward=state.kills*100;
+   addStones(bossReward);
+   item("Boss bảo vật");
+   log("Đánh bại BOSS mốc "+state.kills+"! Thưởng "+bossReward+" linh thạch.");
+   flash("BOSS BỊ ĐÁNH BẠI!",true);
+  }
+
+  checkQuests();
+ }else{
+  const dmg=Math.max(8,Math.floor(e*.15));
+  state.hp=Math.max(0,state.hp-dmg);
+
+  $("battleInfo").textContent=
+   "Thất bại!\nYêu thú: "+e+" lực chiến.\nMất "+dmg+" HP.";
+
+  log("Thất bại trong chiến đấu.");
+ }
+
+ render();
+}
+
+function heal(){
+ if(state.stones<50){
+  alert("Không đủ linh thạch.");
+  return;
+ }
+ if(state.hp===state.maxHp){
+  alert("HP đang đầy.");
+  return;
+ }
+
+ addStones(-50);
+ state.hp=Math.min(state.maxHp,state.hp+50);
+ log("Hồi phục sinh mệnh.");
+ render();
+}
+
+function runStage(){
+ if(state.hp<=0)return;
+
+ const e=100+state.stage*65+state.realmIndex*100;
+
+ if(power()<e){
+  state.hp=Math.max(0,state.hp-Math.floor(e*.1));
+  log("Vượt ải thất bại.");
+  render();
+  return;
+ }
+
+ state.stage++;
+ const reward=80+state.stage*20;
+
+ addStones(reward);
+ cultivate(50+state.stage*8,"Vượt ải");
+ item("Huy hiệu vượt ải");
+ log("Vượt ải "+state.stage+" thành công.");
+
+ checkQuests();
+ render();
+}
+
+function climbTower(){
+ if(state.hp<=0)return;
+
+ const e=150+state.tower*90+state.realmIndex*80;
+
+ if(power()<e){
+  state.hp=Math.max(0,state.hp-Math.floor(e*.12));
+  log("Leo tháp thất bại.");
+  render();
+  return;
+ }
+
+ state.tower++;
+ addStones(100+state.tower*25);
+ cultivate(60+state.tower*8,"Leo tháp");
+ log("Chinh phục tầng tháp "+state.tower+".");
+
+ checkQuests();
+ render();
+}
+
+function explore(){
+ if(state.hp<=0)return;
+
+ if(Math.random()<.55){
+  const reward=100+Math.floor(Math.random()*200);
+  addStones(reward);
+  item("Linh thảo");
+  log("Thám hiểm thành công, tìm được "+reward+" linh thạch.");
+ }else{
+  const dmg=20+Math.floor(Math.random()*35);
+  state.hp=Math.max(0,state.hp-dmg);
+  log("Gặp mai phục trong bí cảnh, mất "+dmg+" HP.");
+ }
+
+ render();
+}
+
+function summonPet(){
+ if(state.petLevel){
+  alert("Bạn đã có linh thú.");
+  return;
+ }
+ if(state.stones<300){
+  alert("Không đủ 300 linh thạch.");
+  return;
+ }
+
+ addStones(-300);
+ state.petLevel=1;
+ log("Triệu hồi Thanh Vân Linh Thú.");
+ flash("LINH THÚ GIÁNG THẾ!");
+ render();
+}
+
+function feedPet(){
+ if(!state.petLevel){
+  alert("Chưa có linh thú.");
+  return;
+ }
+ if(state.stones<100){
+  alert("Không đủ 100 linh thạch.");
+  return;
+ }
+
+ addStones(-100);
+ state.petLevel++;
+ log("Linh thú tăng cấp "+state.petLevel+".");
+ render();
+}
+
+function joinSect(){
+ if(state.sect){
+  alert("Bạn đã gia nhập tông môn.");
+  return;
+ }
+ if(state.stones<200){
+  alert("Không đủ 200 linh thạch.");
+  return;
+ }
+
+ addStones(-200);
+ state.sect=true;
+ log("Gia nhập Thanh Vân Tông.");
+ checkQuests();
+ render();
+}
+
+function sectTraining(){
+ if(!state.sect){
+  alert("Hãy gia nhập tông môn trước.");
+  return;
+ }
+
+ cultivate(60+state.skill*5,"Tu luyện tông môn");
+ addStones(20);
+ render();
+}
+
+function sectMission(){
+ if(!state.sect||state.kills<1){
+  alert("Cần gia nhập tông môn và đánh bại ít nhất một yêu thú.");
+  return;
+ }
+
+ addStones(150);
+ cultivate(100,"Nhiệm vụ tông môn");
+ item("Cống hiến tông môn");
+ render();
+}
+
+function buyItem(name,fee){
+ if(state.stones<fee){
+  alert("Không đủ linh thạch.");
+  return;
+ }
+
+ addStones(-fee);
+
+ if(name==="Đan dược hồi phục"){
+  state.hp=Math.min(state.maxHp,state.hp+50);
+ }else if(name==="Tụ Khí Đan"){
+  cultivate(100,"Tụ Khí Đan");
+ }else{
+  addStones(350);
+ }
+
+ item(name);
+ log("Mua "+name+".");
+ render();
+}
+
+function questDefs(){
+ return [
+  {id:"q1",name:"Tu luyện 5 lần",desc:"Tích lũy 5 lần tu luyện.",ok:state.stats.cultivations>=5,reward:100},
+  {id:"q2",name:"Đánh bại 3 yêu thú",desc:"Chiến thắng 3 trận.",ok:state.kills>=3,reward:200},
+  {id:"q3",name:"Vượt 3 ải",desc:"Chinh phục 3 ải.",ok:state.stage>=3,reward:250},
+  {id:"q4",name:"Leo tháp 3 tầng",desc:"Chinh phục 3 tầng.",ok:state.tower>=3,reward:300},
+  {id:"q5",name:"Gia nhập tông môn",desc:"Gia nhập tông môn.",ok:state.sect,reward:100}
+ ];
+}
+
+function checkQuests(){
+ questDefs().forEach(q=>{
+  if(q.ok&&!state.claimed[q.id]){
+   state.claimed[q.id]=true;
+   addStones(q.reward);
+   log("Hoàn thành "+q.name+", nhận "+q.reward+" linh thạch.");
+  }
+ });
+}
+
+function claimQuest(id){
+ const q=questDefs().find(x=>x.id===id);
+
+ if(!q||!q.ok||state.claimed[id])return;
+
+ state.claimed[id]=true;
+ addStones(q.reward);
+ log("Nhận thưởng "+q.name+".");
+ render();
+}
+
+function clearJournal(){
+ if(confirm("Xóa nhật ký?")){
+  state.log=[];
+  render();
+ }
+}
+
+function saveGame(show){
+ if(!state||!accountKey)return;
+
+ try{
+  const old=JSON.parse(localStorage.getItem(accountKey)||"{}");
+
+  localStorage.setItem(accountKey,JSON.stringify({
+   password:old.password,
+   game:state
+  }));
+
+  if(show)alert("Đã lưu game.");
+ }catch(e){
+  if(show)alert("Không thể lưu dữ liệu.");
+ }
+}
+
+function exportSave(){
+ const blob=new Blob(
+  [JSON.stringify({game:state},null,2)],
+  {type:"application/json"}
+ );
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+
+ a.href=url;
+ a.download="tu-tien-dai-dao-save.json";
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function importSave(){
+ const file=$("importFile").files[0];
+
+ if(!file){
+  alert("Hãy chọn file JSON.");
+  return;
+ }
+
+ const reader=new FileReader();
+
+ reader.onload=()=>{
+  try{
+   const data=JSON.parse(reader.result);
+   const g=data.game||data;
+
+   if(!g||!Number.isFinite(Number(g.realmIndex))||
+      !Number.isFinite(Number(g.stones))){
+    throw Error("invalid");
+   }
+
+   if(!confirm("Thay thế tiến trình hiện tại bằng dữ liệu nhập?"))return;
+
+   state=g;
+   normalize();
+   saveGame(false);
+   render();
+   alert("Nhập dữ liệu thành công.");
+  }catch(e){
+   alert("File không hợp lệ.");
+  }
+ };
+
+ reader.readAsText(file);
+}
+
+function achievements(){
+ return [
+  ["Bước đầu tu tiên","Tu luyện lần đầu",state.stats.cultivations>=1],
+  ["Thợ săn yêu thú","Đánh bại 10 yêu thú",state.kills>=10],
+  ["Khai phá bí cảnh","Vượt 10 ải",state.stage>=10],
+  ["Chinh phục bảo tháp","Leo 10 tầng",state.tower>=10],
+  ["Căn cơ vững chắc","Nâng linh căn",state.root>=1],
+  ["Đại đột phá","Đột phá đại cảnh giới",state.stats.breakthroughs>=1],
+  ["Ngự thú sư","Sở hữu linh thú",state.petLevel>=1]
+ ];
+}
+
+function esc(s){
+ return String(s).replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+function render(){
+ if(!state)return;
+
+ $("welcome").textContent="Đạo hữu: "+state.name;
+ $("realmStat").textContent=realmText();
+ $("xpStat").textContent=Math.floor(state.xp).toLocaleString("vi-VN")+" / "+needXp().toLocaleString("vi-VN");
+ $("stoneStat").textContent=state.stones.toLocaleString("vi-VN");
+ $("powerStat").textContent=power().toLocaleString("vi-VN");
+ $("hpStat").textContent=state.hp+" / "+state.maxHp;
+ $("rootStat").textContent=gradeText(state.root);
+ $("bodyStat").textContent=gradeText(state.body);
+ $("skillStat").textContent=gradeText(state.skill);
+
+ const pct=Math.min(100,state.xp/needXp()*100);
+
+ $("homeXpBar").style.width=pct+"%";
+ $("cultXpBar").style.width=pct+"%";
+ $("homeHpBar").style.width=(state.hp/state.maxHp*100)+"%";
+
+ $("homeIntro").textContent=
+  "Bạn đang ở "+realmText()+", lực chiến "+power()+". Đại đạo càng tiến, thử thách càng gian nan.";
+
+ $("autoSummary").innerHTML=[
+  ["cult","Tu luyện"],["fight","Chiến đấu"],["stage","Vượt ải"],["tower","Leo tháp"]
+ ].map(([k,n])=>
+  '<span class="status-pill '+(state.autos[k]?"on":"")+'">'+
+  n+": "+(state.autos[k]?"BẬT":"TẮT")+"</span>"
+ ).join("");
+
+ const autoMap=[
+  ["cult","autoCultText","autoCultBtn"],
+  ["fight","autoFightText","autoFightBtn"],
+  ["stage","autoStageText","autoStageBtn"],
+  ["tower","autoTowerText","autoTowerBtn"]
+ ];
+
+ autoMap.forEach(([k,textId,btnId])=>{
+  $(textId).textContent=state.autos[k]?"Đang tự động.":"Chưa bật.";
+  $(btnId).textContent=state.autos[k]?"Tắt Auto":"Bật Auto";
+ });
+
+ $("magicCircle").classList.toggle("active",!!state.autos.cult);
+
+ $("breakInfo").textContent=
+  "Tu vi "+Math.floor(state.xp)+"/"+needXp()+
+  ". Chi phí: "+Math.floor(1000*Math.pow(1.6,state.realmIndex)).toLocaleString("vi-VN")+" linh thạch.";
+
+ ["root","body","skill"].forEach(t=>{
+  $(t+"Cost").textContent=
+   "Cấp hiện tại: "+gradeText(state[t])+
+   ". Chi phí: "+cost(t).toLocaleString("vi-VN")+" linh thạch.";
+ });
+
+ $("characterDetails").innerHTML=
+  "<p><b>Nhân vật:</b> "+esc(state.name)+"</p>"+
+  "<p><b>Cảnh giới:</b> "+esc(realmText())+"</p>"+
+  "<p><b>Lực chiến:</b> "+power()+"</p>"+
+  "<p><b>Chiến thắng:</b> "+state.stats.wins+"</p>"+
+  "<p><b>Tu luyện:</b> "+state.stats.cultivations+" lần</p>"+
+  "<p><b>Đột phá:</b> "+state.stats.breakthroughs+" lần</p>";
+
+ $("inventoryList").innerHTML=Object.keys(state.inventory).length
+  ?"<table><tr><th>Vật phẩm</th><th>Số lượng</th></tr>"+
+   Object.entries(state.inventory).map(([k,v])=>
+    "<tr><td>"+esc(k)+"</td><td>"+v+"</td></tr>"
+   ).join("")+"</table>"
+  :"<p>Túi đồ trống.</p>";
+
+ $("questList").innerHTML=questDefs().map(q=>
+  '<div class="card" style="margin-bottom:9px">'+
+  '<h3>'+esc(q.name)+'</h3>'+
+  '<p>'+esc(q.desc)+'</p>'+
+  '<p>Thưởng: '+q.reward+' linh thạch</p>'+
+  '<p class="'+(q.ok?"green":"small")+'">'+
+  (state.claimed[q.id]?"Đã nhận":q.ok?"Hoàn thành":"Chưa hoàn thành")+
+  '</p>'+
+  (q.ok&&!state.claimed[q.id]
+   ?'<button onclick="claimQuest(\''+q.id+'\')">Nhận thưởng</button>'
+   :"")+
+  '</div>'
+ ).join("");
+
+ $("petName").textContent=state.petLevel?state.petName:"Linh thú chưa thức tỉnh";
+ $("petInfo").textContent=state.petLevel
+  ?"Cấp "+state.petLevel+". Tăng "+state.petLevel*60+" lực chiến."
+  :"Chưa có linh thú.";
+
+ $("stageInfo").textContent=
+  "Ải "+state.stage+". Lực chiến yêu cầu dự kiến: "+
+  (100+state.stage*65+state.realmIndex*100);
+
+ $("towerInfo").textContent=
+  "Tầng "+state.tower+". Lực chiến yêu cầu dự kiến: "+
+  (150+state.tower*90+state.realmIndex*80);
+
+ $("sectName").textContent=state.sect?state.sectName:"Chưa gia nhập tông môn";
+ $("sectInfo").textContent=state.sect
+  ?"Thành viên "+state.sectName+"."
+  :"Gia nhập để mở hoạt động tông môn.";
+
+ $("achievementList").innerHTML=achievements().map(a=>
+  '<div class="card" style="margin-bottom:8px">'+
+  '<b>'+(a[2]?"🏆 ":"🔒 ")+esc(a[0])+'</b>'+
+  '<p>'+esc(a[1])+'</p>'+
+  '<span class="'+(a[2]?"green":"small")+'">'+
+  (a[2]?"Đã đạt":"Chưa đạt")+'</span></div>'
+ ).join("");
+
+ $("rankingList").innerHTML=
+  "<table><tr><th>Hạng</th><th>Nhân vật</th><th>Cảnh giới</th><th>Lực chiến</th></tr>"+
+  "<tr><td>1</td><td>"+esc(state.name)+"</td><td>"+
+  esc(realmText())+"</td><td>"+power()+"</td></tr></table>";
+
+ $("journalList").innerHTML=state.log.map(x=>"<p>"+esc(x)+"</p>").join("");
+
+ $("recentLog").innerHTML=state.log.slice(0,5).map(x=>"<p>"+esc(x)+"</p>").join("")||
+  "<p>Chưa có ghi chép.</p>";
+
+ checkQuests();
+}
+
+function startTimers(){
+ stopTimers();
+
+ timers.tick=setInterval(()=>{
+  if(!state)return;
+
+  if(state.autos.cult)cultivate(20+state.root*2+state.skill,"Auto Tu Luyện");
+  if(state.autos.fight)fight();
+  if(state.autos.stage)runStage();
+  if(state.autos.tower)climbTower();
+
+  saveGame(false);
+ },1000);
+
+ timers.render=setInterval(()=>{
+  if(state)render();
+ },1500);
+}
+
+function stopTimers(){
+ Object.values(timers).forEach(clearInterval);
+ timers={};
+}
+
+window.addEventListener("beforeunload",()=>saveGame(false));
+
+(function restore(){
+ try{
+  const k=sessionStorage.getItem("ttdd3_current");
+  const r=k&&localStorage.getItem(k);
+
+  if(!r)return;
+
+  const d=JSON.parse(r);
+  state=d.game;
+  accountKey=k;
+  normalize();
+
+  $("login").classList.add("hidden");
+  $("game").classList.remove("hidden");
+
+  startTimers();
+  render();
+ }catch(e){}
+})();
+
+/* Tạo các hạt linh khí trang trí */
+(function createParticles(){
+ const scene=document.querySelector(".cultivation-scene");
+ if(!scene)return;
+
+ for(let i=0;i<16;i++){
+  const p=document.createElement("span");
+  p.className="energy-particle";
+  p.style.left=(5+Math.random()*90)+"%";
+  p.style.bottom=(5+Math.random()*20)+"px";
+  p.style.animationDelay=(-Math.random()*4)+"s";
+  p.style.animationDuration=(3+Math.random()*3)+"s";
+  scene.appendChild(p);
+ }
+})();
+</script>
+</body>
+</html>
