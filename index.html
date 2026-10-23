@@ -909,6 +909,387 @@ header .brand{font-size:16px;padding-right:45%}
 }
 
 /* ===== KET THUC FIX LAN 3 ===== */
+/* ===== TTDD ALCHEMY 5.0 ===== */
+
+.ttdd-alchemy {
+  overflow: hidden;
+}
+
+.ttdd-alchemy-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.ttdd-alchemy-icon {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-size: 35px;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #45216f, #17152f);
+  border: 1px solid #c6a1ff;
+  box-shadow: 0 0 20px #a66aff55;
+}
+
+.ttdd-alchemy-header h2 {
+  margin: 0 0 6px;
+  color: #ffe09a;
+}
+
+.ttdd-alchemy-header p {
+  margin: 0;
+  color: #bfc9e8;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.ttdd-alchemy-scene {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  border: 1px solid #7558a5;
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse at 50% 75%, #572b8c99, transparent 42%),
+    radial-gradient(ellipse at 50% 45%, #203e7299, transparent 55%),
+    linear-gradient(180deg, #17132f, #080c1d);
+  isolation: isolate;
+}
+
+.ttdd-alchemy-stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle, #fff 1px, transparent 2px),
+    radial-gradient(circle, #a9eaff 1px, transparent 2px);
+  background-size: 49px 53px, 73px 67px;
+  background-position: 4px 7px, 25px 29px;
+  animation: ttddAlchemyStars 12s linear infinite;
+}
+
+.ttdd-alchemy-aura {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  left: calc(50% - 90px);
+  top: 55px;
+  border-radius: 50%;
+  background: #a56aff;
+  filter: blur(55px);
+  opacity: .23;
+  animation: ttddAlchemyPulse 2.8s ease-in-out infinite;
+}
+
+.ttdd-alchemy-ring {
+  position: absolute;
+  width: 190px;
+  height: 190px;
+  left: calc(50% - 95px);
+  top: 43px;
+  border: 2px solid #b88aff77;
+  border-radius: 50%;
+  box-shadow: 0 0 20px #a56aff33, inset 0 0 20px #a56aff22;
+  animation: ttddAlchemyRotate 14s linear infinite;
+}
+
+.ttdd-alchemy-cauldron {
+  position: absolute;
+  left: calc(50% - 55px);
+  top: 98px;
+  width: 110px;
+  height: 115px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 15px #a96bff66);
+  animation: ttddCauldronFloat 2.5s ease-in-out infinite;
+}
+
+.ttdd-cauldron-lid {
+  z-index: 2;
+  width: 110px;
+  height: 17px;
+  border: 2px solid #e4c1ff;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #55316f, #d1a1ff, #54316f);
+}
+
+.ttdd-cauldron-body {
+  width: 94px;
+  height: 80px;
+  margin-top: -3px;
+  display: grid;
+  place-items: center;
+  border: 3px solid #d5a5ff;
+  border-radius: 12px 12px 32px 32px;
+  background: linear-gradient(135deg, #624185, #211e48 70%);
+  color: #ffe4a2;
+  font-size: 42px;
+  box-shadow: inset 0 0 18px #b97aff55;
+}
+
+.ttdd-cauldron-glow {
+  position: absolute;
+  bottom: -12px;
+  width: 80px;
+  height: 25px;
+  border-radius: 50%;
+  background: #ff9b42;
+  filter: blur(17px);
+  animation: ttddAlchemyPulse .8s ease-in-out infinite;
+}
+
+.ttdd-alchemy-flames {
+  position: absolute;
+  top: 176px;
+  left: 50%;
+  width: 150px;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-between;
+  font-size: 25px;
+  filter: drop-shadow(0 0 10px #ff873c);
+}
+
+.ttdd-alchemy-flames span:nth-child(1) {
+  animation: ttddFlame 1s ease-in-out infinite;
+}
+
+.ttdd-alchemy-flames span:nth-child(2) {
+  animation: ttddFlame 1.3s ease-in-out infinite reverse;
+}
+
+.ttdd-alchemy-flames span:nth-child(3) {
+  animation: ttddFlame .8s ease-in-out infinite;
+}
+
+.ttdd-alchemy-caption {
+  position: absolute;
+  bottom: 16px;
+  left: 8px;
+  right: 8px;
+  text-align: center;
+  color: #ffe0a0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-shadow: 0 0 12px #d19aff;
+}
+
+.ttdd-alchemy-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.ttdd-alchemy-stat {
+  min-width: 0;
+  padding: 12px 5px;
+  text-align: center;
+  border: 1px solid #514875;
+  border-radius: 14px;
+  background: #111a32;
+}
+
+.ttdd-alchemy-stat span {
+  display: block;
+  font-size: 23px;
+  margin-bottom: 5px;
+}
+
+.ttdd-alchemy-stat small {
+  display: block;
+  color: #aeb9d7;
+  font-size: 11px;
+}
+
+.ttdd-alchemy-stat strong {
+  display: block;
+  margin-top: 5px;
+  color: #ffe09a;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.ttdd-alchemy-notice {
+  padding: 14px;
+  margin: 14px 0 20px;
+  border-left: 3px solid #b98aff;
+  border-radius: 10px;
+  background: #1b1738;
+}
+
+.ttdd-alchemy-notice strong {
+  color: #d8b5ff;
+}
+
+.ttdd-alchemy-notice p {
+  margin-bottom: 0;
+  color: #d1d8ee;
+  line-height: 1.6;
+  font-size: 13px;
+}
+
+.ttdd-alchemy-section-title {
+  margin: 22px 0 12px;
+  color: #ffe09a;
+}
+
+.ttdd-recipe-list {
+  display: grid;
+  gap: 13px;
+}
+
+.ttdd-recipe-card {
+  padding: 15px;
+  border: 1px solid #4c456f;
+  border-radius: 17px;
+  background: linear-gradient(145deg, #151d38, #101427);
+}
+
+.ttdd-recipe-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ttdd-recipe-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #382652;
+  font-size: 26px;
+}
+
+.ttdd-recipe-info h3 {
+  margin: 0 0 5px;
+  color: #8ce8ff;
+}
+
+.ttdd-recipe-info p {
+  margin: 0;
+  color: #aeb9d7;
+  font-size: 12px;
+}
+
+.ttdd-recipe-cost,
+.ttdd-recipe-materials {
+  margin-top: 14px;
+  padding: 11px;
+  border-radius: 10px;
+  background: #090f21;
+}
+
+.ttdd-recipe-cost {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  color: #cbd5ef;
+  font-size: 12px;
+}
+
+.ttdd-recipe-cost strong {
+  color: #ffd778;
+}
+
+.ttdd-recipe-materials strong {
+  color: #8fe6bd;
+  font-size: 12px;
+}
+
+.ttdd-recipe-materials p {
+  margin-bottom: 0;
+  color: #d0d8ed;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.ttdd-alchemy-button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 13px 10px;
+  border: 1px solid #e2bdff;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #7941ad, #47309b);
+  box-shadow: 0 0 15px #9d62ff22;
+  cursor: pointer;
+}
+
+.ttdd-alchemy-button:active {
+  transform: scale(.98);
+  filter: brightness(1.2);
+}
+
+.ttdd-alchemy-empty {
+  padding: 20px;
+  text-align: center;
+  color: #bac5e4;
+  border: 1px dashed #67588a;
+  border-radius: 14px;
+}
+
+.ttdd-alchemy-footer {
+  margin-top: 20px;
+  padding: 14px 4px 4px;
+  text-align: center;
+  color: #bca0e8;
+  font-size: 12px;
+}
+
+@keyframes ttddAlchemyStars {
+  from { background-position: 4px 7px, 25px 29px; }
+  to { background-position: 53px 60px, -48px 96px; }
+}
+
+@keyframes ttddAlchemyPulse {
+  0%, 100% { transform: scale(.9); opacity: .2; }
+  50% { transform: scale(1.12); opacity: .45; }
+}
+
+@keyframes ttddAlchemyRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ttddCauldronFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes ttddFlame {
+  0%, 100% { transform: translateY(0) scale(.9); opacity: .75; }
+  50% { transform: translateY(-7px) scale(1.15); opacity: 1; }
+}
+
+@media (max-width: 600px) {
+  .ttdd-alchemy-scene {
+    height: 270px;
+  }
+
+  .ttdd-alchemy-stat {
+    padding: 10px 3px;
+  }
+
+  .ttdd-alchemy-stat strong {
+    font-size: 11px;
+  }
+}
+
+/* ===== END TTDD ALCHEMY 5.0 ===== */
 
 </style>
 </head>
@@ -2545,400 +2926,6 @@ case "alchemy": {
   `;
   break;
 }
-:::
-
-**Lưu ý:** Đoạn trên dùng các trường dữ liệu hiện có như `player.alchemy`, `player.stones` và `RECIPES`. Nó chỉ thay giao diện, chưa tự thay đổi tỷ lệ thành công của công thức.
-
----
-
-## BƯỚC 2: Thêm hiệu ứng lò luyện đan
-
-Tìm dòng `</style>` trong `index.html`.
-
-Dán toàn bộ CSS sau ngay phía trên dòng đó. **Không xóa CSS cũ.**
-
-```css
-/* ===== TTDD ALCHEMY 5.0 ===== */
-
-.ttdd-alchemy {
-  overflow: hidden;
-}
-
-.ttdd-alchemy-header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 20px;
-}
-
-.ttdd-alchemy-icon {
-  width: 60px;
-  height: 60px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  font-size: 35px;
-  border-radius: 18px;
-  background: linear-gradient(145deg, #45216f, #17152f);
-  border: 1px solid #c6a1ff;
-  box-shadow: 0 0 20px #a66aff55;
-}
-
-.ttdd-alchemy-header h2 {
-  margin: 0 0 6px;
-  color: #ffe09a;
-}
-
-.ttdd-alchemy-header p {
-  margin: 0;
-  color: #bfc9e8;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.ttdd-alchemy-scene {
-  position: relative;
-  height: 300px;
-  overflow: hidden;
-  border: 1px solid #7558a5;
-  border-radius: 22px;
-  background:
-    radial-gradient(ellipse at 50% 75%, #572b8c99, transparent 42%),
-    radial-gradient(ellipse at 50% 45%, #203e7299, transparent 55%),
-    linear-gradient(180deg, #17132f, #080c1d);
-  isolation: isolate;
-}
-
-.ttdd-alchemy-stars {
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(circle, #fff 1px, transparent 2px),
-    radial-gradient(circle, #a9eaff 1px, transparent 2px);
-  background-size: 49px 53px, 73px 67px;
-  background-position: 4px 7px, 25px 29px;
-  animation: ttddAlchemyStars 12s linear infinite;
-}
-
-.ttdd-alchemy-aura {
-  position: absolute;
-  width: 180px;
-  height: 180px;
-  left: calc(50% - 90px);
-  top: 55px;
-  border-radius: 50%;
-  background: #a56aff;
-  filter: blur(55px);
-  opacity: .23;
-  animation: ttddAlchemyPulse 2.8s ease-in-out infinite;
-}
-
-.ttdd-alchemy-ring {
-  position: absolute;
-  width: 190px;
-  height: 190px;
-  left: calc(50% - 95px);
-  top: 43px;
-  border: 2px solid #b88aff77;
-  border-radius: 50%;
-  box-shadow: 0 0 20px #a56aff33, inset 0 0 20px #a56aff22;
-  animation: ttddAlchemyRotate 14s linear infinite;
-}
-
-.ttdd-alchemy-cauldron {
-  position: absolute;
-  left: calc(50% - 55px);
-  top: 98px;
-  width: 110px;
-  height: 115px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  filter: drop-shadow(0 0 15px #a96bff66);
-  animation: ttddCauldronFloat 2.5s ease-in-out infinite;
-}
-
-.ttdd-cauldron-lid {
-  z-index: 2;
-  width: 110px;
-  height: 17px;
-  border: 2px solid #e4c1ff;
-  border-radius: 50%;
-  background: linear-gradient(90deg, #55316f, #d1a1ff, #54316f);
-}
-
-.ttdd-cauldron-body {
-  width: 94px;
-  height: 80px;
-  margin-top: -3px;
-  display: grid;
-  place-items: center;
-  border: 3px solid #d5a5ff;
-  border-radius: 12px 12px 32px 32px;
-  background: linear-gradient(135deg, #624185, #211e48 70%);
-  color: #ffe4a2;
-  font-size: 42px;
-  box-shadow: inset 0 0 18px #b97aff55;
-}
-
-.ttdd-cauldron-glow {
-  position: absolute;
-  bottom: -12px;
-  width: 80px;
-  height: 25px;
-  border-radius: 50%;
-  background: #ff9b42;
-  filter: blur(17px);
-  animation: ttddAlchemyPulse .8s ease-in-out infinite;
-}
-
-.ttdd-alchemy-flames {
-  position: absolute;
-  top: 176px;
-  left: 50%;
-  width: 150px;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: space-between;
-  font-size: 25px;
-  filter: drop-shadow(0 0 10px #ff873c);
-}
-
-.ttdd-alchemy-flames span:nth-child(1) {
-  animation: ttddFlame 1s ease-in-out infinite;
-}
-
-.ttdd-alchemy-flames span:nth-child(2) {
-  animation: ttddFlame 1.3s ease-in-out infinite reverse;
-}
-
-.ttdd-alchemy-flames span:nth-child(3) {
-  animation: ttddFlame .8s ease-in-out infinite;
-}
-
-.ttdd-alchemy-caption {
-  position: absolute;
-  bottom: 16px;
-  left: 8px;
-  right: 8px;
-  text-align: center;
-  color: #ffe0a0;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  text-shadow: 0 0 12px #d19aff;
-}
-
-.ttdd-alchemy-stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  margin: 14px 0;
-}
-
-.ttdd-alchemy-stat {
-  min-width: 0;
-  padding: 12px 5px;
-  text-align: center;
-  border: 1px solid #514875;
-  border-radius: 14px;
-  background: #111a32;
-}
-
-.ttdd-alchemy-stat span {
-  display: block;
-  font-size: 23px;
-  margin-bottom: 5px;
-}
-
-.ttdd-alchemy-stat small {
-  display: block;
-  color: #aeb9d7;
-  font-size: 11px;
-}
-
-.ttdd-alchemy-stat strong {
-  display: block;
-  margin-top: 5px;
-  color: #ffe09a;
-  font-size: 12px;
-  overflow-wrap: anywhere;
-}
-
-.ttdd-alchemy-notice {
-  padding: 14px;
-  margin: 14px 0 20px;
-  border-left: 3px solid #b98aff;
-  border-radius: 10px;
-  background: #1b1738;
-}
-
-.ttdd-alchemy-notice strong {
-  color: #d8b5ff;
-}
-
-.ttdd-alchemy-notice p {
-  margin-bottom: 0;
-  color: #d1d8ee;
-  line-height: 1.6;
-  font-size: 13px;
-}
-
-.ttdd-alchemy-section-title {
-  margin: 22px 0 12px;
-  color: #ffe09a;
-}
-
-.ttdd-recipe-list {
-  display: grid;
-  gap: 13px;
-}
-
-.ttdd-recipe-card {
-  padding: 15px;
-  border: 1px solid #4c456f;
-  border-radius: 17px;
-  background: linear-gradient(145deg, #151d38, #101427);
-}
-
-.ttdd-recipe-top {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.ttdd-recipe-icon {
-  width: 48px;
-  height: 48px;
-  flex-shrink: 0;
-  display: grid;
-  place-items: center;
-  border-radius: 14px;
-  background: #382652;
-  font-size: 26px;
-}
-
-.ttdd-recipe-info h3 {
-  margin: 0 0 5px;
-  color: #8ce8ff;
-}
-
-.ttdd-recipe-info p {
-  margin: 0;
-  color: #aeb9d7;
-  font-size: 12px;
-}
-
-.ttdd-recipe-cost,
-.ttdd-recipe-materials {
-  margin-top: 14px;
-  padding: 11px;
-  border-radius: 10px;
-  background: #090f21;
-}
-
-.ttdd-recipe-cost {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  flex-wrap: wrap;
-  color: #cbd5ef;
-  font-size: 12px;
-}
-
-.ttdd-recipe-cost strong {
-  color: #ffd778;
-}
-
-.ttdd-recipe-materials strong {
-  color: #8fe6bd;
-  font-size: 12px;
-}
-
-.ttdd-recipe-materials p {
-  margin-bottom: 0;
-  color: #d0d8ed;
-  font-size: 13px;
-  line-height: 1.6;
-  overflow-wrap: anywhere;
-}
-
-.ttdd-alchemy-button {
-  width: 100%;
-  margin-top: 14px;
-  padding: 13px 10px;
-  border: 1px solid #e2bdff;
-  border-radius: 12px;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 800;
-  background: linear-gradient(135deg, #7941ad, #47309b);
-  box-shadow: 0 0 15px #9d62ff22;
-  cursor: pointer;
-}
-
-.ttdd-alchemy-button:active {
-  transform: scale(.98);
-  filter: brightness(1.2);
-}
-
-.ttdd-alchemy-empty {
-  padding: 20px;
-  text-align: center;
-  color: #bac5e4;
-  border: 1px dashed #67588a;
-  border-radius: 14px;
-}
-
-.ttdd-alchemy-footer {
-  margin-top: 20px;
-  padding: 14px 4px 4px;
-  text-align: center;
-  color: #bca0e8;
-  font-size: 12px;
-}
-
-@keyframes ttddAlchemyStars {
-  from { background-position: 4px 7px, 25px 29px; }
-  to { background-position: 53px 60px, -48px 96px; }
-}
-
-@keyframes ttddAlchemyPulse {
-  0%, 100% { transform: scale(.9); opacity: .2; }
-  50% { transform: scale(1.12); opacity: .45; }
-}
-
-@keyframes ttddAlchemyRotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-@keyframes ttddCauldronFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
-}
-
-@keyframes ttddFlame {
-  0%, 100% { transform: translateY(0) scale(.9); opacity: .75; }
-  50% { transform: translateY(-7px) scale(1.15); opacity: 1; }
-}
-
-@media (max-width: 600px) {
-  .ttdd-alchemy-scene {
-    height: 270px;
-  }
-
-  .ttdd-alchemy-stat {
-    padding: 10px 3px;
-  }
-
-  .ttdd-alchemy-stat strong {
-    font-size: 11px;
-  }
-}
-
-/* ===== END TTDD ALCHEMY 5.0 ===== */
 
 case "forging":
 h=`<section class="panel"><h2>🔨 Luyện khí</h2><p>Trang bị hiện tại: ${esc(player.equipment)}</p><p>Đã luyện khí: ${player.forging} lần</p>
