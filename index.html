@@ -699,6 +699,118 @@ header .brand{font-size:16px;padding-right:45%}
 }
 
 /* ===== KET THUC GIAO DIEN NHAN VAT 4.3 ===== */
+  /* ===== FIX GIAO DIEN NHAN VAT LAN 2 ===== */
+
+/* Thu gọn các vòng năng lượng quanh nhân vật */
+.ttdd-energy {
+  width: 34% !important;
+  height: 10% !important;
+  left: 33% !important;
+  top: 75% !important;
+  opacity: .65 !important;
+}
+
+.ttdd-energy.e2 {
+  width: 29% !important;
+  left: 35.5% !important;
+  top: 77% !important;
+}
+
+.ttdd-energy.e3 {
+  width: 12% !important;
+  height: 24% !important;
+  left: 44% !important;
+  top: 67% !important;
+}
+
+/* Nhân vật rõ hơn, không bị vòng năng lượng lấn át */
+.ttdd-character {
+  z-index: 6 !important;
+  width: 39% !important;
+  height: 53% !important;
+  left: 30.5% !important;
+  top: 30% !important;
+  filter:
+    drop-shadow(0 0 7px var(--ttdd-aura))
+    drop-shadow(0 0 16px rgba(190, 130, 255, .35)) !important;
+}
+
+/* Giảm kích thước vòng ma pháp */
+.ttdd-magic-circle {
+  width: 40% !important;
+  left: 30% !important;
+  top: 42% !important;
+  opacity: .55 !important;
+}
+
+/* Khung chiến đấu: nhân vật bên trái, boss bên phải */
+.ttdd-scene.battle-mode .ttdd-character {
+  left: 7% !important;
+  top: 34% !important;
+  width: 37% !important;
+  height: 49% !important;
+}
+
+.ttdd-scene.battle-mode .ttdd-magic-circle {
+  left: 5% !important;
+  top: 40% !important;
+  width: 43% !important;
+}
+
+.ttdd-scene.battle-mode .ttdd-energy {
+  left: 9% !important;
+  top: 76% !important;
+  width: 31% !important;
+}
+
+.ttdd-scene.battle-mode .ttdd-energy.e2 {
+  left: 12% !important;
+  top: 78% !important;
+}
+
+.ttdd-scene.battle-mode .ttdd-energy.e3 {
+  left: 20% !important;
+  top: 65% !important;
+}
+
+/* Boss nổi bật nhưng không quá lớn */
+.ttdd-enemy {
+  z-index: 7 !important;
+  width: 21% !important;
+  right: 5% !important;
+  top: 45% !important;
+  font-size: clamp(38px, 12vw, 64px) !important;
+}
+
+/* Khung tu luyện gọn hơn trên điện thoại */
+@media (max-width: 600px) {
+  .ttdd-scene {
+    height: 320px !important;
+    min-height: 320px !important;
+    max-height: 320px !important;
+  }
+
+  .ttdd-scene:not(.battle-mode) .ttdd-character {
+    width: 42% !important;
+    height: 53% !important;
+    left: 29% !important;
+    top: 31% !important;
+  }
+
+  .ttdd-scene.battle-mode .ttdd-character {
+    width: 36% !important;
+    height: 48% !important;
+    left: 7% !important;
+    top: 35% !important;
+  }
+
+  .ttdd-scene.battle-mode .ttdd-enemy {
+    right: 4% !important;
+    top: 45% !important;
+  }
+}
+
+/* ===== KET THUC FIX LAN 2 ===== */
 
 </style>
 </head>
