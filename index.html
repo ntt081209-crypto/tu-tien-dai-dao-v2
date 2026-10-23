@@ -432,6 +432,273 @@ header .brand{font-size:16px;padding-right:45%}
     animation-duration: 8s !important;
   }
 }
+  /* ===== TU TIEN DAI DAO - NHAN VAT 4.3 ===== */
+
+.ttdd-scene {
+  position: relative !important;
+  width: 100% !important;
+  height: clamp(300px, 95vw, 430px) !important;
+  min-height: 300px !important;
+  max-height: 430px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  isolation: isolate;
+  border: 1px solid rgba(190, 150, 255, .48) !important;
+  border-radius: 24px !important;
+  background:
+    radial-gradient(
+      circle at 50% 65%,
+      rgba(92, 53, 177, .38),
+      transparent 48%
+    ),
+    radial-gradient(
+      circle at 50% 20%,
+      rgba(34, 93, 151, .25),
+      transparent 50%
+    ),
+    linear-gradient(180deg, #17132d, #080d20 85%) !important;
+}
+
+.ttdd-stars {
+  position: absolute !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.ttdd-caption {
+  position: absolute !important;
+  top: 18px !important;
+  left: 8px !important;
+  right: 8px !important;
+  z-index: 8 !important;
+  text-align: center !important;
+  font-size: clamp(15px, 4vw, 21px) !important;
+  font-weight: 800 !important;
+  color: #ffe2a0 !important;
+  text-shadow: 0 0 12px rgba(255, 195, 90, .65) !important;
+}
+
+.ttdd-aura {
+  position: absolute !important;
+  z-index: 1 !important;
+  width: 56% !important;
+  aspect-ratio: 1 !important;
+  left: 22% !important;
+  top: 24% !important;
+  border-radius: 50% !important;
+  background: var(--ttdd-aura, #80e8ff) !important;
+  opacity: .13 !important;
+  filter: blur(35px) !important;
+  animation: ttddAuraPulse 3s ease-in-out infinite !important;
+}
+
+.ttdd-magic-circle {
+  position: absolute !important;
+  z-index: 2 !important;
+  width: 48% !important;
+  aspect-ratio: 1 !important;
+  left: 26% !important;
+  top: 38% !important;
+  border: 2px solid rgba(105, 218, 255, .42) !important;
+  border-radius: 50% !important;
+  box-shadow:
+    0 0 16px rgba(95, 180, 255, .2),
+    inset 0 0 16px rgba(95, 180, 255, .12) !important;
+  animation: ttddCircleRotate 18s linear infinite !important;
+}
+
+.ttdd-energy {
+  position: absolute !important;
+  z-index: 3 !important;
+  width: 42% !important;
+  height: 15% !important;
+  left: 29% !important;
+  top: 67% !important;
+  border: 2px solid rgba(183, 119, 255, .9) !important;
+  border-radius: 50% !important;
+  transform: rotate(-12deg) !important;
+  box-shadow: 0 0 18px rgba(173, 100, 255, .55) !important;
+  animation: ttddEnergyFloat 4s ease-in-out infinite !important;
+}
+
+.ttdd-energy.e2 {
+  width: 34% !important;
+  left: 33% !important;
+  top: 70% !important;
+  border-color: rgba(105, 225, 255, .7) !important;
+  transform: rotate(12deg) !important;
+  animation-delay: -1.3s !important;
+}
+
+.ttdd-energy.e3 {
+  width: 17% !important;
+  height: 38% !important;
+  left: 41.5% !important;
+  top: 55% !important;
+  border-color: rgba(120, 218, 255, .6) !important;
+  transform: rotate(2deg) !important;
+  animation-delay: -2s !important;
+}
+
+.ttdd-character {
+  position: absolute !important;
+  z-index: 5 !important;
+  width: 42% !important;
+  height: 57% !important;
+  left: 29% !important;
+  top: 28% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  animation: ttddCharacterFloat 3s ease-in-out infinite !important;
+  filter: drop-shadow(
+    0 0 15px var(--ttdd-aura, #80e8ff)
+  ) !important;
+}
+
+.ttdd-character-image {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center bottom !important;
+  border: 0 !important;
+  background: transparent !important;
+  image-rendering: auto !important;
+}
+
+.ttdd-enemy {
+  position: absolute !important;
+  z-index: 6 !important;
+  width: 22% !important;
+  height: 30% !important;
+  right: 5% !important;
+  top: 43% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  font-size: clamp(42px, 14vw, 76px) !important;
+  filter: drop-shadow(0 0 15px rgba(255, 70, 70, .8)) !important;
+  animation: ttddEnemyFloat 2.2s ease-in-out infinite !important;
+}
+
+.ttdd-scene.battle-mode .ttdd-character {
+  left: 8% !important;
+  width: 38% !important;
+  top: 31% !important;
+}
+
+.ttdd-scene.battle-mode .ttdd-magic-circle {
+  left: 13% !important;
+  width: 46% !important;
+}
+
+.ttdd-scene.breakthrough-mode .ttdd-aura {
+  opacity: .35 !important;
+  animation-duration: .8s !important;
+}
+
+.ttdd-breakthrough-flash {
+  position: absolute !important;
+  z-index: 7 !important;
+  inset: 0 !important;
+  pointer-events: none !important;
+  background: radial-gradient(
+    circle at 50% 55%,
+    rgba(255, 244, 180, .75),
+    transparent 65%
+  ) !important;
+  animation: ttddBreakthroughFlash 1.2s ease-out infinite !important;
+}
+
+@keyframes ttddAuraPulse {
+  0%, 100% {
+    transform: scale(.88);
+    opacity: .12;
+  }
+  50% {
+    transform: scale(1.12);
+    opacity: .25;
+  }
+}
+
+@keyframes ttddCircleRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ttddEnergyFloat {
+  0%, 100% {
+    margin-top: 0;
+    opacity: .75;
+  }
+  50% {
+    margin-top: -12px;
+    opacity: 1;
+  }
+}
+
+@keyframes ttddCharacterFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+
+@keyframes ttddEnemyFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-7px) scale(1.05); }
+}
+
+@keyframes ttddBreakthroughFlash {
+  0%, 100% { opacity: .1; }
+  50% { opacity: .65; }
+}
+
+/* Tối ưu màn hình điện thoại */
+@media (max-width: 600px) {
+  .ttdd-scene {
+    height: 340px !important;
+    min-height: 340px !important;
+    max-height: 340px !important;
+    border-radius: 20px !important;
+  }
+
+  .ttdd-character {
+    width: 46% !important;
+    height: 55% !important;
+    left: 27% !important;
+    top: 30% !important;
+  }
+
+  .ttdd-scene.battle-mode .ttdd-character {
+    left: 5% !important;
+    width: 39% !important;
+    top: 32% !important;
+  }
+
+  .ttdd-enemy {
+    right: 4% !important;
+    width: 24% !important;
+    top: 44% !important;
+  }
+
+  .ttdd-caption {
+    top: 16px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ttdd-aura,
+  .ttdd-magic-circle,
+  .ttdd-energy,
+  .ttdd-character,
+  .ttdd-enemy,
+  .ttdd-breakthrough-flash {
+    animation-duration: 8s !important;
+  }
+}
+
+/* ===== KET THUC GIAO DIEN NHAN VAT 4.3 ===== */
 
 </style>
 </head>
