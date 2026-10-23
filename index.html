@@ -2434,29 +2434,82 @@ function ttddCharacterScene(mode = "cultivate") {
   const isBreakthrough = mode === "breakthrough";
 
   const realmColors = [
-    "#80e8ff", "#76baff", "#ffd987",
-    "#c4a1ff", "#ff85dc", "#ff9e80",
-    "#b9ffdd", "#ffe6a0", "#ff6d8d"
+    "#80e8ff",
+    "#76baff",
+    "#ffd987",
+    "#c4a1ff",
+    "#ff85dc",
+    "#ff9e80",
+    "#b9ffdd",
+    "#ffe6a0",
+    "#ff6d8d"
   ];
 
-  const auraColor = realmColors[
-    Math.min(8, Math.floor((player?.realm || 0) / 2))
-  ];
+  const realmIndex = Math.min(
+    8,
+    Math.floor((Number(player?.realm) || 0) / 2)
+  );
 
-  const enemy = BOSS_LIST[
-    Math.min(player?.bossIndex || 0, BOSS_LIST.length - 1)
-  ];
+  const auraColor = realmColors[realmIndex];
+
+  const enemyIndex = Math.min(
+    Number(player?.bossIndex) || 0,
+    BOSS_LIST.length - 1
+  );
+
+  const enemy = BOSS_LIST[enemyIndex];
+
+  // Ảnh mặc định dùng SVG nhúng sẵn,
+  // không phụ thuộc thư mục images trên GitHub.
+  const fallbackImage = "data:image/svg+xml;charset=UTF-8," +
+    encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320">
+        <defs>
+          <radialGradient id="a">
+            <stop stop-color="${auraColor}" stop-opacity=".65"/>
+            <stop offset="1" stop-color="#10162f" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="r" x2="0" y2="1">
+            <stop stop-color="#fff0b0"/>
+            <stop offset=".45" stop-color="#c58aff"/>
+            <stop offset="1" stop-color="#4736a1"/>
+          </linearGradient>
+        </defs>
+        <circle cx="120" cy="150" r="115" fill="url(#a)"/>
+        <circle cx="120" cy="74" r="34" fill="#f4d5bd"/>
+        <path d="M87 70 Q78 25 120 25 Q160 25 153 73 L140 49 L102 49 Z"
+              fill="#202039"/>
+        <path d="M90 110 L120 96 L150 110 L178 230 L62 230 Z"
+              fill="url(#r)" stroke="${auraColor}" stroke-width="3"/>
+        <path d="M105 108 L120 145 L135 108 L130 200 L110 200 Z"
+              fill="#fff0c2" opacity=".9"/>
+        <path d="M91 118 L54 174 L70 185 L105 142"
+              fill="#c58aff" stroke="#fff0b0" stroke-width="3"/>
+        <path d="M149 118 L186 174 L170 185 L135 142"
+              fill="#c58aff" stroke="#fff0b0" stroke-width="3"/>
+        <path d="M75 228 L165 228 L185 300 L55 300 Z"
+              fill="#292354" stroke="${auraColor}" stroke-width="3"/>
+        <path d="M95 40 Q120 8 145 40" fill="none"
+              stroke="#ffe6a0" stroke-width="5"/>
+        <circle cx="108" cy="75" r="3" fill="#292039"/>
+        <circle cx="132" cy="75" r="3" fill="#292039"/>
+      </svg>
+    `);
 
   return `
-    <div id="ttddAnimationScene"
-         class="ttdd-scene ${isBattle ? "battle-mode" : ""} ${isBreakthrough ? "breakthrough-mode" : ""}"
-         style="--ttdd-aura:${auraColor}">
-
+    <div
+      id="ttddAnimationScene"
+      class="ttdd-scene ${isBattle ? "battle-mode" : ""} ${isBreakthrough ? "breakthrough-mode" : ""}"
+      style="--ttdd-aura:${auraColor}"
+    >
       <div class="ttdd-stars"></div>
+
       <div class="ttdd-caption">
-        ${isBattle ? "⚔️ CHIẾN ĐẤU" :
-          isBreakthrough ? "⚡ ĐỘT PHÁ CẢNH GIỚI" :
-          "☯ VẬN CÔNG TU LUYỆN"}
+        ${isBattle
+          ? "⚔️ CHIẾN ĐẤU"
+          : isBreakthrough
+            ? "⚡ ĐỘT PHÁ CẢNH GIỚI"
+            : "☯ VẬN CÔNG TU LUYỆN"}
       </div>
 
       <div class="ttdd-aura"></div>
@@ -2467,18 +2520,26 @@ function ttddCharacterScene(mode = "cultivate") {
       <div class="ttdd-energy e3"></div>
 
       <div class="ttdd-character">
-  <img
-    id="ttddCharacterImage"
-    class="ttdd-character-image"
-    src="images/realm-1.png"
-    alt="Nhân vật tu tiên"
-  >
-</div>
+        <img
+          id="ttddCharacterImage"
+          class="ttdd-character-image"
+          src="${fallbackImage}"
+          alt="Nhân vật tu tiên"
+          onerror="this.onerror=null;this.src='${fallbackImage}'"
+        >
+      </div>
 
       ${isBattle ? `
-        <div class="ttdd-enemy">👹</div>
+        <div class="ttdd-enemy" aria-label="Đối thủ">
+          ${enemy?.icon || "👹"}
+        </div>
       ` : ""}
-    </div>`;
+
+      ${isBreakthrough ? `
+        <div class="ttdd-breakthrough-flash"></div>
+      ` : ""}
+    </div>
+  `;
 }
 
 function ttddRefreshCharacterScene(mode) {
